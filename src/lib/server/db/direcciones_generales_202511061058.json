@@ -1,0 +1,119 @@
+{
+"direcciones_generales": [
+	{
+		"id" : 1,
+		"nombre" : "ALCALDIA"
+	},
+	{
+		"id" : 2,
+		"nombre" : "DIRECCION TERRITORIAL ACATITLA ZARAGOZA"
+	},
+	{
+		"id" : 3,
+		"nombre" : "DIRECCION TERRITORIAL AZTAHUACAN"
+	},
+	{
+		"id" : 4,
+		"nombre" : "DIRECCION TERRITORIAL CABEZA DE JUAREZ"
+	},
+	{
+		"id" : 5,
+		"nombre" : "DIRECCION TERRITORIAL ANGELES AGRARISTA"
+	},
+	{
+		"id" : 6,
+		"nombre" : "DIRECCION TERRITORIAL TEZONCO"
+	},
+	{
+		"id" : 7,
+		"nombre" : "DIRECCION TERRITORIAL SANTA CRUZ QUETZALCOATL"
+	},
+	{
+		"id" : 8,
+		"nombre" : "DIRECCION TERRITORIAL ACAHUALTEPEC TEOTONGO"
+	},
+	{
+		"id" : 9,
+		"nombre" : "DIRECCION TERRITORIAL SANTA CATARINA"
+	},
+	{
+		"id" : 10,
+		"nombre" : "DIRECCION TERRITORIAL ACULCO"
+	},
+	{
+		"id" : 11,
+		"nombre" : "DIRECCION TERRITORIAL LOS CULHUACANES"
+	},
+	{
+		"id" : 12,
+		"nombre" : "DIRECCION TERRITORIAL ESTRELLA HUIZACHEPETL"
+	},
+	{
+		"id" : 13,
+		"nombre" : "DIRECCION TERRITORIAL REFORMA"
+	},
+	{
+		"id" : 14,
+		"nombre" : "DIRECCION TERRITORIAL ATLALILCO AXOMULCO"
+	},
+	{
+		"id" : 15,
+		"nombre" : "DIRECCION GENERAL JURIDICO"
+	},
+	{
+		"id" : 16,
+		"nombre" : "DIRECCION GENERAL DE GOBIERNO Y PROTECCION CIUDADANA"
+	},
+	{
+		"id" : 17,
+		"nombre" : "DIRECCION GENERAL DE INCLUSION Y BIENESTAR SOCIAL"
+	},
+	{
+		"id" : 18,
+		"nombre" : "DIRECCION GENERAL DE PLANEACION Y PARTICIPACION CIUDADANA"
+	},
+	{
+		"id" : 19,
+		"nombre" : "DIRECCION GENERAL DE OBRAS Y DESARROLLO URBANO"
+	},
+	{
+		"id" : 20,
+		"nombre" : "DIRECCION GENERAL DE SERVICIOS URBANOS"
+	},
+	{
+		"id" : 21,
+		"nombre" : "DIRECCION GENERAL DE ADMINISTRACION"
+	},
+	{
+		"id" : 22,
+		"nombre" : "DIRECCION EJECUTIVA DE CULTURA"
+	},
+	{
+		"id" : 23,
+		"nombre" : "DIRECCION EJECUTIVA DE PROTECCION CIVIL"
+	},
+	{
+		"id" : 24,
+		"nombre" : "COORDINACION GENERAL DE SEGURIDAD PUBLICA"
+	},
+	{
+		"id" : 25,
+		"nombre" : "DIRECCION EJECUTIVA DE DESARROLLO SUSTENTABLE"
+	},
+	{
+		"id" : 26,
+		"nombre" : "CONSEJALES"
+	},
+	{
+		"id" : 27,
+		"nombre" : "CONTRALORIA"
+	},
+	{
+		"id" : 28,
+		"nombre" : "FINANZAS"
+	},
+	{
+		"id" : 29,
+		"nombre" : "DIRECCION GENERAL DE REGULARIZACION TERRITORIAL"
+	}
+]}

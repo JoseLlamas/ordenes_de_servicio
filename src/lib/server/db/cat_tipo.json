@@ -1,0 +1,263 @@
+{
+"data": [
+	{
+		"tipo" : 1,
+		"descripcion" : "BALUM"
+	},
+	{
+		"tipo" : 2,
+		"descripcion" : "CAMARA FOTOGRAFICA DIGITAL"
+	},
+	{
+		"tipo" : 3,
+		"descripcion" : "CAMARA FOTOGRAFICA INSTANTANEA"
+	},
+	{
+		"tipo" : 4,
+		"descripcion" : "CAMARA MULTIMEDIA"
+	},
+	{
+		"tipo" : 5,
+		"descripcion" : "CONCENTRADOR DE RED"
+	},
+	{
+		"tipo" : 6,
+		"descripcion" : "CPU"
+	},
+	{
+		"tipo" : 8,
+		"descripcion" : "DISCO DURO EXTERNO"
+	},
+	{
+		"tipo" : 9,
+		"descripcion" : "ETIQUETADORA"
+	},
+	{
+		"tipo" : 10,
+		"descripcion" : "FUENTE INALAMBRICA"
+	},
+	{
+		"tipo" : 11,
+		"descripcion" : "GENERADOR"
+	},
+	{
+		"tipo" : 12,
+		"descripcion" : "IMPRESORA DE MATRIZ"
+	},
+	{
+		"tipo" : 13,
+		"descripcion" : "IMPRESORA DE TRANSF. TERMICA"
+	},
+	{
+		"tipo" : 14,
+		"descripcion" : "IMPRESORA INYECCION DE TINTA"
+	},
+	{
+		"tipo" : 15,
+		"descripcion" : "IMPRESORA LASER"
+	},
+	{
+		"tipo" : 16,
+		"descripcion" : "LAP TOP"
+	},
+	{
+		"tipo" : 17,
+		"descripcion" : "MODEM"
+	},
+	{
+		"tipo" : 18,
+		"descripcion" : "MONITOR FLAT PANEL"
+	},
+	{
+		"tipo" : 19,
+		"descripcion" : "MULTIFUNCIONAL"
+	},
+	{
+		"tipo" : 20,
+		"descripcion" : "NO BREAK"
+	},
+	{
+		"tipo" : 21,
+		"descripcion" : "NOTE BOOK"
+	},
+	{
+		"tipo" : 22,
+		"descripcion" : "PAD DE FIRMA"
+	},
+	{
+		"tipo" : 23,
+		"descripcion" : "PAD DE HUELLA"
+	},
+	{
+		"tipo" : 24,
+		"descripcion" : "PANTALLA DE PROYECCION"
+	},
+	{
+		"tipo" : 25,
+		"descripcion" : "PLOTER"
+	},
+	{
+		"tipo" : 26,
+		"descripcion" : "PROYECTOR"
+	},
+	{
+		"tipo" : 27,
+		"descripcion" : "PUNTO DE ACCESO INALAMBRICO"
+	},
+	{
+		"tipo" : 28,
+		"descripcion" : "QUEMADOR C\/DVD"
+	},
+	{
+		"tipo" : 29,
+		"descripcion" : "REGULADOR"
+	},
+	{
+		"tipo" : 30,
+		"descripcion" : "RUTEADOR"
+	},
+	{
+		"tipo" : 31,
+		"descripcion" : "SCANER"
+	},
+	{
+		"tipo" : 32,
+		"descripcion" : "SERVIDOR"
+	},
+	{
+		"tipo" : 33,
+		"descripcion" : "SERVIDOR DE ARCHIVOS"
+	},
+	{
+		"tipo" : 34,
+		"descripcion" : "SERVIDOR DE IMPRESION"
+	},
+	{
+		"tipo" : 35,
+		"descripcion" : "SWITCH DE RED"
+	},
+	{
+		"tipo" : 36,
+		"descripcion" : "SWITCH DISPLAY"
+	},
+	{
+		"tipo" : 37,
+		"descripcion" : "TABLETA DIGITALIZADORA"
+	},
+	{
+		"tipo" : 38,
+		"descripcion" : "TELEFONO CON DIADEMA"
+	},
+	{
+		"tipo" : 39,
+		"descripcion" : "TELEFONO IP"
+	},
+	{
+		"tipo" : 40,
+		"descripcion" : "UNIDAD DE RESPALDO ZIP 250 MB"
+	},
+	{
+		"tipo" : 41,
+		"descripcion" : "VIDEOCAMARA"
+	},
+	{
+		"tipo" : 42,
+		"descripcion" : "VIDEOCAMARA DIGITAL"
+	},
+	{
+		"tipo" : 61,
+		"descripcion" : "SWITCH DE 52 PUERTOS"
+	},
+	{
+		"tipo" : 60,
+		"descripcion" : "SWITCH DE 28 PUERTOS"
+	},
+	{
+		"tipo" : 59,
+		"descripcion" : "SISTEMA DE BOCINAS 5.1"
+	},
+	{
+		"tipo" : 58,
+		"descripcion" : "REPRODUCTOR DVD BLU-RAY"
+	},
+	{
+		"tipo" : 57,
+		"descripcion" : "RADIO"
+	},
+	{
+		"tipo" : 56,
+		"descripcion" : "PUNTO DE ACCESO INALAMBRICO PARA RED"
+	},
+	{
+		"tipo" : 55,
+		"descripcion" : "PUENTE INALAMBRICO PARA RED"
+	},
+	{
+		"tipo" : 54,
+		"descripcion" : "PANTALLA LCD 52\" FULLHD"
+	},
+	{
+		"tipo" : 53,
+		"descripcion" : "PANEL DE CONTROL DE COMUNICACIÓN"
+	},
+	{
+		"tipo" : 52,
+		"descripcion" : "MULTIMETRO DIGITAL"
+	},
+	{
+		"tipo" : 51,
+		"descripcion" : "MONITOR TOUCHSCREEN 19\""
+	},
+	{
+		"tipo" : 50,
+		"descripcion" : "MODULO PARA VIDEOCONFERENCIA"
+	},
+	{
+		"tipo" : 49,
+		"descripcion" : "GABINETE"
+	},
+	{
+		"tipo" : 48,
+		"descripcion" : "DISCO DURO PORTATIL"
+	},
+	{
+		"tipo" : 47,
+		"descripcion" : "CAMARA ROBOTICA PARA VIDEOCONFERENCIA"
+	},
+	{
+		"tipo" : 46,
+		"descripcion" : "BOCINAS PARA PC"
+	},
+	{
+		"tipo" : 45,
+		"descripcion" : "ANTENA PARABOLICA"
+	},
+	{
+		"tipo" : 44,
+		"descripcion" : "ANTENA OMNIDIRECCIONAL"
+	},
+	{
+		"tipo" : 43,
+		"descripcion" : "ACCESS POINT INALAMBRICO"
+	},
+	{
+		"tipo" : 0,
+		"descripcion" : "NO DEFINIDO"
+	},
+	{
+		"tipo" : 62,
+		"descripcion" : "MONITOR"
+	},
+	{
+		"tipo" : 63,
+		"descripcion" : "TECLADO"
+	},
+	{
+		"tipo" : 67,
+		"descripcion" : "ADAPTADOR"
+	},
+	{
+		"tipo" : 65,
+		"descripcion" : "MOUSE"
+	}
+]}

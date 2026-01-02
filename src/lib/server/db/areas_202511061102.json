@@ -1,0 +1,2265 @@
+{
+"areas": [
+	{
+		"id" : 1,
+		"nombre" : "ALCALDIA",
+		"direccion_general_id" : 1,
+		"activo" : 1
+	},
+	{
+		"id" : 2,
+		"nombre" : "DIRECCION DE COMUNICACION SOCIAL",
+		"direccion_general_id" : 1,
+		"activo" : 1
+	},
+	{
+		"id" : 3,
+		"nombre" : "L.C.P. DE ATENCION A MEDIOS DE COMUNICACIÓN",
+		"direccion_general_id" : 1,
+		"activo" : 1
+	},
+	{
+		"id" : 4,
+		"nombre" : "COORDINACION DE ASESORES",
+		"direccion_general_id" : 1,
+		"activo" : 1
+	},
+	{
+		"id" : 5,
+		"nombre" : "ASESOR \"B\"",
+		"direccion_general_id" : 1,
+		"activo" : 1
+	},
+	{
+		"id" : 6,
+		"nombre" : "SECRETARIA PARTICULAR",
+		"direccion_general_id" : 1,
+		"activo" : 1
+	},
+	{
+		"id" : 7,
+		"nombre" : "SUBDIRECCION DE ATENCION CIUDADANA",
+		"direccion_general_id" : 1,
+		"activo" : 1
+	},
+	{
+		"id" : 8,
+		"nombre" : "L.C.P. TECNICO Y ADMINISTRATIVO",
+		"direccion_general_id" : 1,
+		"activo" : 1
+	},
+	{
+		"id" : 9,
+		"nombre" : "INFORMACIÓN PÚBLICA",
+		"direccion_general_id" : 1,
+		"activo" : 0
+	},
+	{
+		"id" : 10,
+		"nombre" : "ASESOR \"A\"",
+		"direccion_general_id" : 1,
+		"activo" : 1
+	},
+	{
+		"id" : 11,
+		"nombre" : "J.U.D. DE PROMOCION DE LOS DERECHOS DE LAS MUJERES Y DE LA IGUALDAD SUSTANTIVA",
+		"direccion_general_id" : 1,
+		"activo" : 1
+	},
+	{
+		"id" : 12,
+		"nombre" : "SUBDIRECCION DEL PROGRAMA DE RECONSTRUCCION",
+		"direccion_general_id" : 1,
+		"activo" : 1
+	},
+	{
+		"id" : 13,
+		"nombre" : "COORDINACION DE ENLACE Y SEGUIMIENTO DE LAS TERRITORIALES",
+		"direccion_general_id" : 1,
+		"activo" : 1
+	},
+	{
+		"id" : 14,
+		"nombre" : "DIRECCION TERRITORIAL ACATITLA ZARAGOZA",
+		"direccion_general_id" : 2,
+		"activo" : 1
+	},
+	{
+		"id" : 15,
+		"nombre" : "L.C.P. DE ADMINISTRACION EN \"ACATITLA ZARAGOZA\"",
+		"direccion_general_id" : 2,
+		"activo" : 1
+	},
+	{
+		"id" : 16,
+		"nombre" : "J.U.D. DE JURÍDICO Y DE SERVICIOS LEGALES EN \"ACATITLA ZARAGOZA\"",
+		"direccion_general_id" : 2,
+		"activo" : 1
+	},
+	{
+		"id" : 17,
+		"nombre" : "L.C.P. DE JURÍDICO EN \"ACATITLA ZARAGOZA\"",
+		"direccion_general_id" : 2,
+		"activo" : 1
+	},
+	{
+		"id" : 18,
+		"nombre" : "J.U.D. DE DESARROLLO SOCIAL, PLANEACIÓN Y PARTICIPACION CIUDADANA EN \"ACATITLA ZARAGOZA\"",
+		"direccion_general_id" : 2,
+		"activo" : 1
+	},
+	{
+		"id" : 19,
+		"nombre" : "L.C.P. DE PARTICIPACION CIUDADANA EN \"ACATITLA ZARAGOZA\"",
+		"direccion_general_id" : 2,
+		"activo" : 1
+	},
+	{
+		"id" : 20,
+		"nombre" : "L.C.P. DE CULTURA EN \"ACATITLA ZARAGOZA\"",
+		"direccion_general_id" : 2,
+		"activo" : 1
+	},
+	{
+		"id" : 21,
+		"nombre" : "J.U.D. DE OBRAS Y SERVICIOS EN \"ACATITLA ZARAGOZA\"",
+		"direccion_general_id" : 2,
+		"activo" : 1
+	},
+	{
+		"id" : 22,
+		"nombre" : "L.C.P. DE OBRAS Y SERVICIOS \"A\" EN \"ACATITLA ZARAGOZA\"",
+		"direccion_general_id" : 2,
+		"activo" : 1
+	},
+	{
+		"id" : 23,
+		"nombre" : "L.C.P. DE OBRAS Y SERVICIOS \"B\" EN \"ACATITLA ZARAGOZA\"",
+		"direccion_general_id" : 2,
+		"activo" : 1
+	},
+	{
+		"id" : 24,
+		"nombre" : "L.C.P. DE OBRAS Y SERVICIOS \"C\" EN \"ACATITLA ZARAGOZA\"",
+		"direccion_general_id" : 2,
+		"activo" : 1
+	},
+	{
+		"id" : 25,
+		"nombre" : "L.C.P. DE OBRAS Y SERVICIOS \"D\" EN \"ACATITLA ZARAGOZA\"",
+		"direccion_general_id" : 2,
+		"activo" : 1
+	},
+	{
+		"id" : 26,
+		"nombre" : "L.C.P. DE OBRAS Y SERVICIOS \"E\" EN \"ACATITLA ZARAGOZA\"",
+		"direccion_general_id" : 2,
+		"activo" : 1
+	},
+	{
+		"id" : 27,
+		"nombre" : "L.C.P. DE EVALUACIÓN Y ATENCIÓN A GRIETAS EN \"ACATITLA ZARAGOZA\"",
+		"direccion_general_id" : 2,
+		"activo" : 1
+	},
+	{
+		"id" : 28,
+		"nombre" : "J.U.D. DE APOYO TECNICO EN \"ACATITLA ZARAGOZA\"",
+		"direccion_general_id" : 2,
+		"activo" : 1
+	},
+	{
+		"id" : 29,
+		"nombre" : "DIRECCION TERRITORIAL AZTAHUACAN",
+		"direccion_general_id" : 3,
+		"activo" : 1
+	},
+	{
+		"id" : 30,
+		"nombre" : "L.C.P. DE ADMINISTRACION EN \"AZTAHUACAN\"",
+		"direccion_general_id" : 3,
+		"activo" : 1
+	},
+	{
+		"id" : 31,
+		"nombre" : "J.U.D. DE JURÍDICO Y DE SERVICIOS LEGALES EN \"AZTAHUACAN\"",
+		"direccion_general_id" : 3,
+		"activo" : 1
+	},
+	{
+		"id" : 32,
+		"nombre" : "L.C.P. DE JURÍDICO EN \"AZTAHUACAN\"",
+		"direccion_general_id" : 3,
+		"activo" : 1
+	},
+	{
+		"id" : 33,
+		"nombre" : "J.U.D. DE DESARROLLO SOCIAL, PLANEACIÓN Y PARTICIPACION CIUDADANA EN \"AZTAUACAN\"",
+		"direccion_general_id" : 3,
+		"activo" : 1
+	},
+	{
+		"id" : 34,
+		"nombre" : "L.C.P. DE PARTICIPACION CIUDADANA EN \"AZTAHUACAN\"",
+		"direccion_general_id" : 3,
+		"activo" : 1
+	},
+	{
+		"id" : 35,
+		"nombre" : "L.C.P. DE CULTURA EN \"AZTAHUACAN\"",
+		"direccion_general_id" : 3,
+		"activo" : 1
+	},
+	{
+		"id" : 36,
+		"nombre" : "J.U.D. DE OBRAS Y SERVICIOS EN \"AZTAHUACAN\"",
+		"direccion_general_id" : 3,
+		"activo" : 1
+	},
+	{
+		"id" : 37,
+		"nombre" : "L.C.P. DE OBRAS Y SERVICIOS \"A\" EN \"AZTAHUACAN\"",
+		"direccion_general_id" : 3,
+		"activo" : 1
+	},
+	{
+		"id" : 38,
+		"nombre" : "L.C.P. DE OBRAS Y SERVICIOS \"B\" EN \"AZTAHUACAN\"",
+		"direccion_general_id" : 3,
+		"activo" : 1
+	},
+	{
+		"id" : 39,
+		"nombre" : "L.C.P. DE OBRAS Y SERVICIOS \"C\" EN \"AZTAHUACAN\"",
+		"direccion_general_id" : 3,
+		"activo" : 1
+	},
+	{
+		"id" : 40,
+		"nombre" : "L.C.P. DE OBRAS Y SERVICIOS \"D\" EN \"AZTAHUACAN\"",
+		"direccion_general_id" : 3,
+		"activo" : 1
+	},
+	{
+		"id" : 41,
+		"nombre" : "L.C.P. DE IMAGEN URBANA",
+		"direccion_general_id" : 3,
+		"activo" : 0
+	},
+	{
+		"id" : 42,
+		"nombre" : "L.C.P. DE EVALUACIÓN Y ATENCIÓN A GRIETAS EN \"AZTAHUACAN\"",
+		"direccion_general_id" : 3,
+		"activo" : 1
+	},
+	{
+		"id" : 43,
+		"nombre" : "DIRECCION TERRITORIAL CABEZA DE JUAREZ",
+		"direccion_general_id" : 4,
+		"activo" : 1
+	},
+	{
+		"id" : 44,
+		"nombre" : "L.C.P. DE ADMINISTRACION EN \"CABEZA DE JUÁREZ\"",
+		"direccion_general_id" : 4,
+		"activo" : 1
+	},
+	{
+		"id" : 45,
+		"nombre" : "J.U.D. DE JURÍDICO Y DE SERVICIOS LEGALES EN \"CABEZA DE JUÁREZ\"",
+		"direccion_general_id" : 4,
+		"activo" : 1
+	},
+	{
+		"id" : 46,
+		"nombre" : "L.C.P. DE JURÍDICO EN \"CABEZA DE JUÁREZ\"",
+		"direccion_general_id" : 4,
+		"activo" : 1
+	},
+	{
+		"id" : 47,
+		"nombre" : "J.U.D. DE DESARROLLO SOCIAL, PLANEACIÓN Y PARTICIPACION CIUDADANA EN \"CABEZA DE JUÁREZ\"",
+		"direccion_general_id" : 4,
+		"activo" : 1
+	},
+	{
+		"id" : 48,
+		"nombre" : "L.C.P. DE PARTICIPACION CIUDADANA EN \"CABEZA DE JUÁREZ\"",
+		"direccion_general_id" : 4,
+		"activo" : 1
+	},
+	{
+		"id" : 49,
+		"nombre" : "L.C.P. DE CULTURA EN \"CABEZA DE JUÁREZ\"",
+		"direccion_general_id" : 4,
+		"activo" : 1
+	},
+	{
+		"id" : 50,
+		"nombre" : "J.U.D. DE OBRAS Y SERVICIOS EN \"CABEZA DE JUÁREZ\"",
+		"direccion_general_id" : 4,
+		"activo" : 1
+	},
+	{
+		"id" : 51,
+		"nombre" : "L.C.P. DE OBRAS Y SERVICIOS \"A\" EN \"CABEZA DE JUÁREZ\"",
+		"direccion_general_id" : 4,
+		"activo" : 1
+	},
+	{
+		"id" : 52,
+		"nombre" : "L.C.P. DE OBRAS Y SERVICIOS \"B\" EN \"CABEZA DE JUÁREZ\"",
+		"direccion_general_id" : 4,
+		"activo" : 1
+	},
+	{
+		"id" : 53,
+		"nombre" : "L.C.P. DE OBRAS Y SERVICIOS \"C\" EN \"CABEZA DE JUÁREZ\"",
+		"direccion_general_id" : 4,
+		"activo" : 1
+	},
+	{
+		"id" : 54,
+		"nombre" : "L.C.P. DE OBRAS Y SERVICIOS \"D\" EN \"CABEZA DE JUÁREZ\"",
+		"direccion_general_id" : 4,
+		"activo" : 1
+	},
+	{
+		"id" : 55,
+		"nombre" : "L.C.P. DE SERVICIOS",
+		"direccion_general_id" : 4,
+		"activo" : 0
+	},
+	{
+		"id" : 56,
+		"nombre" : "L.C.P. DE EVALUACIÓN Y ATENCIÓN A GRIETAS EN \"CABEZA DE JUÁREZ\"",
+		"direccion_general_id" : 4,
+		"activo" : 1
+	},
+	{
+		"id" : 57,
+		"nombre" : "DIRECCION TERRITORIAL ANGELES AGRARISTA",
+		"direccion_general_id" : 5,
+		"activo" : 1
+	},
+	{
+		"id" : 58,
+		"nombre" : "L.C.P. DE ADMINISTRACION EN \"ÁNGELES AGRARISTA\"",
+		"direccion_general_id" : 5,
+		"activo" : 1
+	},
+	{
+		"id" : 59,
+		"nombre" : "J.U.D. DE JURÍDICO Y DE SERVICIOS LEGALES  EN \"ÁNGELES AGRARISTA\"",
+		"direccion_general_id" : 5,
+		"activo" : 1
+	},
+	{
+		"id" : 60,
+		"nombre" : "L.C.P. DE JURÍDICO EN \"ÁNGELES AGRARISTA\"",
+		"direccion_general_id" : 5,
+		"activo" : 1
+	},
+	{
+		"id" : 61,
+		"nombre" : "J.U.D. DE DESARROLLO SOCIAL, PLANEACIÓN Y PARTICIPACION CIUDADANA EN \"ÁNGELES AGRARISTA\"",
+		"direccion_general_id" : 5,
+		"activo" : 1
+	},
+	{
+		"id" : 62,
+		"nombre" : "L.C.P. DE PARTICIPACION CIUDADANA EN \"ÁNGELES AGRARISTA\"",
+		"direccion_general_id" : 5,
+		"activo" : 1
+	},
+	{
+		"id" : 63,
+		"nombre" : "L.C.P. DE PROYECTOS DE CULTURA EN \"ÁNGELES AGRARISTA\"",
+		"direccion_general_id" : 5,
+		"activo" : 1
+	},
+	{
+		"id" : 64,
+		"nombre" : "J.U.D. DE OBRAS Y SERVICIOS EN \"ÁNGELES AGRARISTA\"",
+		"direccion_general_id" : 5,
+		"activo" : 1
+	},
+	{
+		"id" : 65,
+		"nombre" : "L.C.P. DE OBRAS Y SERVICIOS \"A\" EN ÁNGELES AGRARISTA\"",
+		"direccion_general_id" : 5,
+		"activo" : 1
+	},
+	{
+		"id" : 66,
+		"nombre" : "L.C.P. DE OBRAS Y SERVICIOS \"B\" EN ÁNGELES AGRARISTA\"",
+		"direccion_general_id" : 5,
+		"activo" : 1
+	},
+	{
+		"id" : 67,
+		"nombre" : "L.C.P. DE OBRAS Y SERVICIOS \"C\" EN ÁNGELES AGRARISTA\"",
+		"direccion_general_id" : 5,
+		"activo" : 1
+	},
+	{
+		"id" : 68,
+		"nombre" : "L.C.P. DE OBRAS Y SERVICIOS \"D\" EN ÁNGELES AGRARISTA\"",
+		"direccion_general_id" : 5,
+		"activo" : 1
+	},
+	{
+		"id" : 69,
+		"nombre" : "L.C.P. DE SERVICIOS",
+		"direccion_general_id" : 5,
+		"activo" : 0
+	},
+	{
+		"id" : 70,
+		"nombre" : "L.C.P. DE EVALUACIÓN Y ATENCIÓN A GRIETAS EN \"ÁNGELES AGRARISTA\"",
+		"direccion_general_id" : 5,
+		"activo" : 1
+	},
+	{
+		"id" : 71,
+		"nombre" : "DIRECCION TERRITORIAL TEZONCO",
+		"direccion_general_id" : 6,
+		"activo" : 1
+	},
+	{
+		"id" : 72,
+		"nombre" : "L.C.P. DE ADMINISTRACION EN \"TEZONCO\"",
+		"direccion_general_id" : 6,
+		"activo" : 1
+	},
+	{
+		"id" : 73,
+		"nombre" : "J.U.D. DE JURÍDICO Y DE SERVICIOS LEGALES EN \"TEZONCO\"",
+		"direccion_general_id" : 6,
+		"activo" : 1
+	},
+	{
+		"id" : 74,
+		"nombre" : "L.C.P. DE JURÍDICO EN \"TEZONCO\"",
+		"direccion_general_id" : 6,
+		"activo" : 1
+	},
+	{
+		"id" : 75,
+		"nombre" : "J.U.D. DE DESARROLLO SOCIAL, PLANEACIÓN Y PARTICIPACION CIUDADANA EN \"TEZONCO\"",
+		"direccion_general_id" : 6,
+		"activo" : 1
+	},
+	{
+		"id" : 76,
+		"nombre" : "L.C.P. DE PARTICIPACION CIUDADANA EN \"TEZONCO\"",
+		"direccion_general_id" : 6,
+		"activo" : 1
+	},
+	{
+		"id" : 77,
+		"nombre" : "L.C.P. DE CULTURA EN \"TEZONCO\"",
+		"direccion_general_id" : 6,
+		"activo" : 1
+	},
+	{
+		"id" : 78,
+		"nombre" : "J.U.D. DE OBRAS Y SERVICIOS EN \"TEZONCO\"",
+		"direccion_general_id" : 6,
+		"activo" : 1
+	},
+	{
+		"id" : 79,
+		"nombre" : "L.C.P. DE OBRAS Y SERVICIOS \"A\" EN \"TEZONCO\"",
+		"direccion_general_id" : 6,
+		"activo" : 1
+	},
+	{
+		"id" : 80,
+		"nombre" : "L.C.P. DE OBRAS Y SERVICIOS \"B\" EN \"TEZONCO\"",
+		"direccion_general_id" : 6,
+		"activo" : 1
+	},
+	{
+		"id" : 81,
+		"nombre" : "L.C.P. DE OBRAS Y SERVICIOS \"C\" EN \"TEZONCO\"",
+		"direccion_general_id" : 6,
+		"activo" : 1
+	},
+	{
+		"id" : 82,
+		"nombre" : "L.C.P. DE OBRAS Y SERVICIOS \"D\" EN \"TEZONCO\"",
+		"direccion_general_id" : 6,
+		"activo" : 1
+	},
+	{
+		"id" : 83,
+		"nombre" : "L.C.P. DE SERVICIOS",
+		"direccion_general_id" : 6,
+		"activo" : 0
+	},
+	{
+		"id" : 84,
+		"nombre" : "L.C.P. DE EVALUACIÓN Y ATENCIÓN A GRIETAS EN \"TEZONCO\"",
+		"direccion_general_id" : 6,
+		"activo" : 1
+	},
+	{
+		"id" : 85,
+		"nombre" : "DIRECCION TERRITORIAL SANTA CRUZ QUETZALCOATL",
+		"direccion_general_id" : 7,
+		"activo" : 1
+	},
+	{
+		"id" : 86,
+		"nombre" : "DIRECCION TERRITORIAL ACAHUALTEPEC TEOTONGO",
+		"direccion_general_id" : 8,
+		"activo" : 1
+	},
+	{
+		"id" : 87,
+		"nombre" : "L.C.P. DE ADMINISTRACION EN \"ACAHUALTEPEC TEOTONGO\"",
+		"direccion_general_id" : 8,
+		"activo" : 1
+	},
+	{
+		"id" : 88,
+		"nombre" : "J.U.D. DE JURÍDICO Y DE SERVICIOS LEGALES EN \"ACAHUALTEPEC TEOTONGO\"",
+		"direccion_general_id" : 8,
+		"activo" : 1
+	},
+	{
+		"id" : 89,
+		"nombre" : "L.C.P. DE JURÍDICO EN \"ACAHUALTEPEC TEOTONGO\"",
+		"direccion_general_id" : 8,
+		"activo" : 1
+	},
+	{
+		"id" : 90,
+		"nombre" : "J.U.D. DE DESARROLLO SOCIAL, PLANEACIÓN Y PARTICIPACION CIUDADANA EN \"ACAHUALTEPEC TEOTONGO\"",
+		"direccion_general_id" : 8,
+		"activo" : 1
+	},
+	{
+		"id" : 91,
+		"nombre" : "L.C.P. DE PARTICIPACION CIUDADANA EN \"ACAHUALTEPEC TEOTONGO\"",
+		"direccion_general_id" : 8,
+		"activo" : 1
+	},
+	{
+		"id" : 92,
+		"nombre" : "L.C.P. DE CULTURA EN \"ACAHUALTEPEC TEOTONGO\"",
+		"direccion_general_id" : 8,
+		"activo" : 1
+	},
+	{
+		"id" : 93,
+		"nombre" : "J.U.D. DE OBRAS Y SERVICIOS EN \"ACAHUALTEPEC TEOTONGO\"",
+		"direccion_general_id" : 8,
+		"activo" : 1
+	},
+	{
+		"id" : 94,
+		"nombre" : "L.C.P. DE OBRAS Y SERVICIOS \"A\" EN \"ACAHUALTEPEC TEOTONGO\"",
+		"direccion_general_id" : 8,
+		"activo" : 1
+	},
+	{
+		"id" : 95,
+		"nombre" : "L.C.P. DE OBRAS Y SERVICIOS \"B\" EN \"ACAHUALTEPEC TEOTONGO\"",
+		"direccion_general_id" : 8,
+		"activo" : 1
+	},
+	{
+		"id" : 96,
+		"nombre" : "L.C.P. DE OBRAS Y SERVICIOS \"C\" EN \"ACAHUALTEPEC TEOTONGO\"",
+		"direccion_general_id" : 8,
+		"activo" : 1
+	},
+	{
+		"id" : 97,
+		"nombre" : "L.C.P. DE OBRAS Y SERVICIOS \"D\" EN \"ACAHUALTEPEC TEOTONGO\"",
+		"direccion_general_id" : 8,
+		"activo" : 1
+	},
+	{
+		"id" : 98,
+		"nombre" : "L.C.P. DE SERVICIOS",
+		"direccion_general_id" : 8,
+		"activo" : 0
+	},
+	{
+		"id" : 99,
+		"nombre" : "DIRECCION TERRITORIAL SANTA CATARINA",
+		"direccion_general_id" : 9,
+		"activo" : 1
+	},
+	{
+		"id" : 100,
+		"nombre" : "L.C.P. DE ADMINISTRACION EN \"SANTA CATARINA\"",
+		"direccion_general_id" : 9,
+		"activo" : 1
+	},
+	{
+		"id" : 101,
+		"nombre" : "J.U.D. DE JURÍDICO Y DE SERVICIOS LEGALES EN \"SANTA CATARINA\"",
+		"direccion_general_id" : 9,
+		"activo" : 1
+	},
+	{
+		"id" : 102,
+		"nombre" : "L.C.P. DE JURÍDICO EN \"SANTA CATARINA\"",
+		"direccion_general_id" : 9,
+		"activo" : 1
+	},
+	{
+		"id" : 103,
+		"nombre" : "J.U.D. DE DESARROLLO SOCIAL, PLANEACIÓN Y PARTICIPACION CIUDADANA EN \"SANTA CATARINA\"",
+		"direccion_general_id" : 9,
+		"activo" : 1
+	},
+	{
+		"id" : 104,
+		"nombre" : "L.C.P. DE PARTICIPACION CIUDADANA EN \"SANTA CATARINA\"",
+		"direccion_general_id" : 9,
+		"activo" : 1
+	},
+	{
+		"id" : 105,
+		"nombre" : "L.C.P. DE CULTURA EN \"SANTA CATARINA\"",
+		"direccion_general_id" : 9,
+		"activo" : 1
+	},
+	{
+		"id" : 106,
+		"nombre" : "J.U.D. DE OBRAS Y SERVICIOS EN \"SANTA CATARINA\"",
+		"direccion_general_id" : 9,
+		"activo" : 1
+	},
+	{
+		"id" : 107,
+		"nombre" : "L.C.P. DE OBRAS Y SERVICIOS \"B\" EN \"SANTA CATARINA\"",
+		"direccion_general_id" : 9,
+		"activo" : 1
+	},
+	{
+		"id" : 108,
+		"nombre" : "L.C.P. DE OBRAS Y SERVICIOS \"C\" EN \"SANTA CATARINA\"",
+		"direccion_general_id" : 9,
+		"activo" : 1
+	},
+	{
+		"id" : 109,
+		"nombre" : "L.C.P. DE OBRAS Y SERVICIOS \"D\" EN \"SANTA CATARINA\"",
+		"direccion_general_id" : 9,
+		"activo" : 1
+	},
+	{
+		"id" : 110,
+		"nombre" : "L.C.P. DE SERVICIOS",
+		"direccion_general_id" : 9,
+		"activo" : 0
+	},
+	{
+		"id" : 111,
+		"nombre" : "DIRECCION TERRITORIAL ACULCO",
+		"direccion_general_id" : 10,
+		"activo" : 1
+	},
+	{
+		"id" : 112,
+		"nombre" : "L.C.P. DE ADMINISTRACION EN \"ACULCO\"",
+		"direccion_general_id" : 10,
+		"activo" : 1
+	},
+	{
+		"id" : 113,
+		"nombre" : "J.U.D. DE JURÍDICO Y DE SERVICIOS LEGALES EN \"ACULCO\"",
+		"direccion_general_id" : 10,
+		"activo" : 1
+	},
+	{
+		"id" : 114,
+		"nombre" : "L.C.P. DE JURÍDICO EN \"ACULCO\"",
+		"direccion_general_id" : 10,
+		"activo" : 1
+	},
+	{
+		"id" : 115,
+		"nombre" : "J.U.D. DE DESARROLLO SOCIAL, PLANEACIÓN Y PARTICIPACION CIUDADANA EN \"ACULCO\"",
+		"direccion_general_id" : 10,
+		"activo" : 1
+	},
+	{
+		"id" : 116,
+		"nombre" : "L.C.P. DE PARTICIPACION CIUDADANA EN \"ACULCO\"",
+		"direccion_general_id" : 10,
+		"activo" : 1
+	},
+	{
+		"id" : 117,
+		"nombre" : "L.C.P. DE CULTURA EN \"ACULCO\"",
+		"direccion_general_id" : 10,
+		"activo" : 1
+	},
+	{
+		"id" : 118,
+		"nombre" : "J.U.D. DE OBRAS Y SERVICIOS EN \"ACULCO\"",
+		"direccion_general_id" : 10,
+		"activo" : 1
+	},
+	{
+		"id" : 119,
+		"nombre" : "L.C.P. DE OBRAS Y SERVICIOS \"A\" EN \"ACULCO\"",
+		"direccion_general_id" : 10,
+		"activo" : 1
+	},
+	{
+		"id" : 120,
+		"nombre" : "L.C.P. DE OBRAS Y SERVICIOS \"B\" EN \"ACULCO\"",
+		"direccion_general_id" : 10,
+		"activo" : 1
+	},
+	{
+		"id" : 121,
+		"nombre" : "L.C.P. DE OBRAS Y SERVICIOS \"C\" EN \"ACULCO\"",
+		"direccion_general_id" : 10,
+		"activo" : 1
+	},
+	{
+		"id" : 122,
+		"nombre" : "L.C.P. DE OBRAS Y SERVICIOS \"D\" EN \"ACULCO\"",
+		"direccion_general_id" : 10,
+		"activo" : 1
+	},
+	{
+		"id" : 123,
+		"nombre" : "L.C.P. DE SERVICIOS",
+		"direccion_general_id" : 10,
+		"activo" : 1
+	},
+	{
+		"id" : 124,
+		"nombre" : "DIRECCION TERRITORIAL LOS CULHUACANES",
+		"direccion_general_id" : 11,
+		"activo" : 1
+	},
+	{
+		"id" : 125,
+		"nombre" : "L.C.P. DE ADMINISTRACION EN \"LOS CULHUACANES\"",
+		"direccion_general_id" : 11,
+		"activo" : 1
+	},
+	{
+		"id" : 126,
+		"nombre" : "J.U.D. DE JURÍDICO Y DE SERVICIOS LEGALES EN \"LOS CULHUACANES\"",
+		"direccion_general_id" : 11,
+		"activo" : 1
+	},
+	{
+		"id" : 127,
+		"nombre" : "L.C.P. DE JURÍDICO EN \"LOS CULHUACANES\"",
+		"direccion_general_id" : 11,
+		"activo" : 1
+	},
+	{
+		"id" : 128,
+		"nombre" : "J.U.D. DE DESARROLLO SOCIAL, PLANEACIÓN Y PARTICIPACION CIUDADANA EN \"LOS CULHUACANES\"",
+		"direccion_general_id" : 11,
+		"activo" : 1
+	},
+	{
+		"id" : 129,
+		"nombre" : "L.C.P. DE PARTICIPACION CIUDADANA EN \"LOS CULHUACANES\"",
+		"direccion_general_id" : 11,
+		"activo" : 1
+	},
+	{
+		"id" : 130,
+		"nombre" : "L.C.P. DE CULTURA EN \"LOS CULHUACANES\"",
+		"direccion_general_id" : 11,
+		"activo" : 1
+	},
+	{
+		"id" : 131,
+		"nombre" : "J.U.D. DE OBRAS Y SERVICIOS EN \"LOS CULHUACANES\"",
+		"direccion_general_id" : 11,
+		"activo" : 1
+	},
+	{
+		"id" : 132,
+		"nombre" : "L.C.P. DE OBRAS Y SERVICIOS \"A\" EN \"LOS CULHUACANES\"",
+		"direccion_general_id" : 11,
+		"activo" : 1
+	},
+	{
+		"id" : 133,
+		"nombre" : "L.C.P. DE OBRAS Y SERVICIOS \"B\" EN \"LOS CULHUACANES\"",
+		"direccion_general_id" : 11,
+		"activo" : 1
+	},
+	{
+		"id" : 134,
+		"nombre" : "L.C.P. DE OBRAS Y SERVICIOS \"C\" EN \"LOS CULHUACANES\"",
+		"direccion_general_id" : 11,
+		"activo" : 1
+	},
+	{
+		"id" : 135,
+		"nombre" : "L.C.P. DE OBRAS Y SERVICIOS \"D\" EN \"LOS CULHUACANES\"",
+		"direccion_general_id" : 11,
+		"activo" : 1
+	},
+	{
+		"id" : 136,
+		"nombre" : "L.C.P. DE SERVICIOS",
+		"direccion_general_id" : 11,
+		"activo" : 0
+	},
+	{
+		"id" : 137,
+		"nombre" : "DIRECCION TERRITORIAL ESTRELLA HUIZACHEPETL",
+		"direccion_general_id" : 12,
+		"activo" : 1
+	},
+	{
+		"id" : 138,
+		"nombre" : "L.C.P. DE ADMINISTRACION EN \"ESTRELLA HUIZACHEPETL\"",
+		"direccion_general_id" : 12,
+		"activo" : 1
+	},
+	{
+		"id" : 139,
+		"nombre" : "J.U.D. DE JURÍDICO Y DE SERVICIOS LEGALES EN \"ESTRELLA HUIZACHEPETL\"",
+		"direccion_general_id" : 12,
+		"activo" : 1
+	},
+	{
+		"id" : 140,
+		"nombre" : "L.C.P. DE JURÍDICO EN \"ESTRELLA HUIZACHEPETL\"",
+		"direccion_general_id" : 12,
+		"activo" : 1
+	},
+	{
+		"id" : 141,
+		"nombre" : "J.U.D. DE DESARROLLO SOCIAL, PLANEACIÓN Y PARTICIPACION CIUDADANA EN \"ESTRELLA HUIZACHEPETL\"",
+		"direccion_general_id" : 12,
+		"activo" : 1
+	},
+	{
+		"id" : 142,
+		"nombre" : "L.C.P. DE PARTICIPACION CIUDADANA EN \"ESTRELLA HUIZACHEPETL\"",
+		"direccion_general_id" : 12,
+		"activo" : 1
+	},
+	{
+		"id" : 143,
+		"nombre" : "L.C.P. DE CULTURA EN \"ESTRELLA HUIZACHEPETL\"",
+		"direccion_general_id" : 12,
+		"activo" : 1
+	},
+	{
+		"id" : 144,
+		"nombre" : "J.U.D. DE OBRAS Y SERVICIOS EN \"ESTRELLA HUIZACHEPETL\"",
+		"direccion_general_id" : 12,
+		"activo" : 1
+	},
+	{
+		"id" : 145,
+		"nombre" : "L.C.P. DE OBRAS Y SERVICIOS \"A\" EN \"ESTRELLA HUIZACHEPETL\"",
+		"direccion_general_id" : 12,
+		"activo" : 1
+	},
+	{
+		"id" : 146,
+		"nombre" : "L.C.P. DE OBRAS Y SERVICIOS \"B\" EN \"ESTRELLA HUIZACHEPETL\"",
+		"direccion_general_id" : 12,
+		"activo" : 1
+	},
+	{
+		"id" : 147,
+		"nombre" : "L.C.P. DE OBRAS Y SERVICIOS \"C\" EN \"ESTRELLA HUIZACHEPETL\"",
+		"direccion_general_id" : 12,
+		"activo" : 1
+	},
+	{
+		"id" : 148,
+		"nombre" : "L.C.P. DE OBRAS Y SERVICIOS \"D\" EN \"ESTRELLA HUIZACHEPETL\"",
+		"direccion_general_id" : 12,
+		"activo" : 1
+	},
+	{
+		"id" : 149,
+		"nombre" : "L.C.P. DE SERVICIOS",
+		"direccion_general_id" : 12,
+		"activo" : 0
+	},
+	{
+		"id" : 150,
+		"nombre" : "DIRECCION TERRITORIAL REFORMA",
+		"direccion_general_id" : 13,
+		"activo" : 1
+	},
+	{
+		"id" : 151,
+		"nombre" : "L.C.P. DE ADMINISTRACION EN \"REFORMA\"",
+		"direccion_general_id" : 13,
+		"activo" : 1
+	},
+	{
+		"id" : 152,
+		"nombre" : "J.U.D. DE JURÍDICO Y DE SERVICIOS LEGALES EN \"REFORMA\"",
+		"direccion_general_id" : 13,
+		"activo" : 1
+	},
+	{
+		"id" : 153,
+		"nombre" : "L.C.P. DE JURÍDICO EN \"REFORMA\"",
+		"direccion_general_id" : 13,
+		"activo" : 1
+	},
+	{
+		"id" : 154,
+		"nombre" : "J.U.D. DE DESARROLLO SOCIAL, PLANEACIÓN Y PARTICIPACION CIUDADANA EN \"REFORMA\"",
+		"direccion_general_id" : 13,
+		"activo" : 1
+	},
+	{
+		"id" : 155,
+		"nombre" : "L.C.P. DE DE PARTICIPACION CIUDADANA EN \"REFORMA\"",
+		"direccion_general_id" : 13,
+		"activo" : 1
+	},
+	{
+		"id" : 156,
+		"nombre" : "L.C.P. DE CULTURA EN \"REFORMA\"",
+		"direccion_general_id" : 13,
+		"activo" : 1
+	},
+	{
+		"id" : 157,
+		"nombre" : "J.U.D. DE OBRAS Y SERVICIOS EN \"REFORMA\"",
+		"direccion_general_id" : 13,
+		"activo" : 1
+	},
+	{
+		"id" : 158,
+		"nombre" : "L.C.P. DE OBRAS Y SERVICIOS \"A\" EN \"REFORMA\"",
+		"direccion_general_id" : 13,
+		"activo" : 1
+	},
+	{
+		"id" : 159,
+		"nombre" : "L.C.P. DE OBRAS Y SERVICIOS \"B\" EN \"REFORMA\"",
+		"direccion_general_id" : 13,
+		"activo" : 1
+	},
+	{
+		"id" : 160,
+		"nombre" : "L.C.P. DE OBRAS Y SERVICIOS \"C\" EN \"REFORMA\"",
+		"direccion_general_id" : 13,
+		"activo" : 1
+	},
+	{
+		"id" : 161,
+		"nombre" : "L.C.P. DE OBRAS Y SERVICIOS \"D\" EN \"REFORMA\"",
+		"direccion_general_id" : 13,
+		"activo" : 1
+	},
+	{
+		"id" : 162,
+		"nombre" : "L.C.P. DE SERVICIOS",
+		"direccion_general_id" : 13,
+		"activo" : 0
+	},
+	{
+		"id" : 163,
+		"nombre" : "DIRECCION TERRITORIAL ATLALILCO AXOMULCO",
+		"direccion_general_id" : 14,
+		"activo" : 1
+	},
+	{
+		"id" : 164,
+		"nombre" : "L.C.P. DE ADMINISTRACION EN \"ATLALILCO AXOMULCO\"",
+		"direccion_general_id" : 14,
+		"activo" : 1
+	},
+	{
+		"id" : 165,
+		"nombre" : "J.U.D. DE JURÍDICO Y DE SERVICIOS LEGALES EN \"ATLALILCO AXOMULCO\"",
+		"direccion_general_id" : 14,
+		"activo" : 1
+	},
+	{
+		"id" : 166,
+		"nombre" : "L.C.P. DE JURÍDICO EN \"ATLALILCO AXOMULCO\"",
+		"direccion_general_id" : 14,
+		"activo" : 1
+	},
+	{
+		"id" : 167,
+		"nombre" : "SUBDIRECCIÓN DE DESARROLLO SOCIAL, PLANEACIÓN Y PARTICIPACIÓN CIUDADANA.",
+		"direccion_general_id" : 14,
+		"activo" : 0
+	},
+	{
+		"id" : 168,
+		"nombre" : "L.C.P. DE PARTICIPACIÓN CIUDADANA",
+		"direccion_general_id" : 14,
+		"activo" : 0
+	},
+	{
+		"id" : 169,
+		"nombre" : "L.C.P. DE CULTURA EN ATLALILCO AXOMULCO\"",
+		"direccion_general_id" : 14,
+		"activo" : 1
+	},
+	{
+		"id" : 170,
+		"nombre" : "J.U.D. DE OBRAS Y SERVICIOS EN \"ATLALILCO AXOMULCO\"",
+		"direccion_general_id" : 14,
+		"activo" : 1
+	},
+	{
+		"id" : 171,
+		"nombre" : "L.C.P. DE OBRAS Y SERVICIOS \"A\" EN \"ATLALILCO AXOMULCO\"",
+		"direccion_general_id" : 14,
+		"activo" : 1
+	},
+	{
+		"id" : 172,
+		"nombre" : "L.C.P. DE OBRAS Y SERVICIOS \"B\" EN \"ATLALILCO AXOMULCO\"",
+		"direccion_general_id" : 14,
+		"activo" : 1
+	},
+	{
+		"id" : 173,
+		"nombre" : "L.C.P. DE OBRAS Y SERVICIOS \"C\" EN \"ATLALILCO AXOMULCO\"",
+		"direccion_general_id" : 14,
+		"activo" : 1
+	},
+	{
+		"id" : 174,
+		"nombre" : "L.C.P. DE OBRAS Y SERVICIOS \"D\" EN \"ATLALILCO AXOMULCO\"",
+		"direccion_general_id" : 14,
+		"activo" : 1
+	},
+	{
+		"id" : 175,
+		"nombre" : "L.C.P. DE SERVICIOS",
+		"direccion_general_id" : 14,
+		"activo" : 0
+	},
+	{
+		"id" : 176,
+		"nombre" : "DIRECCION GENERAL JURIDICO",
+		"direccion_general_id" : 15,
+		"activo" : 1
+	},
+	{
+		"id" : 177,
+		"nombre" : "L.C.P. DE ADMINISTRACION",
+		"direccion_general_id" : 15,
+		"activo" : 1
+	},
+	{
+		"id" : 178,
+		"nombre" : "DIRECCION JURIDICO",
+		"direccion_general_id" : 15,
+		"activo" : 1
+	},
+	{
+		"id" : 179,
+		"nombre" : "SUBDIRECCIÓN DE TRAMITES",
+		"direccion_general_id" : 15,
+		"activo" : 1
+	},
+	{
+		"id" : 180,
+		"nombre" : "J.U.D. DE REGULARIZACION TERRITORIAL",
+		"direccion_general_id" : 15,
+		"activo" : 1
+	},
+	{
+		"id" : 181,
+		"nombre" : "J.U.D. DE ANALISIS Y PROCEDIMIENTO DE RECUPERACIÓN",
+		"direccion_general_id" : 15,
+		"activo" : 1
+	},
+	{
+		"id" : 182,
+		"nombre" : "SUBDIRECCIÓN DE SERVICIOS LEGALES",
+		"direccion_general_id" : 15,
+		"activo" : 1
+	},
+	{
+		"id" : 183,
+		"nombre" : "J.U.D. DE AMPAROS Y CONTENCIOSO",
+		"direccion_general_id" : 15,
+		"activo" : 1
+	},
+	{
+		"id" : 184,
+		"nombre" : "J.U.D. DE CONTRATOS Y ASESORIA JURIDICA",
+		"direccion_general_id" : 15,
+		"activo" : 1
+	},
+	{
+		"id" : 185,
+		"nombre" : "SUBDIRECCIÓN DE VERIFICACION Y REGLAMENTOS",
+		"direccion_general_id" : 15,
+		"activo" : 1
+	},
+	{
+		"id" : 186,
+		"nombre" : "J.U.D. DE VERIFICACION",
+		"direccion_general_id" : 15,
+		"activo" : 1
+	},
+	{
+		"id" : 187,
+		"nombre" : "L.C.P. DE ESTABLECIMIENTOS MERCANTILES",
+		"direccion_general_id" : 15,
+		"activo" : 1
+	},
+	{
+		"id" : 188,
+		"nombre" : "SUBDIRECCIÓN DE MODERNIZACION ADMINISTRATIVA",
+		"direccion_general_id" : 15,
+		"activo" : 1
+	},
+	{
+		"id" : 189,
+		"nombre" : "L.C.P. DE CONTROL Y SEGUIMIENTO",
+		"direccion_general_id" : 15,
+		"activo" : 1
+	},
+	{
+		"id" : 190,
+		"nombre" : "SUBDIRECCIÓN DE ASESORIA JURIDICA Y MEDIOS ALTERNOS DE SOLUCION DE CONFLICTOS",
+		"direccion_general_id" : 15,
+		"activo" : 1
+	},
+	{
+		"id" : 191,
+		"nombre" : "J.U.D. DE ASESORIA JURIDICA",
+		"direccion_general_id" : 15,
+		"activo" : 1
+	},
+	{
+		"id" : 192,
+		"nombre" : "J.U.D. DE MEDIOS ALTERNOS DE SOLUCION DE CONFLICTOS",
+		"direccion_general_id" : 15,
+		"activo" : 1
+	},
+	{
+		"id" : 193,
+		"nombre" : "J.U.D. DE INFORMES",
+		"direccion_general_id" : 15,
+		"activo" : 1
+	},
+	{
+		"id" : 194,
+		"nombre" : "L.C.P. DE MODERNIZACION",
+		"direccion_general_id" : 15,
+		"activo" : 1
+	},
+	{
+		"id" : 195,
+		"nombre" : "DIRECCION GENERAL DE GOBIERNO Y PROTECCION CIUDADANA",
+		"direccion_general_id" : 16,
+		"activo" : 1
+	},
+	{
+		"id" : 196,
+		"nombre" : "J.U.D. DE ADMINISTRACION",
+		"direccion_general_id" : 16,
+		"activo" : 1
+	},
+	{
+		"id" : 197,
+		"nombre" : "J.U.D. DE OPERATIVOS",
+		"direccion_general_id" : 16,
+		"activo" : 1
+	},
+	{
+		"id" : 198,
+		"nombre" : "L.C.P. DE SUPERVISION Y VIGILANCIA",
+		"direccion_general_id" : 16,
+		"activo" : 1
+	},
+	{
+		"id" : 199,
+		"nombre" : "J.U.D. DE PUEBLOS Y BARRIOS",
+		"direccion_general_id" : 16,
+		"activo" : 1
+	},
+	{
+		"id" : 200,
+		"nombre" : "COORDINACION DE MERCADOS Y VIA PUBLICA",
+		"direccion_general_id" : 16,
+		"activo" : 1
+	},
+	{
+		"id" : 201,
+		"nombre" : "J.U.D. DE MERCADOS Y TIANGUIS",
+		"direccion_general_id" : 16,
+		"activo" : 1
+	},
+	{
+		"id" : 202,
+		"nombre" : "L.C.P. DE VIA PUBLICA",
+		"direccion_general_id" : 16,
+		"activo" : 1
+	},
+	{
+		"id" : 203,
+		"nombre" : "SUBDIRECCIÓN DE SERVICIOS DE GOBIERNO Y MOVILIDAD",
+		"direccion_general_id" : 16,
+		"activo" : 1
+	},
+	{
+		"id" : 204,
+		"nombre" : "J.U.D. DE ESPECTACULOS PUBLICOS",
+		"direccion_general_id" : 16,
+		"activo" : 1
+	},
+	{
+		"id" : 205,
+		"nombre" : "J.U.D. DE MOVILIDAD",
+		"direccion_general_id" : 16,
+		"activo" : 1
+	},
+	{
+		"id" : 206,
+		"nombre" : "J.U.D. DE PANTEONES Y SERVICIOS FUNERARIOS",
+		"direccion_general_id" : 16,
+		"activo" : 1
+	},
+	{
+		"id" : 207,
+		"nombre" : "COORDINACIÓN DE CONCERTACION Y OPERATIVOS",
+		"direccion_general_id" : 16,
+		"activo" : 1
+	},
+	{
+		"id" : 208,
+		"nombre" : "J.U.D. DE ATENCION A ORGANIZACIONES",
+		"direccion_general_id" : 16,
+		"activo" : 1
+	},
+	{
+		"id" : 209,
+		"nombre" : "L.C.P. DE ATENCIÓN A REPRESENTACIONES CIUDADANAS",
+		"direccion_general_id" : 16,
+		"activo" : 1
+	},
+	{
+		"id" : 210,
+		"nombre" : "SUBDIRECCION DE CONCERTACION",
+		"direccion_general_id" : 16,
+		"activo" : 1
+	},
+	{
+		"id" : 211,
+		"nombre" : "SUBDIRECCION DE APOYO TECNICO",
+		"direccion_general_id" : 16,
+		"activo" : 1
+	},
+	{
+		"id" : 212,
+		"nombre" : "DIRECCION DE GOBIERNO",
+		"direccion_general_id" : 16,
+		"activo" : 1
+	},
+	{
+		"id" : 213,
+		"nombre" : "L.C.P. DE ESPECTACULOS PUBLICOS",
+		"direccion_general_id" : 16,
+		"activo" : 1
+	},
+	{
+		"id" : 214,
+		"nombre" : "L.C.P. DE PANTEONES",
+		"direccion_general_id" : 16,
+		"activo" : 1
+	},
+	{
+		"id" : 215,
+		"nombre" : "DIRECCION GENERAL DE INCLUSION Y BIENESTAR SOCIAL",
+		"direccion_general_id" : 17,
+		"activo" : 1
+	},
+	{
+		"id" : 216,
+		"nombre" : "J.U.D. DE ADMINISTRACION",
+		"direccion_general_id" : 17,
+		"activo" : 1
+	},
+	{
+		"id" : 217,
+		"nombre" : "COORDINACIÓN DE INCLUSIÓN A GRUPOS PRIORITARIOS",
+		"direccion_general_id" : 17,
+		"activo" : 1
+	},
+	{
+		"id" : 218,
+		"nombre" : "SUBDIRECCIÓN DE INCLUSIÓN SOCIAL",
+		"direccion_general_id" : 17,
+		"activo" : 1
+	},
+	{
+		"id" : 219,
+		"nombre" : "J.U.D. PARA EL DESARROLLO Y BIENESTAR DE LAS PERSONAS MAYORES Y PERSONAS CON DISCAPACIDAD",
+		"direccion_general_id" : 17,
+		"activo" : 1
+	},
+	{
+		"id" : 220,
+		"nombre" : "L.C.P. DE SEGUIMIENTO A PROGRAMAS PARA PERSONAS CON DISCAPACIDAD",
+		"direccion_general_id" : 17,
+		"activo" : 1
+	},
+	{
+		"id" : 221,
+		"nombre" : "J.U.D. DE PROMOCION DE LOS DERECHOS DE LAS NIÑAS, NIÑOS, JOVENES Y MUJERES",
+		"direccion_general_id" : 17,
+		"activo" : 1
+	},
+	{
+		"id" : 222,
+		"nombre" : "L.C.P. PARA LA ATENCIÓN DE PERSONAS USUARIAS DE SUSTANCIAS PSICOACTIVAS",
+		"direccion_general_id" : 17,
+		"activo" : 1
+	},
+	{
+		"id" : 223,
+		"nombre" : "J.U.D. DE PROMOCIÓN DE LOS DERECHOS DE LAS MUJERES Y  DE LA IGUALDAD SUSTANTIVA",
+		"direccion_general_id" : 17,
+		"activo" : 0
+	},
+	{
+		"id" : 224,
+		"nombre" : "L.C.P. DE SEGUIMIENTO A PROGRAMAS PARA LAS MUJERES",
+		"direccion_general_id" : 17,
+		"activo" : 1
+	},
+	{
+		"id" : 225,
+		"nombre" : "J.U.D. DE DE DIVERSIDAD",
+		"direccion_general_id" : 17,
+		"activo" : 1
+	},
+	{
+		"id" : 226,
+		"nombre" : "SUBDIRECCIÓN DE ESPACIOS COMUNITARIOS",
+		"direccion_general_id" : 17,
+		"activo" : 1
+	},
+	{
+		"id" : 227,
+		"nombre" : "J.U.D. DE CENTROS DE INCLUSIÓN SOCIAL \"A\"",
+		"direccion_general_id" : 17,
+		"activo" : 1
+	},
+	{
+		"id" : 228,
+		"nombre" : "J.U.D. DE CENTROS DE INCLUSIÓN SOCIAL \"B\"",
+		"direccion_general_id" : 17,
+		"activo" : 1
+	},
+	{
+		"id" : 229,
+		"nombre" : "COORDINACIÓN DE BIENESTAR SOCIAL",
+		"direccion_general_id" : 17,
+		"activo" : 1
+	},
+	{
+		"id" : 230,
+		"nombre" : "SUBDIRECCIÓN DE SALUD PÚBLICA",
+		"direccion_general_id" : 17,
+		"activo" : 1
+	},
+	{
+		"id" : 231,
+		"nombre" : "J.U.D. DE SALUD COMUNITARIA",
+		"direccion_general_id" : 17,
+		"activo" : 1
+	},
+	{
+		"id" : 232,
+		"nombre" : "L.C.P. DE PREVENCION",
+		"direccion_general_id" : 17,
+		"activo" : 1
+	},
+	{
+		"id" : 233,
+		"nombre" : "J.U.D. DE PROMOCION DE LA SALUD",
+		"direccion_general_id" : 17,
+		"activo" : 1
+	},
+	{
+		"id" : 234,
+		"nombre" : "L.C.P. DE ATENCIÓN A LOS ANIMALES",
+		"direccion_general_id" : 17,
+		"activo" : 1
+	},
+	{
+		"id" : 235,
+		"nombre" : "COORDINACIÓN DE DEPORTES",
+		"direccion_general_id" : 17,
+		"activo" : 1
+	},
+	{
+		"id" : 236,
+		"nombre" : "J.U.D. DE DEPORTE COMUNITARIO",
+		"direccion_general_id" : 17,
+		"activo" : 1
+	},
+	{
+		"id" : 237,
+		"nombre" : "L.C.P. DE PROGRAMACIÓN DEPORTIVA",
+		"direccion_general_id" : 17,
+		"activo" : 1
+	},
+	{
+		"id" : 238,
+		"nombre" : "L.C.P. DE SEGUIMIENTO DE ACCIONES DEPORTIVAS",
+		"direccion_general_id" : 17,
+		"activo" : 1
+	},
+	{
+		"id" : 239,
+		"nombre" : "J.U.D. DE ATENCIÓN A UNIDADES DEPORTIVAS",
+		"direccion_general_id" : 17,
+		"activo" : 1
+	},
+	{
+		"id" : 240,
+		"nombre" : "SUBDIRECCIÓN DE DESARROLLO EDUCATIVO",
+		"direccion_general_id" : 17,
+		"activo" : 1
+	},
+	{
+		"id" : 241,
+		"nombre" : "J.U.D. DE PROYECTOS EDUCATIVOS",
+		"direccion_general_id" : 17,
+		"activo" : 1
+	},
+	{
+		"id" : 242,
+		"nombre" : "J.U.D. DE PROGRAMAS EDUCATIVOS",
+		"direccion_general_id" : 17,
+		"activo" : 1
+	},
+	{
+		"id" : 243,
+		"nombre" : "DIRECCION GENERAL DE PLANEACION Y PARTICIPACION CIUDADANA",
+		"direccion_general_id" : 18,
+		"activo" : 1
+	},
+	{
+		"id" : 244,
+		"nombre" : "J.U.D. DE ADMINISTRACION",
+		"direccion_general_id" : 18,
+		"activo" : 1
+	},
+	{
+		"id" : 245,
+		"nombre" : "DIRECCIÓN DE PROGRAMAS SOCIALES",
+		"direccion_general_id" : 18,
+		"activo" : 1
+	},
+	{
+		"id" : 246,
+		"nombre" : "L.C.P. ADMINISTRATIVO DE PROGRAMAS SOCIALES",
+		"direccion_general_id" : 18,
+		"activo" : 1
+	},
+	{
+		"id" : 247,
+		"nombre" : "J.U.D. DE PROGRAMAS SOCIALES \"A\"",
+		"direccion_general_id" : 18,
+		"activo" : 1
+	},
+	{
+		"id" : 248,
+		"nombre" : "J.U.D. DE PROGRAMAS SOCIALES \"B\"",
+		"direccion_general_id" : 18,
+		"activo" : 1
+	},
+	{
+		"id" : 249,
+		"nombre" : "J.U.D. DE PROGRAMAS SOCIALES \"C\"",
+		"direccion_general_id" : 18,
+		"activo" : 1
+	},
+	{
+		"id" : 250,
+		"nombre" : "J.U.D. DE PROGRAMAS SOCIALES \"D\"",
+		"direccion_general_id" : 18,
+		"activo" : 1
+	},
+	{
+		"id" : 251,
+		"nombre" : "J.U.D. DE PROGRAMAS SOCIALES \"E\"",
+		"direccion_general_id" : 18,
+		"activo" : 1
+	},
+	{
+		"id" : 252,
+		"nombre" : "SUBDIRECCIÓN DE CENTROS DE SERVICIOS DE ATENCIÓN CIUDADANA",
+		"direccion_general_id" : 18,
+		"activo" : 1
+	},
+	{
+		"id" : 253,
+		"nombre" : "L.C.P. DE ATENCIÓN A TRAMITES \"A\"",
+		"direccion_general_id" : 18,
+		"activo" : 1
+	},
+	{
+		"id" : 254,
+		"nombre" : "L.C.P. DE ATENCIÓN A TRAMITES \"B\"",
+		"direccion_general_id" : 18,
+		"activo" : 1
+	},
+	{
+		"id" : 255,
+		"nombre" : "SUBDIRECCIÓN DE VENTANILLA UNICA",
+		"direccion_general_id" : 18,
+		"activo" : 1
+	},
+	{
+		"id" : 256,
+		"nombre" : "L.C.P. ATENCIÓN \"A\"",
+		"direccion_general_id" : 18,
+		"activo" : 1
+	},
+	{
+		"id" : 257,
+		"nombre" : "L.C.P. ATENCIÓN \"B\"",
+		"direccion_general_id" : 18,
+		"activo" : 1
+	},
+	{
+		"id" : 258,
+		"nombre" : "SUBDIRECCIÓN DE PARTICIPACION CIUDADANA",
+		"direccion_general_id" : 18,
+		"activo" : 1
+	},
+	{
+		"id" : 259,
+		"nombre" : "L.C.P. DE ANALISIS GEO ESTADISTICO",
+		"direccion_general_id" : 18,
+		"activo" : 1
+	},
+	{
+		"id" : 260,
+		"nombre" : "J.U.D. DE PLANEACIÓN PARTICIPATIVA",
+		"direccion_general_id" : 18,
+		"activo" : 1
+	},
+	{
+		"id" : 261,
+		"nombre" : "J.U.D. DE PARTICIPACION CIUDADANA",
+		"direccion_general_id" : 18,
+		"activo" : 1
+	},
+	{
+		"id" : 262,
+		"nombre" : "SUBDIRECCIÓN DE CONSTRUCCION DE CIUDADANIA",
+		"direccion_general_id" : 18,
+		"activo" : 1
+	},
+	{
+		"id" : 263,
+		"nombre" : "J.U.D. DE FORMACIÓN CIUDADANA",
+		"direccion_general_id" : 18,
+		"activo" : 1
+	},
+	{
+		"id" : 264,
+		"nombre" : "DIRECCION GENERAL DE OBRAS Y DESARROLLO URBANO",
+		"direccion_general_id" : 19,
+		"activo" : 1
+	},
+	{
+		"id" : 265,
+		"nombre" : "SUBDIRECCIÓN ADMINISTRATIVA",
+		"direccion_general_id" : 19,
+		"activo" : 1
+	},
+	{
+		"id" : 266,
+		"nombre" : "J.U.D. DE SEGUIMIENTO A AUDITORIAS",
+		"direccion_general_id" : 19,
+		"activo" : 1
+	},
+	{
+		"id" : 267,
+		"nombre" : "L.C.P. DE CONTROL Y SEGUIMIENTO DE RECURSOS DE OBRAS Y DESARROLLO URBANO",
+		"direccion_general_id" : 19,
+		"activo" : 1
+	},
+	{
+		"id" : 268,
+		"nombre" : "COORDINACIÓN DE OBRAS Y DESARROLLO URBANO",
+		"direccion_general_id" : 19,
+		"activo" : 1
+	},
+	{
+		"id" : 269,
+		"nombre" : "SUBDIRECCIÓN TECNICA",
+		"direccion_general_id" : 19,
+		"activo" : 1
+	},
+	{
+		"id" : 270,
+		"nombre" : "J.U.D. DE CONCURSOS, CONTRATOS Y ESTIMACIONES",
+		"direccion_general_id" : 19,
+		"activo" : 1
+	},
+	{
+		"id" : 271,
+		"nombre" : "J.U.D. DE AVANCE FISICO Y FINANCIERO DE OBRA PÚBLICA",
+		"direccion_general_id" : 19,
+		"activo" : 1
+	},
+	{
+		"id" : 272,
+		"nombre" : "SUBDIRECCIÓN DE SUPERVISION DE OBRAS",
+		"direccion_general_id" : 19,
+		"activo" : 1
+	},
+	{
+		"id" : 273,
+		"nombre" : "J.U.D. DE SUPERVISION DE OBRA \"A\"",
+		"direccion_general_id" : 19,
+		"activo" : 1
+	},
+	{
+		"id" : 274,
+		"nombre" : "J.U.D. DE SUPERVISION DE OBRA \"B\"",
+		"direccion_general_id" : 19,
+		"activo" : 1
+	},
+	{
+		"id" : 275,
+		"nombre" : "J.U.D. DE SUPERVISION DE OBRA \"C\"",
+		"direccion_general_id" : 19,
+		"activo" : 1
+	},
+	{
+		"id" : 276,
+		"nombre" : "J.U.D. DE SUPERVISIÓN DE OBRA",
+		"direccion_general_id" : 19,
+		"activo" : 0
+	},
+	{
+		"id" : 277,
+		"nombre" : "SUBDIRECCIÓN DE LICENCIAS Y USO DEL SUELO",
+		"direccion_general_id" : 19,
+		"activo" : 1
+	},
+	{
+		"id" : 278,
+		"nombre" : "J.U.D. DE NORMATIVIDAD Y DICTÁMENES",
+		"direccion_general_id" : 19,
+		"activo" : 1
+	},
+	{
+		"id" : 279,
+		"nombre" : "J.U.D. DE ORDENAMIENTO URBANO",
+		"direccion_general_id" : 19,
+		"activo" : 1
+	},
+	{
+		"id" : 280,
+		"nombre" : "COORDINACIÓN DE SERVICIOS Y MANTENIMIENTO",
+		"direccion_general_id" : 19,
+		"activo" : 1
+	},
+	{
+		"id" : 281,
+		"nombre" : "SUBDIRECCIÓN DE REHABILITACION, MANTENIMIENTO Y CONSTRUCCION",
+		"direccion_general_id" : 19,
+		"activo" : 1
+	},
+	{
+		"id" : 282,
+		"nombre" : "J.U.D. DE REHABILITACION, MANTENIMIENTO Y CONSTRUCCION",
+		"direccion_general_id" : 19,
+		"activo" : 1
+	},
+	{
+		"id" : 283,
+		"nombre" : "J.U.D. DE PARQUES Y JARDINES",
+		"direccion_general_id" : 19,
+		"activo" : 1
+	},
+	{
+		"id" : 284,
+		"nombre" : "J.U.D. DE OBRAS VÍALES",
+		"direccion_general_id" : 19,
+		"activo" : 1
+	},
+	{
+		"id" : 285,
+		"nombre" : "J.U.D. DE ALUMBRADO PUBLICO",
+		"direccion_general_id" : 19,
+		"activo" : 1
+	},
+	{
+		"id" : 286,
+		"nombre" : "J.U.D. DE INFRAESTRUCTURA Y EQUIPAMIENTO URBANO",
+		"direccion_general_id" : 19,
+		"activo" : 1
+	},
+	{
+		"id" : 287,
+		"nombre" : "SUBDIRECCIÓN DE PROYECTOS",
+		"direccion_general_id" : 19,
+		"activo" : 1
+	},
+	{
+		"id" : 288,
+		"nombre" : "J.U.D. DE ESTUDIOS Y PROYECTOS",
+		"direccion_general_id" : 19,
+		"activo" : 1
+	},
+	{
+		"id" : 289,
+		"nombre" : "J.U.D. TECNICA DE PROYECTOS",
+		"direccion_general_id" : 19,
+		"activo" : 1
+	},
+	{
+		"id" : 290,
+		"nombre" : "SUBDIRECCIÓN DEL CENTRO DE EVALUACIÓN DE RIESGOS",
+		"direccion_general_id" : 19,
+		"activo" : 1
+	},
+	{
+		"id" : 291,
+		"nombre" : "J.U.D. DE ESTUDIOS DE RIESGOS",
+		"direccion_general_id" : 19,
+		"activo" : 1
+	},
+	{
+		"id" : 292,
+		"nombre" : "J.U.D. DE ATENCIÓN A RIESGOS",
+		"direccion_general_id" : 19,
+		"activo" : 1
+	},
+	{
+		"id" : 293,
+		"nombre" : "DIRECCION GENERAL DE SERVICIOS URBANOS",
+		"direccion_general_id" : 20,
+		"activo" : 1
+	},
+	{
+		"id" : 294,
+		"nombre" : "J.U.D. DE ADMINISTRACION",
+		"direccion_general_id" : 20,
+		"activo" : 1
+	},
+	{
+		"id" : 295,
+		"nombre" : "COORDINACIÓN DE OPERACIÓN HIDRAULICA",
+		"direccion_general_id" : 20,
+		"activo" : 1
+	},
+	{
+		"id" : 296,
+		"nombre" : "SUBDIRECCIÓN DE AGUA POTABLE",
+		"direccion_general_id" : 20,
+		"activo" : 1
+	},
+	{
+		"id" : 297,
+		"nombre" : "J.U.D. DE SERVICIO DE AGUA POTABLE",
+		"direccion_general_id" : 20,
+		"activo" : 1
+	},
+	{
+		"id" : 298,
+		"nombre" : "J.U.D. DE CONSTRUCCION DE RED DE AGUA POTABLE",
+		"direccion_general_id" : 20,
+		"activo" : 1
+	},
+	{
+		"id" : 299,
+		"nombre" : "L.C.P. DE ATENCIÓN A FUGAS DE AGUA POTABLE",
+		"direccion_general_id" : 20,
+		"activo" : 1
+	},
+	{
+		"id" : 300,
+		"nombre" : "SUBDIRECCIÓN DE CONTROL Y EVALUACIÓN",
+		"direccion_general_id" : 20,
+		"activo" : 1
+	},
+	{
+		"id" : 301,
+		"nombre" : "J.U.D. DE EVALUACIÓN DE OBRAS",
+		"direccion_general_id" : 20,
+		"activo" : 1
+	},
+	{
+		"id" : 302,
+		"nombre" : "L.C.P. DE SEGUIMIENTO DE OBRA PÚBLICA",
+		"direccion_general_id" : 20,
+		"activo" : 1
+	},
+	{
+		"id" : 303,
+		"nombre" : "COORDINACIÓN DE SERVICIOS E IMAGEN URBANA",
+		"direccion_general_id" : 20,
+		"activo" : 1
+	},
+	{
+		"id" : 304,
+		"nombre" : "SUBDIRECCIÓN DE IMAGEN URBANA",
+		"direccion_general_id" : 20,
+		"activo" : 1
+	},
+	{
+		"id" : 305,
+		"nombre" : "J.U.D. DE RECOLECCION DE RESIDUOS SOLIDOS ZONA \"A\"",
+		"direccion_general_id" : 20,
+		"activo" : 1
+	},
+	{
+		"id" : 306,
+		"nombre" : "J.U.D. DE RECOLECCION DE RESIDUOS SOLIDOS ZONA \"B\"",
+		"direccion_general_id" : 20,
+		"activo" : 1
+	},
+	{
+		"id" : 307,
+		"nombre" : "SUBDIRECCIÓN DE SERVICIOS",
+		"direccion_general_id" : 20,
+		"activo" : 1
+	},
+	{
+		"id" : 308,
+		"nombre" : "J.U.D. DE CONSTRUCCION DE RED DE DRENAJE",
+		"direccion_general_id" : 20,
+		"activo" : 1
+	},
+	{
+		"id" : 309,
+		"nombre" : "J.U.D. DE SANEAMIENTO",
+		"direccion_general_id" : 20,
+		"activo" : 1
+	},
+	{
+		"id" : 310,
+		"nombre" : "DIRECCION GENERAL DE ADMINISTRACION",
+		"direccion_general_id" : 21,
+		"activo" : 1
+	},
+	{
+		"id" : 311,
+		"nombre" : "COORDINACIÓN DE ADQUISICIONES",
+		"direccion_general_id" : 21,
+		"activo" : 1
+	},
+	{
+		"id" : 312,
+		"nombre" : "J.U.D. DE CONCURSOS",
+		"direccion_general_id" : 21,
+		"activo" : 1
+	},
+	{
+		"id" : 313,
+		"nombre" : "J.U.D. DE ESTADÍSTICA E INVESTIGACIÓN",
+		"direccion_general_id" : 21,
+		"activo" : 1
+	},
+	{
+		"id" : 314,
+		"nombre" : "L.C.P. DE INTEGRACIÓN DE INFORMES",
+		"direccion_general_id" : 21,
+		"activo" : 1
+	},
+	{
+		"id" : 315,
+		"nombre" : "COORDINACIÓN DE INFORMÁTICA",
+		"direccion_general_id" : 21,
+		"activo" : 1
+	},
+	{
+		"id" : 316,
+		"nombre" : "J.U.D. DE DESARROLLO DE SISTEMAS",
+		"direccion_general_id" : 21,
+		"activo" : 1
+	},
+	{
+		"id" : 317,
+		"nombre" : "J.U.D. DE REDES, INTERNET E INTRANET Y SOPORTE TÉCNICO",
+		"direccion_general_id" : 21,
+		"activo" : 1
+	},
+	{
+		"id" : 318,
+		"nombre" : "COORDINACIÓN DE PLANEACIÓN E INTEGRACION DE INFORMES",
+		"direccion_general_id" : 21,
+		"activo" : 1
+	},
+	{
+		"id" : 319,
+		"nombre" : "L.C.P. DE ATENCIÓN A AUDITORIAS",
+		"direccion_general_id" : 21,
+		"activo" : 1
+	},
+	{
+		"id" : 320,
+		"nombre" : "L.C.P. DE VINCULACIÓN",
+		"direccion_general_id" : 21,
+		"activo" : 1
+	},
+	{
+		"id" : 321,
+		"nombre" : "COORDINACIÓN DE RECURSOS FINANCIEROS",
+		"direccion_general_id" : 21,
+		"activo" : 1
+	},
+	{
+		"id" : 322,
+		"nombre" : "J.U.D. DE CAJA",
+		"direccion_general_id" : 21,
+		"activo" : 1
+	},
+	{
+		"id" : 323,
+		"nombre" : "J.U.D. DE CONTABILIDAD",
+		"direccion_general_id" : 21,
+		"activo" : 1
+	},
+	{
+		"id" : 324,
+		"nombre" : "J.U.D. DE PRESUPUESTO",
+		"direccion_general_id" : 21,
+		"activo" : 1
+	},
+	{
+		"id" : 325,
+		"nombre" : "L.C.P. DE AFECTACIONES PRESUPUESTALES",
+		"direccion_general_id" : 21,
+		"activo" : 1
+	},
+	{
+		"id" : 326,
+		"nombre" : "L.C.P. DE MANEJOS DE CUENTAS",
+		"direccion_general_id" : 21,
+		"activo" : 1
+	},
+	{
+		"id" : 327,
+		"nombre" : "COORDINACIÓN ADMINISTRATIVA DE CAPITAL HUMANO",
+		"direccion_general_id" : 21,
+		"activo" : 1
+	},
+	{
+		"id" : 328,
+		"nombre" : "J.U.D. DE CAPACITACIÓN Y DESARROLLO DE PERSONAL",
+		"direccion_general_id" : 21,
+		"activo" : 1
+	},
+	{
+		"id" : 329,
+		"nombre" : "J.U.D. DE EMPLEO Y REGISTRO",
+		"direccion_general_id" : 21,
+		"activo" : 1
+	},
+	{
+		"id" : 330,
+		"nombre" : "J.U.D. DE MOVIMIENTOS DE PERSONAL",
+		"direccion_general_id" : 21,
+		"activo" : 1
+	},
+	{
+		"id" : 331,
+		"nombre" : "J.U.D. DE NOMINAS",
+		"direccion_general_id" : 21,
+		"activo" : 1
+	},
+	{
+		"id" : 332,
+		"nombre" : "J.U.D. DE PAGOS",
+		"direccion_general_id" : 21,
+		"activo" : 1
+	},
+	{
+		"id" : 333,
+		"nombre" : "J.U.D. DE RELACIONES LABORALES Y PRESTACIONES",
+		"direccion_general_id" : 21,
+		"activo" : 1
+	},
+	{
+		"id" : 334,
+		"nombre" : "COORDINACIÓN DE RECURSOS MATERIALES Y SERVICIOS GENERALES",
+		"direccion_general_id" : 21,
+		"activo" : 1
+	},
+	{
+		"id" : 335,
+		"nombre" : "J.U.D. DE ALMACENES E INVENTARIOS",
+		"direccion_general_id" : 21,
+		"activo" : 1
+	},
+	{
+		"id" : 336,
+		"nombre" : "J.U.D. DE CONTROL VEHICULAR",
+		"direccion_general_id" : 21,
+		"activo" : 1
+	},
+	{
+		"id" : 337,
+		"nombre" : "J.U.D. DE SERVICIOS GENERALES",
+		"direccion_general_id" : 21,
+		"activo" : 1
+	},
+	{
+		"id" : 338,
+		"nombre" : "J.U.D. DE APOYO TECNICO",
+		"direccion_general_id" : 21,
+		"activo" : 1
+	},
+	{
+		"id" : 339,
+		"nombre" : "L.C.P. FINANCIERO DE PROGRAMAS SOCIALES",
+		"direccion_general_id" : 21,
+		"activo" : 1
+	},
+	{
+		"id" : 340,
+		"nombre" : "L.C.P. DE SEGUIMIENTO FINANCIERO",
+		"direccion_general_id" : 21,
+		"activo" : 1
+	},
+	{
+		"id" : 341,
+		"nombre" : "J.U.D. DE TESORERIA",
+		"direccion_general_id" : 21,
+		"activo" : 1
+	},
+	{
+		"id" : 342,
+		"nombre" : "DIRECCIÓN EJECUTIVA DE CULTURA",
+		"direccion_general_id" : 22,
+		"activo" : 1
+	},
+	{
+		"id" : 343,
+		"nombre" : "J.U.D. DE ADMINISTRACION",
+		"direccion_general_id" : 22,
+		"activo" : 1
+	},
+	{
+		"id" : 344,
+		"nombre" : "J.U.D. DE PROMOCION Y TRADICION CULTURAL",
+		"direccion_general_id" : 22,
+		"activo" : 1
+	},
+	{
+		"id" : 345,
+		"nombre" : "L.C.P. DE TURISMO",
+		"direccion_general_id" : 22,
+		"activo" : 1
+	},
+	{
+		"id" : 346,
+		"nombre" : "L.C.P. DE SUPERVISION OPERATIVA DE RECINTOS",
+		"direccion_general_id" : 22,
+		"activo" : 1
+	},
+	{
+		"id" : 347,
+		"nombre" : "J.U.D. DE PROMOCION DE LECTURA",
+		"direccion_general_id" : 22,
+		"activo" : 1
+	},
+	{
+		"id" : 348,
+		"nombre" : "J.U.D. DE VINCULACION CULTURAL",
+		"direccion_general_id" : 22,
+		"activo" : 1
+	},
+	{
+		"id" : 349,
+		"nombre" : "L.C.P. DE SEGUIMIENTO CULTURAL",
+		"direccion_general_id" : 22,
+		"activo" : 1
+	},
+	{
+		"id" : 350,
+		"nombre" : "J.U.D. DE VINCULACION CON PUEBLOS INDIGENAS",
+		"direccion_general_id" : 22,
+		"activo" : 1
+	},
+	{
+		"id" : 351,
+		"nombre" : "DIRECCIÓN EJECUTIVA DE PROTECCION CIVIL",
+		"direccion_general_id" : 23,
+		"activo" : 1
+	},
+	{
+		"id" : 352,
+		"nombre" : "J.U.D. DE EMERGENCIAS",
+		"direccion_general_id" : 23,
+		"activo" : 1
+	},
+	{
+		"id" : 353,
+		"nombre" : "L.C.P. DE ATENCIÓN PRE HOSPITALARÍA",
+		"direccion_general_id" : 23,
+		"activo" : 1
+	},
+	{
+		"id" : 354,
+		"nombre" : "L.C.P. DE INCIDENTES URBANOS",
+		"direccion_general_id" : 23,
+		"activo" : 1
+	},
+	{
+		"id" : 355,
+		"nombre" : "J.U.D. DE PREVENCION",
+		"direccion_general_id" : 23,
+		"activo" : 1
+	},
+	{
+		"id" : 356,
+		"nombre" : "L.C.P. DE PROGRAMAS INTERNOS",
+		"direccion_general_id" : 23,
+		"activo" : 1
+	},
+	{
+		"id" : 357,
+		"nombre" : "L.C.P. DE CAPACITACION Y SIMULACROS",
+		"direccion_general_id" : 23,
+		"activo" : 1
+	},
+	{
+		"id" : 358,
+		"nombre" : "J.U.D. TECNICA DE EVALUACIÓN DE RIESGOS",
+		"direccion_general_id" : 23,
+		"activo" : 1
+	},
+	{
+		"id" : 359,
+		"nombre" : "L.C.P. DE VIVIENDA EN RIESGO",
+		"direccion_general_id" : 23,
+		"activo" : 1
+	},
+	{
+		"id" : 360,
+		"nombre" : "L.C.P. DE ADMINISTRACION",
+		"direccion_general_id" : 23,
+		"activo" : 1
+	},
+	{
+		"id" : 361,
+		"nombre" : "COORDINACION GENERAL DE SEGURIDAD PUBLICA",
+		"direccion_general_id" : 24,
+		"activo" : 1
+	},
+	{
+		"id" : 362,
+		"nombre" : "COORDINACION DE PLANEACION Y COMBATE A LA DELINCUENCIA",
+		"direccion_general_id" : 24,
+		"activo" : 1
+	},
+	{
+		"id" : 363,
+		"nombre" : "J.U.D. DE COMBATE A LA DELINCUENCIA",
+		"direccion_general_id" : 24,
+		"activo" : 1
+	},
+	{
+		"id" : 364,
+		"nombre" : "J.U.D. DE PLANEACION Y CONTROL",
+		"direccion_general_id" : 24,
+		"activo" : 1
+	},
+	{
+		"id" : 365,
+		"nombre" : "SUBDIRECCION DE SEGURIDAD VIAL Y PREVENCION DEL DELITO",
+		"direccion_general_id" : 24,
+		"activo" : 1
+	},
+	{
+		"id" : 366,
+		"nombre" : "J.U.D. DE CONTROL DE SEGURIDAD VIAL Y PREVENCION DEL DELITO",
+		"direccion_general_id" : 24,
+		"activo" : 1
+	},
+	{
+		"id" : 367,
+		"nombre" : "J.U.D. DE OPERACION Y COMBATE A LA IMPUNIDAD",
+		"direccion_general_id" : 24,
+		"activo" : 1
+	},
+	{
+		"id" : 368,
+		"nombre" : "DIRECCION EJECUTIVA DE DESARROLLO SUSTENTABLE",
+		"direccion_general_id" : 25,
+		"activo" : 1
+	},
+	{
+		"id" : 369,
+		"nombre" : "J.U.D. DE DESARROLLO ECONOMICO",
+		"direccion_general_id" : 25,
+		"activo" : 1
+	},
+	{
+		"id" : 370,
+		"nombre" : "L.C.P. DE DE PROMOCION AL EMPLEO",
+		"direccion_general_id" : 25,
+		"activo" : 1
+	},
+	{
+		"id" : 371,
+		"nombre" : "J.U.D. DE PREVENCION E IMPACTO AMBIENTAL",
+		"direccion_general_id" : 25,
+		"activo" : 1
+	},
+	{
+		"id" : 372,
+		"nombre" : "L.C.P. DE EDUCACION AMBIENTAL",
+		"direccion_general_id" : 25,
+		"activo" : 1
+	},
+	{
+		"id" : 373,
+		"nombre" : "L.C.P. DE ADMINISTRACION",
+		"direccion_general_id" : 25,
+		"activo" : 1
+	},
+	{
+		"id" : 374,
+		"nombre" : "CONSEJALES",
+		"direccion_general_id" : 26,
+		"activo" : 1
+	},
+	{
+		"id" : 375,
+		"nombre" : "CONTRALORIA",
+		"direccion_general_id" : 27,
+		"activo" : 1
+	},
+	{
+		"id" : 376,
+		"nombre" : "FINANZAS",
+		"direccion_general_id" : 28,
+		"activo" : 1
+	},
+	{
+		"id" : 377,
+		"nombre" : "DIRECCION GENERAL DE REGULARIZACION TERRITORIAL",
+		"direccion_general_id" : 29,
+		"activo" : 1
+	}
+]}

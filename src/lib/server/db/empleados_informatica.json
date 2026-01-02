@@ -1,0 +1,436 @@
+[
+ {
+  "nombre": "MAURICIO",
+  "primerApellido": "RIOS",
+  "segundoApellido": "ALBA",
+  "numeroEmpleado": 1183787,
+  "areaId": 315
+ },
+ {
+  "nombre": "MARIA GUADALUPE",
+  "primerApellido": "CHAVEZ",
+  "segundoApellido": "LOPEZ",
+  "numeroEmpleado": 199012,
+  "areaId": 315
+ },
+ {
+  "nombre": "ANA LUISA",
+  "primerApellido": "MACEDO",
+  "segundoApellido": "VARELA",
+  "numeroEmpleado": 853904,
+  "areaId": 315
+ },
+ {
+  "nombre": "BLANCA PATRICIA",
+  "primerApellido": "OROZCO",
+  "segundoApellido": "GARCIA",
+  "numeroEmpleado": 75503,
+  "areaId": 315
+ },
+ {
+  "nombre": "CRISTINA",
+  "primerApellido": "TELLEZ",
+  "segundoApellido": "GOMEZ",
+  "numeroEmpleado": 811313,
+  "areaId": 315
+ },
+ {
+  "nombre": "MIRNA ANGELICA",
+  "primerApellido": "VELASCO",
+  "segundoApellido": "LEONEL",
+  "numeroEmpleado": 854823,
+  "areaId": 315
+ },
+ {
+  "nombre": "LIZSET",
+  "primerApellido": "GALICIA",
+  "segundoApellido": "ZENDEJAS",
+  "numeroEmpleado": 902796,
+  "areaId": 315
+ },
+ {
+  "nombre": "CATALINA",
+  "primerApellido": "LUNA",
+  "segundoApellido": "CASTELLANOS",
+  "numeroEmpleado": 168992,
+  "areaId": 315
+ },
+ {
+  "nombre": "KARLA MABEL",
+  "primerApellido": "BARRERA",
+  "segundoApellido": "HERNANDEZ",
+  "numeroEmpleado": 996094,
+  "areaId": 315
+ },
+ {
+  "nombre": "BEATRIZ ELIZABETH",
+  "primerApellido": "CAMPOS",
+  "segundoApellido": "SAENZ",
+  "numeroEmpleado": 17655,
+  "areaId": 315
+ },
+ {
+  "nombre": "MARIA GUADALUPE DE LA CONCEPCION",
+  "primerApellido": "CARMONA",
+  "segundoApellido": "DIAZ",
+  "numeroEmpleado": 185189,
+  "areaId": 315
+ },
+ {
+  "nombre": "DULCE MARIA",
+  "primerApellido": "LAGUNAS",
+  "segundoApellido": "GUTIERREZ",
+  "numeroEmpleado": 916444,
+  "areaId": 315
+ },
+ {
+  "nombre": "VICTOR HUGO",
+  "primerApellido": "IBARRA",
+  "segundoApellido": "SAAVEDRA",
+  "numeroEmpleado": 1137041,
+  "areaId": 317
+ },
+ {
+  "nombre": "CARMEN ILEANA",
+  "primerApellido": "ALVARADO",
+  "segundoApellido": "SALGUERO",
+  "numeroEmpleado": 1155223,
+  "areaId": 317
+ },
+ {
+  "nombre": "BERNARDO",
+  "primerApellido": "ARELLANO",
+  "segundoApellido": "OSORNIO",
+  "numeroEmpleado": 1039214,
+  "areaId": 317
+ },
+ {
+  "nombre": "MIGUEL",
+  "primerApellido": "CRUZ",
+  "segundoApellido": "CARTER",
+  "numeroEmpleado": 924353,
+  "areaId": 317
+ },
+ {
+  "nombre": "MARIA DE LOURDES",
+  "primerApellido": "GUZMAN",
+  "segundoApellido": "JUAREZ",
+  "numeroEmpleado": 42366,
+  "areaId": 317
+ },
+ {
+  "nombre": "RICARDO",
+  "primerApellido": "LUCAS",
+  "segundoApellido": "CASTILLO",
+  "numeroEmpleado": 183082,
+  "areaId": 317
+ },
+ {
+  "nombre": "KARINA",
+  "primerApellido": "MARTINEZ",
+  "segundoApellido": "GUZMAN",
+  "numeroEmpleado": 1192951,
+  "areaId": 317
+ },
+ {
+  "nombre": "MIGUEL ANGEL",
+  "primerApellido": "MENDEZ",
+  "segundoApellido": "GARCIA",
+  "numeroEmpleado": 1146100,
+  "areaId": 317
+ },
+ {
+  "nombre": "MIGUEL ALEJANDRO",
+  "primerApellido": "PALMA",
+  "segundoApellido": "ARIAS",
+  "numeroEmpleado": 881988,
+  "areaId": 317
+ },
+ {
+  "nombre": "CAMERINO",
+  "primerApellido": "ROSALES",
+  "segundoApellido": "HERNANDEZ",
+  "numeroEmpleado": 211394,
+  "areaId": 317
+ },
+ {
+  "nombre": "JOSEPH",
+  "primerApellido": "VILLEGAS",
+  "segundoApellido": "CRUZ",
+  "numeroEmpleado": 1014721,
+  "areaId": 317
+ },
+ {
+  "nombre": "CESAR MOISES",
+  "primerApellido": "TOVAR",
+  "segundoApellido": "MEDINA",
+  "numeroEmpleado": 972403,
+  "areaId": 317
+ },
+ {
+  "nombre": "LUISA FERNANDO",
+  "primerApellido": "CORDOVA",
+  "segundoApellido": "TORRES",
+  "numeroEmpleado": 1193587,
+  "areaId": 317
+ },
+ {
+  "nombre": "MAURICIO",
+  "primerApellido": "ESPINOSA",
+  "segundoApellido": "SANCHEZ",
+  "numeroEmpleado": 962049,
+  "areaId": 317
+ },
+ {
+  "nombre": "MARIA DE LOS ANGELES",
+  "primerApellido": "HERNANDEZ",
+  "segundoApellido": "DAMIAN",
+  "numeroEmpleado": 942337,
+  "areaId": 317
+ },
+ {
+  "nombre": "RENE EMANUEL",
+  "primerApellido": "JIMENEZ",
+  "segundoApellido": "GARCIA",
+  "numeroEmpleado": 1192498,
+  "areaId": 317
+ },
+ {
+  "nombre": "JOSE ANTONIO",
+  "primerApellido": "MARTINEZ",
+  "segundoApellido": "HURTADO",
+  "numeroEmpleado": 1057104,
+  "areaId": 317
+ },
+ {
+  "nombre": "KARLA MONSERRAT",
+  "primerApellido": "MARTINEZ",
+  "segundoApellido": "RAMIREZ",
+  "numeroEmpleado": 1155216,
+  "areaId": 317
+ },
+ {
+  "nombre": "DANIEL",
+  "primerApellido": "OCAÑA",
+  "segundoApellido": "ALFARO",
+  "numeroEmpleado": 1035118,
+  "areaId": 317
+ },
+ {
+  "nombre": "JAVIER",
+  "primerApellido": "SANCHEZ",
+  "segundoApellido": "ZAMUDIO",
+  "numeroEmpleado": 1196444,
+  "areaId": 317
+ },
+ {
+  "nombre": "AMADO FRANCISCO",
+  "primerApellido": "VAZQUEZ",
+  "segundoApellido": "HERRERA",
+  "numeroEmpleado": 892115,
+  "areaId": 317
+ },
+ {
+  "nombre": "JORGE ARTURO",
+  "primerApellido": "ARCINIEGA",
+  "segundoApellido": "GONZALEZ",
+  "numeroEmpleado": 926660,
+  "areaId": 317
+ },
+ {
+  "nombre": "ROBERTO MAGNO ALBERTO",
+  "primerApellido": "ESTRADA",
+  "segundoApellido": "LEYVA",
+  "numeroEmpleado": 752372,
+  "areaId": 317
+ },
+ {
+  "nombre": "MAURICIO",
+  "primerApellido": "HURTADO",
+  "segundoApellido": "CEJA",
+  "numeroEmpleado": 1028719,
+  "areaId": 317
+ },
+ {
+  "nombre": "ERIKA",
+  "primerApellido": "MARTINEZ",
+  "segundoApellido": "ROQUE",
+  "numeroEmpleado": 883149,
+  "areaId": 317
+ },
+ {
+  "nombre": "HECTOR RUBEN",
+  "primerApellido": "MORENO",
+  "segundoApellido": "TAPIA",
+  "numeroEmpleado": 885505,
+  "areaId": 317
+ },
+ {
+  "nombre": "EDEN DANIEL",
+  "primerApellido": "NERI",
+  "segundoApellido": "MENDOZA",
+  "numeroEmpleado": 987217,
+  "areaId": 317
+ },
+ {
+  "nombre": "MAURICIO",
+  "primerApellido": "HERNANDEZ",
+  "segundoApellido": "MEDINA",
+  "numeroEmpleado": 965991,
+  "areaId": 317
+ },
+ {
+  "nombre": "DAVID ABRAHAM",
+  "primerApellido": "MERCADO",
+  "segundoApellido": "AVALOS",
+  "numeroEmpleado": 806534,
+  "areaId": 317
+ },
+ {
+  "nombre": "JOSE DE JESUS",
+  "primerApellido": "CASTILLO",
+  "segundoApellido": "SANCHEZ",
+  "numeroEmpleado": 959703,
+  "areaId": 317
+ },
+ {
+  "nombre": "MARIANA GUADALUPE",
+  "primerApellido": "VELASCO",
+  "segundoApellido": "CALDERON",
+  "numeroEmpleado": 1083430,
+  "areaId": 317
+ },
+ {
+  "nombre": "OSCAR",
+  "primerApellido": "LUNA",
+  "segundoApellido": "HERNANDEZ",
+  "numeroEmpleado": 983693,
+  "areaId": 316
+ },
+ {
+  "nombre": "SAMANTHA",
+  "primerApellido": "GARCIA",
+  "segundoApellido": "MENDOZA",
+  "numeroEmpleado": 1164502,
+  "areaId": 316
+ },
+ {
+  "nombre": "BALBINA",
+  "primerApellido": "GIL",
+  "segundoApellido": "LOPEZ",
+  "numeroEmpleado": 883061,
+  "areaId": 316
+ },
+ {
+  "nombre": "ANAID ARIANA",
+  "primerApellido": "GOMEZ",
+  "segundoApellido": "PINEDA",
+  "numeroEmpleado": 1192653,
+  "areaId": 316
+ },
+ {
+  "nombre": "ANDREA ELIZABETH",
+  "primerApellido": "GONZALEZ",
+  "segundoApellido": "SOLA",
+  "numeroEmpleado": 164798,
+  "areaId": 316
+ },
+ {
+  "nombre": "MARIA DE LOS ANGELES",
+  "primerApellido": "MUÑOZ",
+  "segundoApellido": "MARTINEZ",
+  "numeroEmpleado": 1170859,
+  "areaId": 316
+ },
+ {
+  "nombre": "LUIS GERARDO",
+  "primerApellido": "PEÑA",
+  "segundoApellido": "GALVAN",
+  "numeroEmpleado": 813294,
+  "areaId": 316
+ },
+ {
+  "nombre": "JOSE ENRIQUE",
+  "primerApellido": "RAMIREZ",
+  "segundoApellido": "ROCHA",
+  "numeroEmpleado": 84827,
+  "areaId": 316
+ },
+ {
+  "nombre": "JUAN JOSE",
+  "primerApellido": "HERNANDEZ",
+  "segundoApellido": "LLAMAS",
+  "numeroEmpleado": 10176066,
+  "areaId": 316
+ },
+ {
+  "nombre": "EDUARDO ARTURO",
+  "primerApellido": "ORTEGA",
+  "segundoApellido": "PEÑA",
+  "numeroEmpleado": 1097356,
+  "areaId": 316
+ },
+ {
+  "nombre": "ENRIQUE",
+  "primerApellido": "ACUÑA",
+  "segundoApellido": "RAMIREZ",
+  "numeroEmpleado": 1164353,
+  "areaId": 316
+ },
+ {
+  "nombre": "PATRICIA",
+  "primerApellido": "ANGULO",
+  "segundoApellido": "ORTEGA",
+  "numeroEmpleado": 924244,
+  "areaId": 316
+ },
+ {
+  "nombre": "FERNANDO",
+  "primerApellido": "FLORES",
+  "segundoApellido": "RAMIREZ",
+  "numeroEmpleado": 1192574,
+  "areaId": 316
+ },
+ {
+  "nombre": "ANDREA NOEMI",
+  "primerApellido": "OLVERA",
+  "segundoApellido": "MARTINEZ",
+  "numeroEmpleado": 1146101,
+  "areaId": 316
+ },
+ {
+  "nombre": "ALFREDO ISRAEL",
+  "primerApellido": "SANCHEZ",
+  "segundoApellido": "SANTELIZ",
+  "numeroEmpleado": 1019559,
+  "areaId": 316
+ },
+ {
+  "nombre": "JOHAN FERNANDO",
+  "primerApellido": "TERAN",
+  "segundoApellido": "CERON",
+  "numeroEmpleado": 1164082,
+  "areaId": 316
+ },
+ {
+  "nombre": "SAID RICARDO",
+  "primerApellido": "ZACARIAS",
+  "segundoApellido": "RAMIREZ",
+  "numeroEmpleado": 843297,
+  "areaId": 316
+ },
+ {
+  "nombre": "MARY CARMEN",
+  "primerApellido": "ROMERO",
+  "segundoApellido": "CORNEJO",
+  "numeroEmpleado": 942583,
+  "areaId": 316
+ },
+ {
+  "nombre": "ALEXIS FERNANDO",
+  "primerApellido": "ANGUIANO",
+  "segundoApellido": "ROMERO",
+  "numeroEmpleado": 959604,
+  "areaId": 316
+ }
+]
