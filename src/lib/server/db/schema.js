@@ -157,23 +157,21 @@ export const historialOrdenes = mysqlTable('historial_ordenes', {
   ordenServicioId: int('orden_servicio_id', { unsigned: true }).references(() => ordenesServicio.id, { onDelete: 'restrict' }).notNull(),
   tipo: varchar('tipo', { length: 50 }).notNull(),
   descripcion: text('descripcion').notNull(),
-  datosAdicionales: text('datos_adicionales').notNull(),
-  creadoPor: int('creado_por', { unsigned: true }).notNull().references(() => usuarios.id, { onDelete: 'restrict' }),
-  creadoEn: timestamp('creado_en').defaultNow()
+  datosAdicionales: text('datos_adicionales').notNull()
 });
 
 export const logs = mysqlTable('logs', {
   id: int('id', { unsigned: true }).primaryKey().autoincrement(),
   mensaje: text('mensaje').notNull(),
   stackTrace: text('stack_trace'),
-  createdAt: timestamp('created_at').defaultNow()
+  createdAt: timestamp('created_at').notNull()
 });
 
 export const sesiones = mysqlTable('sesiones', {
   id: varchar('id', { length: 255 }).primaryKey(),
   usuarioId: int('usuario_id', { unsigned: true }).notNull().references(() => usuarios.id, { onDelete: 'restrict' }),
   expiresAt: timestamp('expires_at').notNull(),
-  creadoEn: timestamp('creado_en').defaultNow().notNull()
+  creadoEn: timestamp('creado_en').notNull()
 });
 
 export const invitaciones = mysqlTable('invitaciones', {

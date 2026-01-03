@@ -4,7 +4,8 @@ import {
   obtenerFolioSiguiente,
   obtenerEmpleadoPorId,
   obtenerEncargadoArea,
-  registrarActivos
+  registrarActivos,
+  registrarHistorialOrden
 } from '$lib/server/db/queries';
 import { BusinessRuleException, BusinessRules, ForbiddenException } from '$lib/server/exceptions';
 import { Temporal } from 'temporal-polyfill/impl';
@@ -59,6 +60,30 @@ export function createRegistrarOrdenServicioUseCase (usuario, authorize) {
       if (data.activos.length > 0) {
         await registrarActivos(data.activos.map(activo => ({ ordenServicioId: folio, ...activo })), tx);
       }
+      await registrarHistorialOrden({
+        ordenServicioId: folio,
+        tipo: 'CREACION',
+        descripcion: `SE CREA UNA NUEVA ORDEN DE SERVICIO CON FOLIO ${folio}`,
+        datosAdicionales: {
+          creadoEn: new Date(),
+          creadoPor: {
+            id: usuario.id,
+            nombreUsuario: usuario.nombreUsuario,
+            areasAcceso: usuario.areasAcceso,
+            rol: usuario.rol.nombre,
+            empleado: {
+              id: usuario.empleado.id,
+              nombre: usuario.empleado.nombre,
+              primerApellido: usuario.empleado.primerApellido,
+              segundoApellido: usuario.empleado.segundoApellido,
+              area: {
+                id: usuario.empleado.area.id,
+                nombre: usuario.empleado.area.nombre
+              }
+            }
+          }
+        }
+      }, tx);
       return folio;
     });
   };

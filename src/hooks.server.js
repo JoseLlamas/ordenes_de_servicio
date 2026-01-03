@@ -5,6 +5,7 @@ import { createValidateAuthorization, defineAbilitiesFor } from '$lib/server/aut
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { registrarLog } from '$lib/server/db/queries';
+import { Temporal } from 'temporal-polyfill/impl';
 
 /**
  * @type {import('@sveltejs/kit').Handle}
@@ -68,7 +69,8 @@ export async function handleError ({ error }) {
     try {
       await registrarLog({
         mensaje: error.message,
-        stackTrace: error.stack ?? null
+        stackTrace: error.stack ?? null,
+        createdAt: new Date(Temporal.Now.instant().epochMilliseconds)
       });
       console.error(error);
     } catch (exc) {

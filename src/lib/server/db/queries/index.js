@@ -10,3 +10,4 @@ export * from './categoria_activo';
 export * from './orden_servicio';
 export * from './folio';
 export * from './activo';
+export * from './historial_orden';

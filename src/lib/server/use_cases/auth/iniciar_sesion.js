@@ -20,12 +20,14 @@ export async function iniciarSesion (nombreUsuario, password) {
     throw new UnauthorizedException('Usuario o contraseña incorrectos');
   }
   const sesionId = crypto.randomUUID();
+  const creadoEn = Temporal.Now.instant();
   const seconds = 60 * 60 * 24;//24 horas
   const expiresAt = Temporal.Now.instant().add(Temporal.Duration.from({ seconds }));
   await crearSesion({
     id: sesionId,
     usuarioId: usuario.id,
-    expiresAt: new Date(expiresAt.epochMilliseconds)
+    expiresAt: new Date(expiresAt.epochMilliseconds),
+    creadoEn: new Date(creadoEn.epochMilliseconds)
   });
   return { sesionId, maxAge: seconds };
 }

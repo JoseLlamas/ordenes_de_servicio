@@ -5,6 +5,7 @@ export type * from './permiso';
 export type * from './rol';
 export type * from './usuario';
 export type * from './orden_servicio';
+export type * from './historial_orden';
 
 export interface CategoriaOrdenDTO {
 

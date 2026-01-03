@@ -3,7 +3,7 @@ import { logs } from '../schema';
 
 /**
  *
- * @param {{ mensaje: string, stackTrace: string | null }} data
+ * @param {{ mensaje: string, stackTrace: string | null, createdAt: Date }} data
  * @return {Promise<number>}
  */
 export async function registrarLog (data) {

@@ -8,6 +8,7 @@ import { sesiones } from '../schema';
  * @property {string} id
  * @property {number} usuarioId
  * @property {Date} expiresAt
+ * @property {Date} creadoEn
  */
 
 /**
