@@ -22,6 +22,7 @@ import * as schemas from '../schema';
  *  areaAsignadaId: number,
  *  encargadoAreaAsignadaId: number,
  *  creadoPorId: number,
+ *  creadoEn: Date,
  *  ordenServicioRelacionadoId: number | null
  * }} data
  * @param {DbOrTx} [dbOrTx = db]
@@ -43,6 +44,20 @@ export async function registrarOrdenServicio (data, dbOrTx = db) {
 export async function obtenerOrdenServicioDetallePorId (id, dbOrTx = db) {
   return await dbOrTx.query.ordenesServicio.findFirst({
     where: eq(schemas.ordenesServicio.id, id),
+    columns: {
+      id: true,
+      descripcion: true,
+      estado: true,
+      prioridad: true,
+      tipoEntrada: true,
+      numeroOficio: true,
+      otroCategoriaOrden: true,
+      telefonoSolicitante: true,
+      ordenServicioRelacionadoId: true,
+      creadoEn: true,
+      canceladoEn: true,
+      cerradoEn: true
+    },
     with: {
       categoriaOrden: {
         columns: {

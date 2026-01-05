@@ -41,6 +41,7 @@ export function createRegistrarOrdenServicioUseCase (usuario, authorize) {
       if (encargadoAreaAsignada == null) {
         throw new BusinessRuleException('El area asignada no tiene encargado', BusinessRules.AREA_SIN_ENCARGADO);
       }
+      const creadoEn = new Date(Temporal.Now.instant().epochMilliseconds);
       await registrarOrdenServicio({
         id: folio,
         descripcion: data.descripcion,
@@ -55,7 +56,8 @@ export function createRegistrarOrdenServicioUseCase (usuario, authorize) {
         areaAsignadaId: data.areaParaAsignarId,
         encargadoAreaAsignadaId: encargadoAreaAsignada.id,
         creadoPorId: usuario.id,
-        ordenServicioRelacionadoId: data.orderServicioRelacionadoId
+        ordenServicioRelacionadoId: data.orderServicioRelacionadoId,
+        creadoEn: creadoEn
       }, tx);
       if (data.activos.length > 0) {
         await registrarActivos(data.activos.map(activo => ({ ordenServicioId: folio, ...activo })), tx);
@@ -64,8 +66,8 @@ export function createRegistrarOrdenServicioUseCase (usuario, authorize) {
         ordenServicioId: folio,
         tipo: 'CREACION',
         descripcion: `SE CREA UNA NUEVA ORDEN DE SERVICIO CON FOLIO ${folio}`,
+        creadoEn: creadoEn,
         datosAdicionales: {
-          creadoEn: new Date(),
           creadoPor: {
             id: usuario.id,
             nombreUsuario: usuario.nombreUsuario,

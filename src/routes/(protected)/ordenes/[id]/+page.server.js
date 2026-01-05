@@ -1,6 +1,7 @@
 import { assertAuthenticated } from '$lib/server/auth/guards';
 import { BusinessRuleException, ForbiddenException } from '$lib/server/exceptions';
 import { createObtenerDetalleOrdenServicioUseCase } from '$lib/server/use_cases/orden_servicio';
+import { obtenerHistorialOrden } from '$lib/server/db/queries';
 import { error, redirect } from '@sveltejs/kit';
 import Joi from 'joi';
 
@@ -16,8 +17,10 @@ export async function load ({ params, locals }) {
   }
   try {
     const ordenServicio = await createObtenerDetalleOrdenServicioUseCase(locals.usuario, locals.authorize)(ordenServicioId);
+    const historialOrden = await obtenerHistorialOrden(ordenServicio.id);
     return {
-      ordenServicio
+      ordenServicio,
+      historialOrden
     };
   } catch (exc) {
     if (exc instanceof BusinessRuleException) {

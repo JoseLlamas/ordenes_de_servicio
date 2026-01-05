@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "209076c3-1c05-4c00-a5ea-b89cc225e5c9",
-  "prevId": "08d01051-e2ea-41c0-97cb-0f565661b50f",
+  "id": "7fc066ef-18c1-4c1d-a11a-3dd05e7dad60",
+  "prevId": "44a2eae9-375d-45fe-a513-3a698656f120",
   "tables": {
     "activos": {
       "name": "activos",
@@ -646,7 +646,7 @@
         },
         "tipo": {
           "name": "tipo",
-          "type": "varchar(50)",
+          "type": "enum('CREACION','CAMBIO_ESTADO','ASIGNACION','DESASIGNACION')",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -654,6 +654,13 @@
         "descripcion": {
           "name": "descripcion",
           "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "creado_en": {
+          "name": "creado_en",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -841,9 +848,8 @@
           "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false,
-          "default": "(now())"
+          "notNull": true,
+          "autoincrement": false
         }
       },
       "indexes": {},
@@ -895,8 +901,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "autoincrement": false,
-          "default": "(now())"
+          "autoincrement": false
         },
         "creador_id": {
           "name": "creador_id",
@@ -965,7 +970,7 @@
         },
         "estado": {
           "name": "estado",
-          "type": "enum('NUEVO','ASIGNADO','PROCESO','PENDIENTE','RESUELTO','CERRADO','CANCELADO')",
+          "type": "enum('NUEVO','PROCESO','PENDIENTE','RESUELTO','CERRADO','CANCELADO')",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -1045,8 +1050,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
-          "default": "(now())"
+          "autoincrement": false
         },
         "creado_por_id": {
           "name": "creado_por_id",
@@ -1406,8 +1410,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
-          "default": "(now())"
+          "autoincrement": false
         }
       },
       "indexes": {},

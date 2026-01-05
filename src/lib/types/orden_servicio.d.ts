@@ -4,7 +4,7 @@ export interface OrdenServicioDetalleDTO {
 
   id: number;
   descripcion: string;
-  estado : 'NUEVO' | 'ASIGNADO' | 'PROCESO' | 'PENDIENTE' | 'RESUELTO' | 'CERRADO' | 'CANCELADO';
+  estado : 'NUEVO' | 'PROCESO' | 'PENDIENTE' | 'RESUELTO' | 'CERRADO' | 'CANCELADO';
   prioridad: 'BAJA' | 'MEDIA' | 'ALTA' | 'CRITICA';
   tipoEntrada: 'PRESENCIAL' | 'OFICIO' | 'LLAMADA_TELEFONICA' | 'INDICACION_SUPERIOR';
   numeroOficio: string | null;

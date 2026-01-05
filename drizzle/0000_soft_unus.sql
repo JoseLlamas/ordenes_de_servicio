@@ -64,7 +64,8 @@ CREATE TABLE `empleados` (
 CREATE TABLE `encargados_areas` (
 	`empleado_id` int unsigned NOT NULL,
 	`area_id` int unsigned NOT NULL,
-	CONSTRAINT `encargados_areas_empleado_id_area_id_pk` PRIMARY KEY(`empleado_id`,`area_id`)
+	CONSTRAINT `encargados_areas_empleado_id_area_id_pk` PRIMARY KEY(`empleado_id`,`area_id`),
+	CONSTRAINT `encargados_areas_area_id_unique` UNIQUE(`area_id`)
 );
 --> statement-breakpoint
 CREATE TABLE `folios` (
@@ -82,8 +83,6 @@ CREATE TABLE `historial_ordenes` (
 	`tipo` varchar(50) NOT NULL,
 	`descripcion` text NOT NULL,
 	`datos_adicionales` text NOT NULL,
-	`creado_por` int unsigned NOT NULL,
-	`creado_en` timestamp DEFAULT (now()),
 	CONSTRAINT `historial_ordenes_id` PRIMARY KEY(`id`)
 );
 --> statement-breakpoint
@@ -104,7 +103,7 @@ CREATE TABLE `logs` (
 	`id` int unsigned AUTO_INCREMENT NOT NULL,
 	`mensaje` text NOT NULL,
 	`stack_trace` text,
-	`created_at` timestamp DEFAULT (now()),
+	`created_at` timestamp NOT NULL,
 	CONSTRAINT `logs_id` PRIMARY KEY(`id`)
 );
 --> statement-breakpoint
@@ -113,7 +112,7 @@ CREATE TABLE `observaciones` (
 	`orden_servicio_id` int unsigned NOT NULL,
 	`tipo` enum('SEGUIMIENTO','PENDIENTE','SOLUCION','CIERRE','CANCELACION') NOT NULL,
 	`observacion` text NOT NULL,
-	`creado_en` timestamp DEFAULT (now()),
+	`creado_en` timestamp,
 	`creador_id` int unsigned NOT NULL,
 	CONSTRAINT `observaciones_id` PRIMARY KEY(`id`)
 );
@@ -132,7 +131,7 @@ CREATE TABLE `ordenes_servicio` (
 	`telefono_solicitante` varchar(12) NOT NULL,
 	`area_asignada_id` int unsigned NOT NULL,
 	`encargado_area_asignada_id` int unsigned NOT NULL,
-	`creado_en` timestamp NOT NULL DEFAULT (now()),
+	`creado_en` timestamp NOT NULL,
 	`creado_por_id` int unsigned NOT NULL,
 	`cerrado_en` timestamp,
 	`cerrado_por_id` int unsigned,
@@ -169,7 +168,7 @@ CREATE TABLE `sesiones` (
 	`id` varchar(255) NOT NULL,
 	`usuario_id` int unsigned NOT NULL,
 	`expires_at` timestamp NOT NULL,
-	`creado_en` timestamp NOT NULL DEFAULT (now()),
+	`creado_en` timestamp NOT NULL,
 	CONSTRAINT `sesiones_id` PRIMARY KEY(`id`)
 );
 --> statement-breakpoint
@@ -200,7 +199,6 @@ ALTER TABLE `encargados_areas` ADD CONSTRAINT `encargados_areas_empleado_id_empl
 ALTER TABLE `encargados_areas` ADD CONSTRAINT `encargados_areas_area_id_areas_id_fk` FOREIGN KEY (`area_id`) REFERENCES `areas`(`id`) ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `folios` ADD CONSTRAINT `folios_area_id_areas_id_fk` FOREIGN KEY (`area_id`) REFERENCES `areas`(`id`) ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `historial_ordenes` ADD CONSTRAINT `historial_ordenes_orden_servicio_id_ordenes_servicio_id_fk` FOREIGN KEY (`orden_servicio_id`) REFERENCES `ordenes_servicio`(`id`) ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE `historial_ordenes` ADD CONSTRAINT `historial_ordenes_creado_por_usuarios_id_fk` FOREIGN KEY (`creado_por`) REFERENCES `usuarios`(`id`) ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `invitaciones` ADD CONSTRAINT `invitaciones_empleado_id_empleados_id_fk` FOREIGN KEY (`empleado_id`) REFERENCES `empleados`(`id`) ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `invitaciones` ADD CONSTRAINT `invitaciones_rol_id_roles_id_fk` FOREIGN KEY (`rol_id`) REFERENCES `roles`(`id`) ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `invitaciones` ADD CONSTRAINT `invitaciones_invitador_id_usuarios_id_fk` FOREIGN KEY (`invitador_id`) REFERENCES `usuarios`(`id`) ON DELETE restrict ON UPDATE no action;--> statement-breakpoint

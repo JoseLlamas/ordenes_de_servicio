@@ -90,7 +90,7 @@ export const usuarios = mysqlTable('usuarios', {
 export const ordenesServicio = mysqlTable('ordenes_servicio', {
   id: int('id', { unsigned: true }).primaryKey(),
   descripcion: text('descripcion').notNull(),
-  estado: mysqlEnum('estado', ['NUEVO', 'ASIGNADO', 'PROCESO', 'PENDIENTE', 'RESUELTO', 'CERRADO', 'CANCELADO']).notNull(),
+  estado: mysqlEnum('estado', ['NUEVO', 'PROCESO', 'PENDIENTE', 'RESUELTO', 'CERRADO', 'CANCELADO']).notNull(),
   prioridad: mysqlEnum('prioridad', ['BAJA', 'MEDIA', 'ALTA', 'CRITICA']).notNull(),
   tipoEntrada: mysqlEnum('tipo_entrada', ['PRESENCIAL', 'OFICIO', 'LLAMADA_TELEFONICA', 'INDICACION_SUPERIOR']).notNull(),
   numeroOficio: varchar('numero_oficio', { length: 100 }),
@@ -101,7 +101,7 @@ export const ordenesServicio = mysqlTable('ordenes_servicio', {
   telefonoSolicitante: varchar('telefono_solicitante', { length: 12 }).notNull(),
   areaAsignadaId: int('area_asignada_id', { unsigned: true }).notNull().references(() => areas.id, { onDelete: 'restrict' }),
   encargadoAreaAsignadaId: int('encargado_area_asignada_id', { unsigned: true }).notNull().references(() => empleados.id, { onDelete: 'restrict' }),
-  creadoEn: timestamp('creado_en').notNull().defaultNow(),
+  creadoEn: timestamp('creado_en').notNull(),
   creadoPorId: int('creado_por_id', { unsigned: true }).notNull().references(() => usuarios.id, { onDelete: 'restrict' }),
   cerradoEn: timestamp('cerrado_en'),
   cerradoPorId: int('cerrado_por_id', { unsigned: true }).references(() => usuarios.id, { onDelete: 'restrict' }),
@@ -148,15 +148,16 @@ export const observaciones = mysqlTable('observaciones', {
   ordenServicioId: int('orden_servicio_id', { unsigned: true }).notNull().references(() => ordenesServicio.id, { onDelete: 'restrict' }),
   tipo: mysqlEnum('tipo', ['SEGUIMIENTO', 'PENDIENTE', 'SOLUCION', 'CIERRE', 'CANCELACION']).notNull(),
   observacion: text('observacion').notNull(),
-  creadoEn: timestamp('creado_en').defaultNow(),
+  creadoEn: timestamp('creado_en'),
   creadorId: int('creador_id', { unsigned: true }).notNull().references(() => usuarios.id, { onDelete: 'restrict' })
 });
 
 export const historialOrdenes = mysqlTable('historial_ordenes', {
   id: int('id', { unsigned: true }).primaryKey().autoincrement(),
   ordenServicioId: int('orden_servicio_id', { unsigned: true }).references(() => ordenesServicio.id, { onDelete: 'restrict' }).notNull(),
-  tipo: varchar('tipo', { length: 50 }).notNull(),
+  tipo: mysqlEnum('tipo', ['CREACION', 'CAMBIO_ESTADO', 'ASIGNACION', 'DESASIGNACION']).notNull(),
   descripcion: text('descripcion').notNull(),
+  creadoEn: timestamp('creado_en').notNull(),
   datosAdicionales: text('datos_adicionales').notNull()
 });
 

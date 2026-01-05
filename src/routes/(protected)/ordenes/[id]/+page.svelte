@@ -3,7 +3,7 @@
 import { formatearFecha, normalizePalabras } from '$lib/utils';
   let { data } = $props();
 
-  const { ordenServicio } = $derived(data);
+  const { ordenServicio, historialOrden } = $derived(data);
 
   let tabActual = $state('detalles');
 
@@ -517,101 +517,43 @@ import { formatearFecha, normalizePalabras } from '$lib/utils';
       <div>
         <div class="flow-root">
           <ul class="-mb-8">
-            <!-- Evento: Creado -->
-            <li>
-              <div class="relative pb-8">
-                <span class="absolute left-5 top-5 -ml-px h-full w-0.5 bg-gray-200 dark:bg-gray-700" aria-hidden="true"></span>
-                <div class="relative flex items-start space-x-3">
-                  <div>
-                    <div class="relative px-1">
-                      <div class="flex h-10 w-10 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/30 ring-8 ring-white dark:ring-gray-800">
-                        <svg class="h-5 w-5 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="min-w-0 flex-1">
-                    <div>
-                      <div class="text-sm">
-                        <span class="font-medium text-gray-900 dark:text-white">
-                          {ordenServicio.creadoPor.empleado.nombre} {ordenServicio.creadoPor.empleado.primerApellido}
-                        </span>
-                        <span class="text-gray-500 dark:text-gray-400"> creó la orden</span>
-                      </div>
-                      <p class="mt-0.5 text-sm text-gray-500 dark:text-gray-400">
-                        {formatearFecha(ordenServicio.creadoEn)}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </li>
-
-            <!-- Evento: Cerrado (si existe) -->
-            {#if ordenServicio.cerradoEn && ordenServicio.cerradoPor}
+            {#each historialOrden as registroHistorial(registroHistorial.id)}
               <li>
                 <div class="relative pb-8">
                   <span class="absolute left-5 top-5 -ml-px h-full w-0.5 bg-gray-200 dark:bg-gray-700" aria-hidden="true"></span>
                   <div class="relative flex items-start space-x-3">
                     <div>
                       <div class="relative px-1">
-                        <div class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30 ring-8 ring-white dark:ring-gray-800">
-                          <svg class="h-5 w-5 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        <div class="flex h-10 w-10 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/30 ring-8 ring-white dark:ring-gray-800">
+                          <svg class="h-5 w-5 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                           </svg>
                         </div>
                       </div>
                     </div>
                     <div class="min-w-0 flex-1">
-                      <div>
-                        <div class="text-sm">
-                          <span class="font-medium text-gray-900 dark:text-white">
-                            {ordenServicio.cerradoPor.empleado.nombre} {ordenServicio.cerradoPor.empleado.primerApellido}
-                          </span>
-                          <span class="text-gray-500 dark:text-gray-400"> cerró la orden</span>
+                      {#if registroHistorial.tipo === 'CREACION'}
+                        <div>
+                          <div class="text-sm">
+                            <span class="font-medium text-gray-900 dark:text-white">
+                              {normalizePalabras(
+                                registroHistorial.datosAdicionales.creadoPor.empleado.nombre,
+                                registroHistorial.datosAdicionales.creadoPor.empleado.primerApellido,
+                                registroHistorial.datosAdicionales.creadoPor.empleado.segundoApellido ?? ''
+                              )}
+                            </span>
+                            <span class="text-gray-500 dark:text-gray-400"> creó la orden</span>
+                          </div>
+                          <p class="mt-0.5 text-sm text-gray-500 dark:text-gray-400">
+                            {formatearFecha(registroHistorial.creadoEn)}
+                          </p>
                         </div>
-                        <p class="mt-0.5 text-sm text-gray-500 dark:text-gray-400">
-                          {formatearFecha(ordenServicio.cerradoEn)}
-                        </p>
-                      </div>
+                      {/if}
                     </div>
                   </div>
                 </div>
               </li>
-            {/if}
-
-            <!-- Evento: Cancelado (si existe) -->
-            {#if ordenServicio.canceladoEn && ordenServicio.canceladoPor}
-              <li>
-                <div class="relative pb-8">
-                  <div class="relative flex items-start space-x-3">
-                    <div>
-                      <div class="relative px-1">
-                        <div class="flex h-10 w-10 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30 ring-8 ring-white dark:ring-gray-800">
-                          <svg class="h-5 w-5 text-red-600 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                          </svg>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="min-w-0 flex-1">
-                      <div>
-                        <div class="text-sm">
-                          <span class="font-medium text-gray-900 dark:text-white">
-                            {ordenServicio.canceladoPor.empleado.nombre} {ordenServicio.canceladoPor.empleado.primerApellido}
-                          </span>
-                          <span class="text-gray-500 dark:text-gray-400"> canceló la orden</span>
-                        </div>
-                        <p class="mt-0.5 text-sm text-gray-500 dark:text-gray-400">
-                          {formatearFecha(ordenServicio.canceladoEn)}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </li>
-            {/if}
+            {/each}
           </ul>
         </div>
 

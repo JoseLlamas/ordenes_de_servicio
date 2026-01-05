@@ -19,17 +19,68 @@ interface UsuarioHistorialOrden {
 
 }
 
-interface DataRegistroCreacionHistorialOrden {
+type CreacionHistorialOrden = {
 
-  ordenServicioId: number,
-  tipo: 'CREACION',
-  descripcion: string,
+  ordenServicioId: number;
+  tipo: 'CREACION';
+  descripcion: string;
+  creadoEn: Date;
   datosAdicionales: {
     creadoPor: UsuarioHistorialOrden,
-    creadoEn: Date,
-  },
+  }
 
 };
 
+type CambioEstadoHistorialOrden = {
+
+  ordenServicioId: number;
+  tipo: 'CAMBIO_ESTADO';
+  descripcion: string;
+  creadoEn: Date;
+  datosAdicionales: {
+    modificadoPor: UsuarioHistorialOrden,
+    estadoPrevio: string,
+    estadoNuevo: string
+  }
+
+}
+
+type AsignacionHistorialOrden = {
+
+  ordenServicioId: number;
+  tipo: 'ASIGNACION';
+  descripcion: string;
+  creadoEn: Date;
+  datosAdicionales: {
+    asignadoPor: UsuarioHistorialOrden,
+    usuarioAsignado: UsuarioHistorialOrden,
+    estado: string
+  }
+
+}
+
+type DesasignacionHistorialOrden = {
+
+  ordenServicioId: number;
+  tipo: 'DESASIGNACION';
+  descripcion: string;
+  creadoEn: Date;
+  datosAdicionales: {
+    desasignadoPor: UsuarioHistorialOrden,
+    usuarioDesasignado: UsuarioHistorialOrden,
+    estado: string
+  }
+
+}
+
 export type DataRegistroHistorialOrden =
-  DataRegistroCreacionHistorialOrden;
+  CreacionHistorialOrden |
+  CambioEstadoHistorialOrden |
+  AsignacionHistorialOrden |
+  DesasignacionHistorialOrden;
+
+export type HistorialOrdenDetalle =
+  ({ id: number } & CreacionHistorialOrden) |
+  ({ id: number } & AsignacionHistorialOrden) |
+  ({ id: number } & CambioEstadoHistorialOrden) |
+  ({ id: number } & DesasignacionHistorialOrden);

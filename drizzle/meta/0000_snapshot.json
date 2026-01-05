@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "ed903265-df5f-45e2-a1f6-a41ea9552c28",
+  "id": "0dcfae49-4176-429e-9649-4446151ec86f",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "activos": {
@@ -551,7 +551,14 @@
           ]
         }
       },
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "encargados_areas_area_id_unique": {
+          "name": "encargados_areas_area_id_unique",
+          "columns": [
+            "area_id"
+          ]
+        }
+      },
       "checkConstraint": {}
     },
     "folios": {
@@ -657,21 +664,6 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
-        },
-        "creado_por": {
-          "name": "creado_por",
-          "type": "int unsigned",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "creado_en": {
-          "name": "creado_en",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false,
-          "default": "(now())"
         }
       },
       "indexes": {},
@@ -682,19 +674,6 @@
           "tableTo": "ordenes_servicio",
           "columnsFrom": [
             "orden_servicio_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "restrict",
-          "onUpdate": "no action"
-        },
-        "historial_ordenes_creado_por_usuarios_id_fk": {
-          "name": "historial_ordenes_creado_por_usuarios_id_fk",
-          "tableFrom": "historial_ordenes",
-          "tableTo": "usuarios",
-          "columnsFrom": [
-            "creado_por"
           ],
           "columnsTo": [
             "id"
@@ -862,9 +841,8 @@
           "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false,
-          "default": "(now())"
+          "notNull": true,
+          "autoincrement": false
         }
       },
       "indexes": {},
@@ -916,8 +894,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "autoincrement": false,
-          "default": "(now())"
+          "autoincrement": false
         },
         "creador_id": {
           "name": "creador_id",
@@ -1066,8 +1043,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
-          "default": "(now())"
+          "autoincrement": false
         },
         "creado_por_id": {
           "name": "creado_por_id",
@@ -1427,8 +1403,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
-          "default": "(now())"
+          "autoincrement": false
         }
       },
       "indexes": {},

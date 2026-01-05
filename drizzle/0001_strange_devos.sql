@@ -1,1 +1,0 @@
-ALTER TABLE `encargados_areas` ADD CONSTRAINT `encargados_areas_area_id_unique` UNIQUE(`area_id`);
