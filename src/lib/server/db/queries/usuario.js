@@ -1,11 +1,13 @@
-import { eq, and, inArray } from 'drizzle-orm';
+import { eq, and, inArray, isNotNull } from 'drizzle-orm';
 import { db } from '../index';
 import {
   usuarios,
   empleados,
   areas,
   invitaciones,
-  roles
+  roles,
+  rolesPermisos,
+  permisos
 } from '../schema';
 import { sql, asc } from 'drizzle-orm';
 
@@ -13,6 +15,36 @@ import { sql, asc } from 'drizzle-orm';
  * @import { DbOrTx} from './types';
  * @import { UsuarioLoginDTO, UsuarioDetalleDTO, UsuarioResumenDTO, InvitacionDTO } from '$lib/types';
  */
+
+/**
+ * @param {DbOrTx} [dbOrTx = db]
+ */
+function createQueryParaUsuarioResumen (dbOrTx = db) {
+  const query = dbOrTx
+    .select({
+      id: usuarios.id,
+      nombreUsuario: usuarios.nombreUsuario,
+      activo: usuarios.activo,
+      avatar: usuarios.avatar,
+      'empleado.id': empleados.id,
+      'empleado.numeroEmpleado': empleados.numeroEmpleado,
+      'empleado.nombre': empleados.nombre,
+      'empleado.primerApellido': empleados.primerApellido,
+      'empleado.segundoApellido': empleados.segundoApellido,
+      'empleado.cargo': empleados.cargo,
+      'empleado.area.id': areas.id,
+      'empleado.area.nombre': areas.nombre,
+      'rol.id': roles.id,
+      'rol.nombre': roles.nombre
+    })
+    .from(usuarios)
+    .innerJoin(empleados, eq(usuarios.empleadoId, empleados.id))
+    .innerJoin(areas, eq(empleados.areaId, areas.id))
+    .innerJoin(roles, eq(usuarios.rolId, roles.id));
+  return query;
+}
+
+
 
 /**
  *
@@ -50,32 +82,11 @@ export async function obtenerUsuariosResumenes (filters = {}, dbOrTx = db) {
     typeof filters.areaId !== 'undefined' ? eq(empleados.areaId, filters.areaId) : undefined,
     typeof filters.activo !== 'undefined' ? eq(usuarios.activo, filters.activo) : undefined
   ].filter(Boolean);
-  const query = dbOrTx
-    .select({
-      id: usuarios.id,
-      nombreUsuario: usuarios.nombreUsuario,
-      activo: usuarios.activo,
-      avatar: usuarios.avatar,
-      'empleado.id': empleados.id,
-      'empleado.numeroEmpleado': empleados.numeroEmpleado,
-      'empleado.nombre': empleados.nombre,
-      'empleado.primerApellido': empleados.primerApellido,
-      'empleado.segundoApellido': empleados.segundoApellido,
-      'empleado.cargo': empleados.cargo,
-      'empleado.area.id': areas.id,
-      'empleado.area.nombre': areas.nombre,
-      'rol.id': roles.id,
-      'rol.nombre': roles.nombre
-    })
-    .from(usuarios)
-    .innerJoin(empleados, eq(usuarios.empleadoId, empleados.id))
-    .innerJoin(areas, eq(empleados.areaId, areas.id))
-    .innerJoin(roles, eq(usuarios.rolId, roles.id));
-
+  const query = createQueryParaUsuarioResumen(dbOrTx);
   if (conditions.length > 0) {
     query.where(and(...conditions));
   }
-  const rows = await query.orderBy(asc(empleados.primerApellido), asc(empleados.segundoApellido));
+  const rows = await query.orderBy(asc(empleados.nombre), asc(empleados.primerApellido));
   return rows.map(row => ({
     id: row.id,
     nombreUsuario: row.nombreUsuario,
@@ -320,6 +331,56 @@ export async function existeNombreUsuario (nombreUsuario, dbOrTx = db) {
   return cantidad > 0;
 }
 
-export async function obtenerAgentes () {
-
+/**
+ * @param {number} areaId
+ * @param {DbOrTx} [dbOrTx = db]
+ * @return {Promise<import('$lib/types').UsuarioResumenDTO[]>}
+ */
+export async function obtenerUsuariosConPermisoAgente (areaId, dbOrTx = db) {
+  const subquery = dbOrTx
+    .select({
+      id: usuarios.id
+    })
+    .from(usuarios)
+    .innerJoin(roles, eq(usuarios.rolId, roles.id))
+    .innerJoin(rolesPermisos, eq(roles.id, rolesPermisos.rolId))
+    .innerJoin(permisos, eq(rolesPermisos.permisoId, permisos.id))
+    .where(
+      and(
+        eq(usuarios.activo, true),
+        isNotNull(usuarios.areasAccesoId),
+        eq(permisos.sujeto, 'Orden'),
+        inArray(permisos.accion, ['read', 'start', 'resolve']),
+        sql`JSON_CONTAINS(${usuarios.areasAccesoId}, ${JSON.stringify(areaId)}, '$')`
+      )
+    )
+    .groupBy(usuarios.id)
+    .having(sql`count(distinct ${permisos.accion}) = 3`)
+    .orderBy(usuarios.id)
+    .as('usuarios_con_permisos');
+  const rows = await createQueryParaUsuarioResumen(dbOrTx)
+    .where(sql`${usuarios.id} in (select id from ${subquery})`)
+    .orderBy(asc(empleados.nombre), asc(empleados.primerApellido));
+  return rows.map(row => ({
+    id: row.id,
+    nombreUsuario: row.nombreUsuario,
+    activo: row.activo,
+    avatar: row.avatar,
+    empleado: {
+      id: row['empleado.id'],
+      numeroEmpleado: row['empleado.numeroEmpleado'],
+      nombre: row['empleado.nombre'],
+      primerApellido: row['empleado.primerApellido'],
+      segundoApellido: row['empleado.segundoApellido'],
+      cargo: row['empleado.cargo'],
+      area: {
+        id: row['empleado.area.id'],
+        nombre: row['empleado.area.nombre']
+      }
+    },
+    rol: {
+      id: row['rol.id'],
+      nombre: row['rol.nombre']
+    }
+  }));
 }

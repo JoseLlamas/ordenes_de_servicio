@@ -2,6 +2,9 @@
   import Avatar from '$lib/components/Avatar.svelte';
   import Modal from '$lib/components/Modal.svelte';
   import { formatearFecha, formatearFechaRelativa, normalizePalabras } from '$lib/utils';
+  import { obtenerUsuariosConPermisoAgente } from '$lib/api';
+  import Paginador from '$lib/components/Paginador.svelte';
+    import UsuarioResumenTarjeta from '$lib/components/UsuarioResumenTarjeta.svelte';
 
   let { data } = $props();
 
@@ -14,6 +17,11 @@
   let modalAsignacion = $state();
 
   let tabActual = $state('detalles');
+
+  /**
+   * @type {Awaited<ReturnType<typeof obtenerUsuariosConPermisoAgente>>}
+   */
+  let usuariosConPermisoAgente = $state([]);
 
   const tabs = [
     { id: 'detalles', nombre: 'Detalles', icono: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
@@ -56,17 +64,37 @@
   function escribirNombreCompleto (persona) {
     return normalizePalabras(persona.nombre, persona.primerApellido, persona.segundoApellido ?? '');
   }
+
+  function abrirModalAsignacion () {
+    void obtenerUsuariosConPermisoAgente(ordenServicio.areaAsignada.id)
+      .then(result => {
+        usuariosConPermisoAgente = result;
+        modalAsignacion?.showModal();
+      });
+  }
 </script>
 
 <svelte:head>
   <title>Orden #{ordenServicio.id}</title>
 </svelte:head>
 
+{#snippet imprimirUsuariosConPermisoAgente(usuariosConPermisoAgente)}
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-x-3 gap-y-2">
+    {#each usuariosConPermisoAgente as usuarioConPermisoAgente(usuarioConPermisoAgente)}
+      <UsuarioResumenTarjeta usuarioResumen={usuarioConPermisoAgente} />
+    {/each}
+  </div>
+{/snippet}
+
 <Modal
   bind:dialog={modalAsignacion}
   title="Asignar agentes"
 >
-  este es un modal
+  <Paginador
+    records={usuariosConPermisoAgente}
+    render={imprimirUsuariosConPermisoAgente}
+    perPagina={6}
+  />
 </Modal>
 
 <!-- Header -->
@@ -112,7 +140,7 @@
       </button>
 
       <button
-        onclick={() => modalAsignacion?.showModal()}
+        onclick={abrirModalAsignacion}
         class="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors flex items-center gap-2">
         Asignar
       </button>
@@ -136,7 +164,7 @@
       {#each tabs as tab, index (index)}
         <button
           onclick={() => tabActual = tab.id}
-          class="flex-shrink-0 px-6 py-4 text-sm font-medium border-b-2 transition-colors {
+          class="flex-0 px-6 py-4 text-sm font-medium border-b-2 transition-colors {
             tabActual === tab.id
               ? 'border-blue-500 text-blue-600 dark:text-blue-400'
               : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300'

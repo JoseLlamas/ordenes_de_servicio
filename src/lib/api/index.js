@@ -18,11 +18,23 @@ export async function obtenerCategoriasOrdenPorArea (areaId, signal) {
 /**
  *
  * @param {number} areaId
+ * @param {AbortSignal} [signal]
  * @returns {Promise<import('$lib/types').CategoriaActivoDTO[]>}
  */
-export async function obtenerCategoriasActivoPorArea (areaId) {
+export async function obtenerCategoriasActivoPorArea (areaId, signal) {
   const queryString = new URLSearchParams();
   queryString.append('areaId', String(areaId));
-  return api(`/api/categorias-activo?${queryString.toString()}`);
+  return api(`/api/categorias-activo?${queryString.toString()}`, { signal });
 }
+
+/**
+ *
+ * @param {number} areaId
+ * @param {AbortSignal} [signal]
+ * @returns {Promise<import('$lib/types').UsuarioResumenDTO[]>}
+ */
+export async function obtenerUsuariosConPermisoAgente (areaId, signal) {
+  return api(`/api/areas/${areaId}/con-permiso-agente`, { signal });
+}
+
 
