@@ -215,9 +215,9 @@
         {form.error}
       </ErrorCard>
     {/if}
-    <div class="mt-2 grid grid-cols-1 gap-x-4 gap-y-2 sm:grid-cols-8">
+    <div class="mt-2 grid grid-cols-1 gap-x-4 gap-y-2 lg:grid-cols-8">
 
-      <div class="sm:col-span-8">
+      <div class="lg:col-span-8">
         <Select
           bind:value={areaParaAsignar}
           label="Area a asignar"
@@ -234,14 +234,14 @@
         {/if}
       </div>
 
-      <div class="sm:col-span-8">
+      <div class="lg:col-span-8">
         <hr />
         <h3 class="text-base/5 font-semibold p-2">
           Datos del solicitante
         </h3>
       </div>
 
-      <div class="sm:col-span-4">
+      <div class="lg:col-span-4">
         <Select
           bind:value={direccionGeneralEmpleadoSolicitante}
           label="Dirección general"
@@ -254,7 +254,7 @@
         </Select>
       </div>
 
-      <div class="sm:col-span-4">
+      <div class="lg:col-span-4">
         <Select
           bind:value={areaEmpleadoSolicitante}
           label="Area"
@@ -267,7 +267,7 @@
         </Select>
       </div>
 
-      <div class="sm:col-span-4">
+      <div class="lg:col-span-4">
         <Select
           bind:value={empleadoSolicitante}
           label="Empleado solicitante"
@@ -284,7 +284,7 @@
         {/if}
       </div>
 
-      <div class="sm:col-span-4">
+      <div class="lg:col-span-4">
         <Input
           label="Teléfono"
           name="telefonoSolicitante"
@@ -297,7 +297,7 @@
         {/if}
       </div>
 
-      <div class="sm:col-span-4">
+      <div class="lg:col-span-4">
         <Select
           name="entradaId"
           label="Entrada"
@@ -315,7 +315,7 @@
         {/if}
       </div>
 
-      <div class="sm:col-span-4">
+      <div class="lg:col-span-4">
         <Input
           label="Número oficio"
           name="numeroOficio"
@@ -328,14 +328,14 @@
         {/if}
       </div>
 
-      <div class="sm:col-span-8">
+      <div class="lg:col-span-8">
         <hr />
         <h3 class="text-base/5 font-semibold p-2">
           Datos del reporte
         </h3>
       </div>
 
-      <div class="sm:col-span-4">
+      <div class="lg:col-span-4">
         <Select
           bind:value={categoriaOrden}
           label="Categoría"
@@ -351,7 +351,7 @@
         {/if}
       </div>
 
-      <div class="sm:col-span-4">
+      <div class="lg:col-span-4">
         <Input
           bind:value={otroCategoriaOrden}
           label="Otro"
@@ -363,7 +363,7 @@
         {/if}
       </div>
 
-      <div class="sm:col-span-4">
+      <div class="lg:col-span-4">
         <Select
           label="Prioridad"
           bind:value={prioridad}
@@ -380,7 +380,7 @@
         {/if}
       </div>
 
-      <div class="sm:col-span-4">
+      <div class="lg:col-span-4">
         <div class="flex justify-center items-center h-full p-1">
           <ButtonSecundary
             type="button"
@@ -391,7 +391,7 @@
         </div>
       </div>
 
-      <div class="sm:col-span-8">
+      <div class="lg:col-span-8">
         {#if activos.length > 0}
           <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {#each activos as activo(activo.idT)}
@@ -471,7 +471,7 @@
         {/if}
       </div>
 
-      <div class="sm:col-span-8">
+      <div class="lg:col-span-8">
         <TextArea
           name="descripcion"
           id="descripcion"

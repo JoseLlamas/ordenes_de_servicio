@@ -1,7 +1,7 @@
 /**
  *
  * @param {HTMLFormElement} node
- * @param {{ confirm: (opts?: { title?: string, message?: string}) => Promise<boolean> }} params
+ * @param {{ confirm: () => Promise<boolean> }} params
  * @returns
  */
 export function confirmBeforeEnhance (node, params) {
@@ -28,10 +28,7 @@ export function confirmBeforeEnhance (node, params) {
     }
 
     // 2) Pide confirmación
-    const ok = await params.confirm?.({
-      title: 'Confirmar envío',
-      message: '¿Deseas continuar con esta acción?'
-    });
+    const ok = await params.confirm?.();
 
     if (!ok) {
       if (button instanceof HTMLButtonElement || button instanceof HTMLInputElement) {

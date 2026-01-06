@@ -1,13 +1,23 @@
 <script>
   import { enhance } from '$app/forms';
+  import { confirmBeforeEnhance } from '$lib/actions/confirm_before_enhance.js';
   import PasswordField from '$lib/components/PasswordField.svelte';
   import Input from '$lib/components/Input.svelte';
-  import ButtonSubmitting from '$lib/components/ButtonSubmitting.svelte';
   import ErrorMessage from '$lib/components/ErrorMessage.svelte';
   import ErrorCard from '$lib/components/ErrorCard.svelte';
   import InfoMessage from '$lib/components/InfoMessage.svelte';
+  import ConfirmModal from '$lib/components/ConfirmModal.svelte';
+  import ButtonAccept from '$lib/components/ButtonAccept.svelte';
+  import LoadingScreen from '$lib/components/LoadingScreen.svelte';
 
   let { form } = $props();
+
+  /**
+   * @type {ConfirmModal | undefined}
+   */
+  let confirmModal = $state();
+
+  let submitting = $state(false);
 
 </script>
 
@@ -15,8 +25,13 @@
   <title>Registro de usuario</title>
 </svelte:head>
 
-<div>
+<ConfirmModal
+  bind:this={confirmModal}
+/>
 
+<LoadingScreen hidden={!submitting} />
+
+<div>
   <div class="text-center mb-8">
     <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
       Crear Cuenta
@@ -30,7 +45,14 @@
     <form
       method="POST"
       action="?/registro"
-      use:enhance
+      use:confirmBeforeEnhance={{ confirm: () => confirmModal?.confirm({ texto: '¿Desea continuar?' }) ?? Promise.resolve(false) }}
+      use:enhance={() => {
+        submitting = true;
+        return async ({ update }) => {
+          await update();
+          submitting = false;
+        };
+      }}
       class="space-y-5"
       novalidate
     >
@@ -84,7 +106,9 @@
         </ErrorCard>
       {/if}
 
-      <ButtonSubmitting text="Registrarse" submitting={false} class="w-full" />
+      <ButtonAccept class="w-full">
+        Registrarse
+      </ButtonAccept>
     </form>
 
     <!-- Link a login -->

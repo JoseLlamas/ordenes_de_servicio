@@ -9,7 +9,7 @@ import { BusinessRuleException, BusinessRules, ForbiddenException } from '$lib/s
 export function createRegistrarEmpleadoUseCase (usuario, authorize) {
   /**
   *
-  * @param {Parameters<typeof registrarEmpleado>[0]} dataRegistroEmpleado
+  * @param {Omit<Parameters<typeof registrarEmpleado>[0], 'activo'>} dataRegistroEmpleado
   * @throws {BusinessRuleException} En caso de numero de empleado ya registrado
   * @return {Promise<number>}
   */
@@ -20,6 +20,9 @@ export function createRegistrarEmpleadoUseCase (usuario, authorize) {
     if (dataRegistroEmpleado.numeroEmpleado != null && await existeEmpleadoPorNumero(dataRegistroEmpleado.numeroEmpleado)) {
       throw new BusinessRuleException('Número de empleado ya registrado', BusinessRules.EMPLEADO_REGISTRAR_NUMERO_EMPLEADO_DUPLICADO);
     }
-    return registrarEmpleado(dataRegistroEmpleado);
+    return registrarEmpleado({
+      ...dataRegistroEmpleado,
+      activo: true
+    });
   };
 }

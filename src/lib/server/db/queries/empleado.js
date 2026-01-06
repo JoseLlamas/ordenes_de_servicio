@@ -198,7 +198,8 @@ export async function obtenerEmpleadosSinUsuario (filters = {}, dbOrTx = db) {
  *  segundoApellido: string | null,
  *  cargo: string | null,
  *  areaId: number,
- *  direccionGeneralId: number
+ *  direccionGeneralId: number,
+ *  activo: boolean
  * }} dataRegistroEmpleado
  * @param {DbOrTx} [dbOrTx = db]
  * @return {Promise<number>}

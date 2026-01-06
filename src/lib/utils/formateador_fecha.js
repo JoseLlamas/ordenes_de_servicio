@@ -25,16 +25,46 @@ export function formatearFecha (fecha) {
  * @returns {string} - "hace 2 horas", "ayer", etc.
  */
 export function formatearFechaRelativa (fecha) {
-  const ahora = new Date();
-  const diffMs = ahora - fecha;
-  const diffMins = Math.floor(diffMs / 60000);
-  const diffHours = Math.floor(diffMs / 3600000);
-  const diffDays = Math.floor(diffMs / 86400000);
 
-  if (diffMins < 1) {return 'Justo ahora';}
-  if (diffMins < 60) {return `Hace ${diffMins} minuto${diffMins > 1 ? 's' : ''}`;}
-  if (diffHours < 24) {return `Hace ${diffHours} hora${diffHours > 1 ? 's' : ''}`;}
-  if (diffDays < 7) {return `Hace ${diffDays} día${diffDays > 1 ? 's' : ''}`;}
+  const ahora = Temporal.Now.instant();
+  const instant = Temporal.Instant.fromEpochMilliseconds(fecha.getTime());
+
+  const esFuturo = Temporal.Instant.compare(instant, ahora) > 0;
+
+  const duracion = esFuturo ? instant.since(ahora) : ahora.since(instant);
+
+  const minutos = Math.floor(duracion.total('minutes'));
+  const horas = Math.floor(duracion.total('hours'));
+  const dias = Math.floor(duracion.total('days'));
+
+  if (minutos < 1) {
+    return 'Justo ahora';
+  }
+
+  if (esFuturo) {
+    if (minutos < 60) {
+      return `En ${minutos} minuto${minutos !== 1 ? 's' : ''}`;
+    }
+    if (horas < 24) {
+      return `En ${horas} hora${horas !== 1 ? 's' : ''}`;
+    }
+    if (dias < 7) {
+      return `En ${dias} dia${dias !== 1 ? 's' : ''}`;
+    }
+  } else {
+    if (minutos < 60) {
+      return `Hace ${minutos} minuto${minutos !== 1 ? 's' : ''}`;
+    }
+    if (horas < 24) {
+      return `Hace ${horas} hora${horas !== 1 ? 's' : ''}`;
+    }
+    if (dias === 1) {
+      return 'Ayer';
+    }
+    if (dias < 7) {
+      return `Hace ${dias} días`;
+    }
+  }
 
   return formatearFecha(fecha);
 }

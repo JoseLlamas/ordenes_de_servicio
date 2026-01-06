@@ -5,7 +5,7 @@
   let { children } = $props();
 </script>
 <Mode />
-<div class={['h-screen', 'flex', 'flex-col', 'sm:flex-row']}>
+<div class="min-h-screen flex flex-col sm:flex-row">
 
   <main class="flex-2 flex items-center justify-center bg-white dark:bg-[#2b2e37] p-4">
     <div class="bg-gray-100 dark:bg-[#22242b] shadow-lg rounded-md p-8 w-full min-w-sm max-w-5xl">

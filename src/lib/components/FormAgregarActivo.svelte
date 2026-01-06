@@ -106,13 +106,13 @@
 </script>
 
 <Modal bind:dialog title="Agregar Activo" onclose={() => limpiarCampos()}>
-  <div class="mt-5 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-4 mb-5">
+  <div class="mt-5 grid grid-cols-1 gap-x-6 gap-y-4 lg:grid-cols-4 mb-5">
     {#if working}
-      <div class="sm:col-span-4">
+      <div class="lg:col-span-4">
         <LoaderLine />
       </div>
     {/if}
-    <div class="sm:col-span-2">
+    <div class="lg:col-span-2">
       <Input
         bind:value={numeroInventario}
         label="Número de inventario"
@@ -122,7 +122,7 @@
         <ErrorMessage>{errors.numeroInventario}</ErrorMessage>
       {/if}
     </div>
-    <div class="sm:col-span-2">
+    <div class="lg:col-span-2">
       <Input
         bind:value={numeroSerie}
         label="Número de serie"
@@ -132,7 +132,7 @@
         <ErrorMessage>{errors.numeroSerie}</ErrorMessage>
       {/if}
     </div>
-    <div class="sm:col-span-2">
+    <div class="lg:col-span-2">
       <Select
         id="categoriaActivo"
         label="Categoria"
@@ -147,7 +147,7 @@
         <ErrorMessage>{errors.categoriaActivo}</ErrorMessage>
       {/if}
     </div>
-    <div class="sm:col-span-2">
+    <div class="lg:col-span-2">
       <Input
         bind:value={marca}
         label="marca"
@@ -157,7 +157,7 @@
         <ErrorMessage>{errors.marca}</ErrorMessage>
       {/if}
     </div>
-    <div class="sm:col-span-4">
+    <div class="lg:col-span-4">
       <Input
         bind:value={modelo}
         label="modelo"
@@ -167,7 +167,7 @@
         <ErrorMessage>{errors.modelo}</ErrorMessage>
       {/if}
     </div>
-    <div class="sm:col-span-4">
+    <div class="lg:col-span-4">
       <TextArea
         bind:value={observaciones}
         label="observaciones"
@@ -186,7 +186,7 @@
     }}>
       Cerrar
     </ButtonCancel>
-    <ButtonAccept onclick={() => void addActivo()}>
+    <ButtonAccept onclick={() => void addActivo()} type="button">
       Agregar Activo
     </ButtonAccept>
   </div>

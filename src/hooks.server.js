@@ -51,8 +51,9 @@ async function handleAuth ({ event, resolve }) {
       } else {
         deleteAuthCookies(event.cookies);
       }
-    } catch {
+    } catch (exc) {
       deleteAuthCookies(event.cookies);
+      throw exc;
     }
   }
   return resolve(event);

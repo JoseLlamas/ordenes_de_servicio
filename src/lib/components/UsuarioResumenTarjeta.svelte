@@ -2,7 +2,11 @@
   import { normalizePalabras } from '$lib/utils/normalize_palabras';
   import Avatar from './Avatar.svelte';
 
-  /** @type {{ usuarioResumen: import('$lib/types').UsuarioResumenDTO }} */
+  /**
+   * @type {{
+   *  usuarioResumen: import('$lib/types').UsuarioResumenDTO
+   * }}
+   */
   let { usuarioResumen: usuario } = $props();
 
   let nombreCompleto = $derived(normalizePalabras(usuario.empleado.nombre, usuario.empleado.primerApellido, usuario.empleado.segundoApellido ?? ''));

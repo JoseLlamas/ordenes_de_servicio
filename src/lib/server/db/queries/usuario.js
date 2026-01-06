@@ -319,3 +319,7 @@ export async function existeNombreUsuario (nombreUsuario, dbOrTx = db) {
     .$count(usuarios, eq(sql`lower(${usuarios.nombreUsuario})`, nombreUsuario.toLowerCase()));
   return cantidad > 0;
 }
+
+export async function obtenerAgentes () {
+
+}

@@ -36,6 +36,7 @@
         };
       }}
       class="space-y-5"
+      novalidate
     >
       <div>
         <Input label='Nombre de usuario' name="username" required id="username" />
@@ -60,7 +61,7 @@
         </ErrorCard>
       {/if}
 
-      <ButtonSubmitting text="Registrarse" class="w-full" submitting={logeando} />
+      <ButtonSubmitting text="Iniciar sesión" class="w-full" submitting={logeando} />
     </form>
 
     <div class="mt-4 text-center">

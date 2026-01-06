@@ -48,7 +48,7 @@ export const empleados = mysqlTable('empleados', {
   direccionGeneralId: int('direccion_general_id', { unsigned: true }).notNull().references(() => direccionesGenerales.id, { onDelete: 'restrict' }),
   areaId: int('area_id', { unsigned: true }).notNull().references(() => areas.id, { onDelete: 'restrict' }),
   cargo: varchar('cargo', { length: 100 }),
-  activo: boolean('activo').default(true).notNull()
+  activo: boolean('activo').notNull()
 });
 
 export const categoriasOrden = mysqlTable('categorias_orden', {
@@ -80,7 +80,7 @@ export const usuarios = mysqlTable('usuarios', {
   id: int('id', { unsigned: true }).primaryKey().autoincrement(),
   nombreUsuario: varchar('nombre_usuario', { length: 50 }).notNull().unique(),
   password: varchar('password', { length: 255 }).notNull(),
-  activo: boolean('activo').default(true).notNull(),
+  activo: boolean('activo').notNull(),
   empleadoId: int('empleado_id', { unsigned: true }).unique().notNull().references(() => empleados.id, { onDelete: 'restrict' }),
   rolId: int('rol_id', { unsigned: true }).notNull().references(() => roles.id, { onDelete: 'restrict' }),
   avatar: varchar('avatar', { length: 255 }),

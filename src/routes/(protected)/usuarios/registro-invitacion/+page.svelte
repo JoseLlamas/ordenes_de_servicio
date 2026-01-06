@@ -79,6 +79,9 @@
       });
   }
 
+  /**
+   * @type {ConfirmModal | undefined}
+   */
   let modal = $state();
 </script>
 
@@ -108,13 +111,13 @@
   </InfoMessage>
 {/if}
 
-<div class="grid grid-cols-1 md:grid-cols-4 gap-2">
-  <div class="md:col-span-4">
+<div class="grid grid-cols-1 lg:grid-cols-4 gap-2">
+  <div class="lg:col-span-4">
     <TitleSection>
       Empleado
     </TitleSection>
   </div>
-  <div class="md:col-span-2">
+  <div class="lg:col-span-2">
     <Select
       label="Area"
       bind:value={areaParaAsignarEmpleado}
@@ -126,7 +129,7 @@
       {/each}
     </Select>
   </div>
-  <div class="md:col-span-2">
+  <div class="lg:col-span-2">
     <Select
       label="Empleado"
       required
@@ -143,12 +146,12 @@
       </ErrorMessage>
     {/if}
   </div>
-  <div class="md:col-span-4">
+  <div class="lg:col-span-4">
     <TitleSection>
       Rol
     </TitleSection>
   </div>
-  <div class="md:col-span-4 grid grid-cols-1 md:grid-cols-4 gap-4">
+  <div class="lg:col-span-4 grid grid-cols-1 lg:grid-cols-4 gap-4">
     {#each data.roles as rol(rol.id)}
       <div class="relative">
         <input
@@ -244,18 +247,18 @@
     {/each}
   </div>
   {#if form?.errors && form.errors.rolId}
-    <div class="md:col-span-4">
+    <div class="lg:col-span-4">
       <ErrorMessage>
         {form.errors.rolId}
       </ErrorMessage>
     </div>
   {/if}
-  <div class="md:col-span-4">
+  <div class="lg:col-span-4">
     <TitleSection>
       Alcance del rol
     </TitleSection>
   </div>
-  <div class="md:col-span-2">
+  <div class="lg:col-span-4">
     <Select
       label="Area"
       bind:value={areaParaAsignarAlcance}
@@ -266,7 +269,7 @@
       {/each}
     </Select>
   </div>
-  <div class="md:col-span-2 flex items-center justify-center">
+  <div class="lg:col-span-4">
     <ButtonSecundary
       class="w-full"
       onclick={() => {
@@ -278,7 +281,7 @@
       Agregar area
     </ButtonSecundary>
   </div>
-  <div class="md:col-span-4">
+  <div class="lg:col-span-4">
     {#if areasAccesoSeleccionadas.length > 0}
       <div class="
         rounded-lg border p-4 space-y-2
@@ -337,16 +340,16 @@
     {/if}
   </div>
   {#if form?.errors && form.errors.areasAccesoId}
-    <div class="md:col-span-4">
+    <div class="lg:col-span-4">
       <ErrorMessage>
         {form.errors.areasAccesoId}
       </ErrorMessage>
     </div>
   {/if}
   <form
-    class="md:col-span-4"
+    class="lg:col-span-4"
     method="POST"
-    use:confirmBeforeEnhance={{ confirm: () => modal.confirm({ texto: '¿Seguro de registrar la invitación?' }) }}
+    use:confirmBeforeEnhance={{ confirm: () => modal?.confirm({ texto: '¿Seguro de registrar la invitación?' }) ?? Promise.resolve(false) }}
     use:enhance={({ formData }) => {
       submitting = true;
       const data = {

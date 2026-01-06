@@ -1,23 +1,31 @@
 <script>
+  /**
+   * @type {{
+   * class?: string,
+   * children?: import('svelte').Snippet,
+   * type?: 'submit' | 'reset' | 'button',
+   * [key: string]: any
+   * }}
+   */
   let {
+    'class': classNames = '',
     children,
-    classNames = [],
+    type = 'button',
     ...props
   } = $props();
 </script>
 
 <button
-  class={[
-    'bg-gray-500', // Gris neutral para indicar "Cancelar"
-    'text-white',
-    'py-2',
-    'px-4',
-    'rounded-md',
-    'hover:bg-gray-600', // Un poco más oscuro al hacer hover
-    'transition-colors',
-    'cursor-pointer'
-  ].concat(...classNames)}
+  {type}
+  class="bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600 transition-colors cursor-pointer {classNames}"
   {...props}
 >
   {@render children?.()}
 </button>
+
+<style>
+  button:disabled {
+    background-color: #f3f3f3;
+    cursor: not-allowed;
+  }
+</style>

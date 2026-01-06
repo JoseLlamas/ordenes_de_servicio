@@ -1,15 +1,23 @@
 <script>
   import Avatar from '$lib/components/Avatar.svelte';
-import { formatearFecha, normalizePalabras } from '$lib/utils';
+  import Modal from '$lib/components/Modal.svelte';
+  import { formatearFecha, formatearFechaRelativa, normalizePalabras } from '$lib/utils';
+
   let { data } = $props();
 
-  const { ordenServicio, historialOrden } = $derived(data);
+  let ordenServicio = $derived(data.ordenServicio);
+  let historialOrden = $derived(data.historialOrden);
+
+  /**
+   * @type {HTMLDialogElement | undefined}
+   */
+  let modalAsignacion = $state();
 
   let tabActual = $state('detalles');
 
   const tabs = [
     { id: 'detalles', nombre: 'Detalles', icono: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
-    { id: 'activos', nombre: 'Activos', icono: 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4', badge: ordenServicio.activos?.length || 0 },
+    { id: 'activos', nombre: 'Activos', icono: 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4', badge: ordenServicio.activos.length || 0 },
     { id: 'historial', nombre: 'Historial', icono: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z' }
   ];
 
@@ -48,19 +56,18 @@ import { formatearFecha, normalizePalabras } from '$lib/utils';
   function escribirNombreCompleto (persona) {
     return normalizePalabras(persona.nombre, persona.primerApellido, persona.segundoApellido ?? '');
   }
-
-  /**
-   * Obtener iniciales
-   * @param {{ nombre: string, primerApellido: string }} persona
-   */
-  function getIniciales (persona) {
-    return `${persona.nombre.charAt(0)}${persona.primerApellido.charAt(0)}`;
-  }
 </script>
 
 <svelte:head>
-  <title>Orden #{ordenServicio.id} - {ordenServicio.categoriaOrden.descripcion}</title>
+  <title>Orden #{ordenServicio.id}</title>
 </svelte:head>
+
+<Modal
+  bind:dialog={modalAsignacion}
+  title="Asignar agentes"
+>
+  este es un modal
+</Modal>
 
 <!-- Header -->
 <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 mb-6">
@@ -68,6 +75,7 @@ import { formatearFecha, normalizePalabras } from '$lib/utils';
     <div class="flex-1">
       <div class="flex items-center gap-3 mb-2">
         <a
+          title="regresar"
           href="/ordenes"
           class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
         >
@@ -93,23 +101,21 @@ import { formatearFecha, normalizePalabras } from '$lib/utils';
       </p>
     </div>
 
-    <!-- Botones de acción -->
     <div class="flex flex-wrap gap-2">
+
+      <button class="px-4 py-2 rounded-lg text-sm font-medium bg-green-600 text-white hover:bg-green-700 transition-colors flex items-center gap-2">
+        Iniciar
+      </button>
+
       <button class="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors flex items-center gap-2">
-        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-        </svg>
         Editar
       </button>
 
-      {#if ordenServicio.estado === 'NUEVO'}
-        <button class="px-4 py-2 rounded-lg text-sm font-medium bg-green-600 text-white hover:bg-green-700 transition-colors flex items-center gap-2">
-          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          Cerrar
-        </button>
-      {/if}
+      <button
+        onclick={() => modalAsignacion?.showModal()}
+        class="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors flex items-center gap-2">
+        Asignar
+      </button>
 
       <button class="px-4 py-2 rounded-lg text-sm font-medium border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors flex items-center gap-2">
         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -117,12 +123,14 @@ import { formatearFecha, normalizePalabras } from '$lib/utils';
         </svg>
         Imprimir
       </button>
+
     </div>
+
   </div>
 </div>
 
 <!-- Tabs -->
-<div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+<div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden mb-6">
   <div class="border-b border-gray-200 dark:border-gray-700">
     <nav class="flex -mb-px overflow-x-auto">
       {#each tabs as tab, index (index)}
@@ -354,7 +362,7 @@ import { formatearFecha, normalizePalabras } from '$lib/utils';
                     Creado
                   </p>
                   <p class="text-sm text-gray-900 dark:text-white">
-                    {formatearFecha(ordenServicio.creadoEn)}
+                    {formatearFechaRelativa(ordenServicio.creadoEn)}
                   </p>
                 </div>
 
@@ -567,5 +575,26 @@ import { formatearFecha, normalizePalabras } from '$lib/utils';
         {/if}
       </div>
     {/if}
+  </div>
+</div>
+
+<div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 mb-6">
+  <div class="flex flex-wrap gap-2 justify-center">
+
+    <button class="px-4 py-2 rounded-lg text-sm font-medium bg-green-600 text-white hover:bg-green-700 transition-colors flex items-center gap-2">
+      Pediente
+    </button>
+
+    <button class="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors flex items-center gap-2">
+      Solucionar
+    </button>
+
+    <button class="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors flex items-center gap-2">
+      Cerrar
+    </button>
+
+    <button class="px-4 py-2 rounded-lg text-sm font-medium border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors flex items-center gap-2">
+      Cancelar
+    </button>
   </div>
 </div>

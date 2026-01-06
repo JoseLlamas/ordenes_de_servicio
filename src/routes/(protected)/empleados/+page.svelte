@@ -1,7 +1,7 @@
 <script>
   import { enhance } from '$app/forms';
   import Input from '$lib/components/Input.svelte';
-  import ButtonAccept from '$lib/components/ButtonAccept.svelte';
+  import ButtonSubmitting from '$lib/components/ButtonSubmitting.svelte';
   import ErrorMessage from '$lib/components/ErrorMessage.svelte';
   import TitleSection from '$lib/components/TitleSection.svelte';
   import LoaderLine from '$lib/components/LoaderLine.svelte';
@@ -25,7 +25,7 @@
   <LoaderLine />
 {/if}
 <form
-  class="mt-3 p-2 grid grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-8"
+  class="mt-3 p-2 grid grid-cols-1 gap-x-4 gap-y-2 lg:grid-cols-8"
   use:enhance={async () => {
     fetching = true;
     return async ({ update }) => {
@@ -35,8 +35,9 @@
   }}
   action="?/buscar"
   method="POST"
+  novalidate
 >
-  <div class="md:col-span-2">
+  <div class="lg:col-span-2">
     <Input
       name="numeroEmpleado"
       type="number"
@@ -49,7 +50,7 @@
       </ErrorMessage>
     {/if}
   </div>
-  <div class="md:col-span-2">
+  <div class="lg:col-span-2">
     <Input
       name="nombre"
       label="Nombre"
@@ -61,7 +62,7 @@
       </ErrorMessage>
     {/if}
   </div>
-  <div class="md:col-span-2">
+  <div class="lg:col-span-2">
     <Input
       name="primerApellido"
       label="Segundo Apellido"
@@ -73,7 +74,7 @@
       </ErrorMessage>
     {/if}
   </div>
-  <div class="md:col-span-2">
+  <div class="lg:col-span-2">
     <Input
       name="segundoApellido"
       label="Segundo Apellido"
@@ -85,10 +86,8 @@
       </ErrorMessage>
     {/if}
   </div>
-  <div class="md:col-span-8">
-    <ButtonAccept class="w-full">
-      Buscar
-    </ButtonAccept>
+  <div class="lg:col-span-8">
+    <ButtonSubmitting class="w-full" submitting={fetching} text="Buscar" />
   </div>
 </form>
 
@@ -98,7 +97,7 @@
   <div class="overflow-x-auto">
     <table class="min-w-full divide-y divide-gray-200 text-sm">
       <thead class="bg-gray-100 text-gray-700 text-left">
-        <tr class="hidden md:table-row">
+        <tr class="hidden lg:table-row">
           <th class="py-2 px-4">Número Empleado</th>
           <th class="py-2 px-4">Nombre</th>
           <th class="py-2 px-4">Primer Apellido</th>
@@ -112,41 +111,41 @@
       <tbody class="divide-y divide-gray-200">
         {#each form.empleados as empleado(empleado.id)}
         <!-- Repetir este bloque por cada item -->
-          <tr class="block md:table-row border-b md:border-none p-4 md:p-0">
+          <tr class="block lg:table-row border-b lg:border-none p-4 lg:p-0">
             <!-- Número -->
-            <td class="py-2 px-4 md:table-cell block">
-              <span class="md:hidden font-semibold">Número Empleado:</span>
+            <td class="py-2 px-4 lg:table-cell block">
+              <span class="lg:hidden font-semibold">Número Empleado:</span>
               {empleado.numeroEmpleado ?? 'N/A'}
             </td>
             <!-- Nombre -->
-            <td class="py-2 px-4 md:table-cell block">
-              <span class="md:hidden font-semibold">Nombre:</span>
+            <td class="py-2 px-4 lg:table-cell block">
+              <span class="lg:hidden font-semibold">Nombre:</span>
               {empleado.nombre}
             </td>
             <!-- Primer Apellido -->
-            <td class="py-2 px-4 md:table-cell block">
-              <span class="md:hidden font-semibold">Primer Apellido:</span>
+            <td class="py-2 px-4 lg:table-cell block">
+              <span class="lg:hidden font-semibold">Primer Apellido:</span>
               {empleado.primerApellido}
             </td>
             <!-- Segundo Apellido -->
-            <td class="py-2 px-4 md:table-cell block">
-              <span class="md:hidden font-semibold">Segundo Apellido:</span>
+            <td class="py-2 px-4 lg:table-cell block">
+              <span class="lg:hidden font-semibold">Segundo Apellido:</span>
               {empleado.segundoApellido ?? 'N/A'}
             </td>
-            <td class="py-2 px-4 sm:table-cell block">
-              <span class="md:hidden font-semibold">Dirección General:</span>
+            <td class="py-2 px-4 lg:table-cell block">
+              <span class="lg:hidden font-semibold">Dirección General:</span>
               {empleado.direccionGeneral.nombre}
             </td>
-            <td class="py-2 px-4 md:table-cell block">
-              <span class="md:hidden font-semibold">Area:</span>
+            <td class="py-2 px-4 lg:table-cell block">
+              <span class="lg:hidden font-semibold">Area:</span>
               {empleado.area.nombre}
             </td>
-            <td class="py-2 px-4 sm:table-cell block">
-              <span class="md:hidden font-semibold">Cargo:</span>
+            <td class="py-2 px-4 lg:table-cell block">
+              <span class="lg:hidden font-semibold">Cargo:</span>
               {empleado.cargo ?? 'N/A'}
             </td>
-            <td class="py-2 px-4 md:table-cell block">
-              <span class="md:hidden font-semibold">Activo</span>
+            <td class="py-2 px-4 lg:table-cell block">
+              <span class="lg:hidden font-semibold">Activo</span>
               {empleado.activo ? 'Si' : 'No'}
             </td>
           </tr>

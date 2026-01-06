@@ -33,8 +33,9 @@
 
 <form
   method="POST"
+  novalidate
   action="?/cambiarPassword"
-  class="grid grid-cols-1 sm:grid-cols-3 gap-4 p-4 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-auto space-y-2"
+  class="grid grid-cols-1 lg:grid-cols-3 gap-4 p-4 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-auto space-y-2"
   use:enhance={() => {
     submittingCambioPassword = true;
     return async ({ update }) => {
@@ -44,14 +45,14 @@
   }}
 >
   {#if typeof form?.infoCambioPasword !== 'undefined'}
-    <div class="sm:col-span-3">
+    <div class="lg:col-span-3">
       <InfoMessage>
         {form.infoCambioPasword}
       </InfoMessage>
     </div>
   {/if}
   {#if typeof form?.errorCambioPassword !== 'undefined'}
-    <div class="sm:col-span-3">
+    <div class="lg:col-span-3">
       <ErrorCard>
         {form.errorCambioPassword}
       </ErrorCard>
@@ -63,6 +64,7 @@
       name="passwordActual"
       id="passwordActual"
       placeholder="Ingrese su contraseña actual"
+      required
     />
     {#if typeof form?.errorsCambioPassword?.passwordActual !== 'undefined'}
       <ErrorMessage>{form.errorsCambioPassword.passwordActual}</ErrorMessage>
@@ -74,6 +76,7 @@
       name="passwordNuevo"
       id="passwordNuevo"
       placeholder="Mínimo 8 carácteres"
+      required
     />
     {#if typeof form?.errorsCambioPassword?.passwordNuevo !== 'undefined'}
       <ErrorMessage>{form.errorsCambioPassword.passwordNuevo}</ErrorMessage>
@@ -85,12 +88,13 @@
       name="passwordNuevoConfirmacion"
       id="passwordNuevoConfirmacion"
       placeholder="Ingrese de nuevo su nueva contraseña"
+      required
     />
     {#if typeof form?.errorsCambioPassword?.passwordNuevoConfirmacion !== 'undefined'}
       <ErrorMessage>{form.errorsCambioPassword.passwordNuevoConfirmacion}</ErrorMessage>
     {/if}
   </div>
-  <div class="sm:col-span-3">
+  <div class="lg:col-span-3">
     <ButtonSubmitting class="w-full" text="Cambiar contraseña" submitting={submittingCambioPassword} />
   </div>
 </form>
@@ -110,7 +114,6 @@
     return async ({ update }) => {
       await update();
       submittingCambioAvatar = false;
-
     };
   }}
   class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-auto p-4 space-y-2"

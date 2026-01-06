@@ -22,6 +22,13 @@
       "when": 1767594147637,
       "tag": "0002_real_speed_demon",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1767643005244,
+      "tag": "0003_smart_wiccan",
+      "breakpoints": true
     }
   ]
 }

@@ -27,7 +27,7 @@
 
 {#snippet imprimirListaUsuarios(ur)}
   {@const usuariosResumenes = asUsuarioResumenes(ur)}
-  <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
     {#each usuariosResumenes as usuarioResumen (usuarioResumen.id)}
       <div>
         <UsuarioResumenTarjeta {usuarioResumen} />
@@ -45,10 +45,10 @@
       fetching = false;
     };
   }}
-  class="grid grid-cols-1 sm:grid-cols-3 gap-4"
+  class="grid grid-cols-1 lg:grid-cols-3 gap-4"
 >
 
-  <div class="sm:col-span-2">
+  <div class="lg:col-span-2">
     <Select
       label="Area"
       name="areaId"
@@ -72,7 +72,7 @@
     />
   </div>
 
-  <div class="sm:col-span-3">
+  <div class="lg:col-span-3">
     <ButtonSubmitting
       text="Buscar"
       submitting={fetching}

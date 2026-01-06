@@ -1,20 +1,29 @@
 <script>
   /**
-   * @type {{ text: string, class?: string, submitting: boolean }}
+   * @type {{
+   *  text: string,
+   *  class?: string,
+   *  submitting: boolean,
+   *  type?: 'submit' | 'reset' | 'button',
+   *  [key: string]: any
+   * }}
    */
   let {
-    text,
     'class': classNames = '',
-    submitting
+    submitting,
+    text,
+    type = 'submit',
+    ...props
   } = $props();
 </script>
 <button
-  type="submit"
   disabled={submitting}
   class="
-    inline-flex items-center gap-2 bg-[#9b1f3d] text-white py-2.5
+    inline-flex items-center justify-center gap-2 bg-[#9b1f3d] text-white py-2.5
     px-6 rounded-lg font-medium hover:bg-[#7f182f] transition-colors
     cursor-pointer {classNames}"
+  {type}
+  {...props}
 >
   {#if submitting}
     <svg class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">

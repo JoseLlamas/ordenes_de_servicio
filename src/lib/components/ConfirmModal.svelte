@@ -15,7 +15,7 @@
 
   /**
    *
-   * @param {{ title?: string, texto?: string }} param0
+   * @param {{ title?: string, texto?: string }} [param0]
    * @return {Promise<boolean>}
    */
   export async function confirm ({
@@ -40,32 +40,56 @@
     resolver?.(true);
     resolver = null;
   }
-
 </script>
 
-<Modal
-  bind:dialog={dialog}
-  title={estado.title}
+<dialog
+  bind:this={dialog}
+  closedby="any"
+  class="
+    fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
+    rounded-xl p-2 shadow-3xl backdrop:bg-black/50 backdrop:backdrop-blur-md
+    bg-white dark:bg-[#22242b] text-gray-600 dark:text-gray-300
+  "
 >
-  <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-300">
-    {estado.texto}
-  </p>
-  <div class="mt-6 flex justify-end gap-3">
+  <div class="flex items-center justify-between p-3 border-b
+   bg-gray-100 dark:bg-gray-800 rounded-t-xl">
+    <div class="h-5 w-5"></div>
+
+    <h2 class="text-lg font-semibold">
+      {estado.title}
+    </h2>
+
     <button
-      type="button"
-      class="px-4 py-2 rounded-lg border border-zinc-300 dark:border-zinc-600
-              text-zinc-700 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800"
-      onclick={() => clicInCancelar()}
+      class="text-gray-500 hover:text-red-500 transition text-xl leading-none cursor-pointer"
+      onclick={() => {
+        dialog?.close();
+      }}
+      aria-label="Cerrar"
     >
-      Cancelar
-    </button>
-    <button
-      type="button"
-      class="px-4 py-2 rounded-lg bg-[#9b1f3d] text-white font-medium
-              hover:opacity-90 transition"
-      onclick={() => clicInAceptar()}
-    >
-      Aceptar
+      &times;
     </button>
   </div>
-</Modal>
+  <div class="p-2 space-y-4">
+    <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-300">
+      {estado.texto}
+    </p>
+    <div class="mt-6 flex justify-end gap-3">
+      <button
+        type="button"
+        class="px-4 py-2 rounded-lg border border-zinc-300 dark:border-zinc-600
+                text-zinc-700 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+        onclick={() => clicInCancelar()}
+      >
+        Cancelar
+      </button>
+      <button
+        type="button"
+        class="px-4 py-2 rounded-lg bg-[#9b1f3d] text-white font-medium
+                hover:opacity-90 transition"
+        onclick={() => clicInAceptar()}
+      >
+        Aceptar
+      </button>
+    </div>
+  </div>
+</dialog>

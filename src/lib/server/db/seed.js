@@ -72,6 +72,10 @@ const rolesPermisos = [
 
 async function seed () {
 
+  await db.delete(schema.folios);
+  await db.delete(schema.activos);
+  await db.delete(schema.historialOrdenes);
+  await db.delete(schema.ordenesServicio);
   await db.delete(schema.invitaciones);
   await db.delete(schema.categoriasOrden);
   await db.delete(schema.encargadosAreas);
@@ -101,7 +105,7 @@ async function seed () {
   await db.insert(schema.direccionesGenerales).values(jsonDireccionesGenerales.direcciones_generales);
   await db.insert(schema.areas).values(jsonAreas.areas.map(area => ({ ...area, activo: area.activo === 1, direccionGeneralId: area.direccion_general_id })));
   await db.insert(schema.categoriasActivo).values(jsonCategoriasActivos.data.filter((c) => c.tipo > 0).map(c => ({ descripcion: c.descripcion, areaId: 317 })));
-  await db.insert(schema.empleados).values(jsonEmpleadosInformatica.map((empl) => ({ ...empl, direccionGeneralId: 21 })));
+  await db.insert(schema.empleados).values(jsonEmpleadosInformatica.map((empl) => ({ ...empl, direccionGeneralId: 21, activo: true })));
 
   await db.insert(schema.categoriasOrden).values([
     { descripcion: 'PROBLEMAS DE HARDWARE O SOFTWARE', areaId: 317 },
@@ -125,10 +129,20 @@ async function seed () {
     { descripcion: 'OTRO', areaId: 315 }
   ]);
 
-  const empleado = await db.select().from(schema.empleados).where(eq(schema.empleados.numeroEmpleado, 10176066)).limit(1);
+  await db.insert(schema.empleados).values({
+    numeroEmpleado: 1,
+    nombre: 'ADMINISTRADOR',
+    primerApellido: 'ADMINISTRADOR',
+    direccionGeneralId: 21,
+    areaId: 316,
+    cargo: 'ADMINISTRADOR DEL SISTEMA',
+    activo: true
+  });
+
+  const empleado = await db.select().from(schema.empleados).where(eq(schema.empleados.numeroEmpleado, 1)).limit(1);
   await db.insert(schema.usuarios).values({
-    nombreUsuario: 'JohannHermine',
-    password: await generateHashPassword('lobo@estepario044@johann'),
+    nombreUsuario: 'Administrador',
+    password: await generateHashPassword('lobo@estepario044@administrador'),
     activo: true,
     empleadoId: empleado[0].id,
     rolId: 4,
