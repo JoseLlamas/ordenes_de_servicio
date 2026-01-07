@@ -2,9 +2,7 @@
   import Avatar from '$lib/components/Avatar.svelte';
   import Modal from '$lib/components/Modal.svelte';
   import { formatearFecha, formatearFechaRelativa, normalizePalabras } from '$lib/utils';
-  import { obtenerUsuariosConPermisoAgente } from '$lib/api';
-  import Paginador from '$lib/components/Paginador.svelte';
-    import UsuarioResumenTarjeta from '$lib/components/UsuarioResumenTarjeta.svelte';
+  import SelectorAgentesMultiple from '$lib/components/SelectorAgentesMultiple.svelte';
 
   let { data } = $props();
 
@@ -17,11 +15,6 @@
   let modalAsignacion = $state();
 
   let tabActual = $state('detalles');
-
-  /**
-   * @type {Awaited<ReturnType<typeof obtenerUsuariosConPermisoAgente>>}
-   */
-  let usuariosConPermisoAgente = $state([]);
 
   const tabs = [
     { id: 'detalles', nombre: 'Detalles', icono: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
@@ -64,36 +57,19 @@
   function escribirNombreCompleto (persona) {
     return normalizePalabras(persona.nombre, persona.primerApellido, persona.segundoApellido ?? '');
   }
-
-  function abrirModalAsignacion () {
-    void obtenerUsuariosConPermisoAgente(ordenServicio.areaAsignada.id)
-      .then(result => {
-        usuariosConPermisoAgente = result;
-        modalAsignacion?.showModal();
-      });
-  }
 </script>
 
 <svelte:head>
   <title>Orden #{ordenServicio.id}</title>
 </svelte:head>
 
-{#snippet imprimirUsuariosConPermisoAgente(usuariosConPermisoAgente)}
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-x-3 gap-y-2">
-    {#each usuariosConPermisoAgente as usuarioConPermisoAgente(usuarioConPermisoAgente)}
-      <UsuarioResumenTarjeta usuarioResumen={usuarioConPermisoAgente} />
-    {/each}
-  </div>
-{/snippet}
-
 <Modal
   bind:dialog={modalAsignacion}
   title="Asignar agentes"
 >
-  <Paginador
-    records={usuariosConPermisoAgente}
-    render={imprimirUsuariosConPermisoAgente}
-    perPagina={6}
+  <SelectorAgentesMultiple
+    areaId={ordenServicio.areaAsignada.id}
+    ordenServicioId={ordenServicio.id}
   />
 </Modal>
 
@@ -140,7 +116,7 @@
       </button>
 
       <button
-        onclick={abrirModalAsignacion}
+        onclick={() => modalAsignacion?.showModal()}
         class="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors flex items-center gap-2">
         Asignar
       </button>

@@ -1,4 +1,4 @@
-import { eq, and, inArray, isNotNull } from 'drizzle-orm';
+import { eq, and, inArray, isNotNull, like } from 'drizzle-orm';
 import { db } from '../index';
 import {
   usuarios,
@@ -333,10 +333,11 @@ export async function existeNombreUsuario (nombreUsuario, dbOrTx = db) {
 
 /**
  * @param {number} areaId
+ * @param {{ nombre?: string }} [filters = {}]
  * @param {DbOrTx} [dbOrTx = db]
  * @return {Promise<import('$lib/types').UsuarioResumenDTO[]>}
  */
-export async function obtenerUsuariosConPermisoAgente (areaId, dbOrTx = db) {
+export async function obtenerUsuariosConPermisoAgente (areaId, filters = {}, dbOrTx = db) {
   const subquery = dbOrTx
     .select({
       id: usuarios.id
@@ -359,7 +360,12 @@ export async function obtenerUsuariosConPermisoAgente (areaId, dbOrTx = db) {
     .orderBy(usuarios.id)
     .as('usuarios_con_permisos');
   const rows = await createQueryParaUsuarioResumen(dbOrTx)
-    .where(sql`${usuarios.id} in (select id from ${subquery})`)
+    .where(
+      and(
+        sql`${usuarios.id} in (select id from ${subquery})`,
+        typeof filters.nombre !== 'undefined' ? like(empleados.nombre, `%${filters.nombre}%`) : undefined
+      )
+    )
     .orderBy(asc(empleados.nombre), asc(empleados.primerApellido));
   return rows.map(row => ({
     id: row.id,
