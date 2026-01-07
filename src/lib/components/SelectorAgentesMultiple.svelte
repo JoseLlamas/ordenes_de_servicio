@@ -1,11 +1,12 @@
 <script>
-    import { enhance } from '$app/forms';
+  import { enhance } from '$app/forms';
   import { obtenerUsuariosConPermisoAgente } from '$lib/api';
   import { normalizePalabras } from '$lib/utils';
   import Avatar from './Avatar.svelte';
   import ButtonAccept from './ButtonAccept.svelte';
   import ButtonSubmitting from './ButtonSubmitting.svelte';
   import Input from './Input.svelte';
+    import LoadingScreen from './LoadingScreen.svelte';
   import Paginador from './Paginador.svelte';
 
   /**
@@ -19,7 +20,8 @@
    * }}
    */
   let {
-    areaId
+    areaId,
+    ordenServicioId
   } = $props();
 
   /**
@@ -28,6 +30,7 @@
   let usuariosConPermisoAgentesSeleccionados = $state([]);
 
   let loading = $state(false);
+  let submitting = $state(false);
   let busqueda = $state('');
   let mostrandoSeleccionados = $state(false);
 
@@ -92,6 +95,8 @@
    */
   const asUsuariosConPermisosAgente = (xs) => xs;
 </script>
+
+<LoadingScreen hidden={!submitting} />
 
 {#snippet imprimirUsuariosConPermisoAgente(a)}
   {@const agentes = asUsuariosConPermisosAgente(a)}
@@ -217,10 +222,23 @@
 
 <form
   method="POST"
-  action="?/asignar"
+  action="?/asignarAgentes"
   use:enhance={({ formData }) => {
-    return async ({ update }) => {
+    const data = {
+      ordenServicioId,
+      usuariosConPermisoAgenteId: usuariosConPermisoAgentesSeleccionados.map(u => u.id)
+    };
+    formData.set('data', JSON.stringify(data));
+    submitting = true;
+    return async ({ update, result }) => {
       await update();
+      if (result.status === 200) {
+        usuariosConPermisoAgente = [];
+        usuariosConPermisoAgentesSeleccionados = [];
+        usuariosConPermisoAgenteParaMostrar = [];
+        mostrandoSeleccionados = false;
+      }
+      submitting = false;
     };
   }}
 >

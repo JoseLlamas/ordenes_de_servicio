@@ -38,13 +38,16 @@ export async function load ({ params, locals }) {
  */
 export const actions = {
 
-  agregarAgente: async ({ request }) => {
+  asignarAgentes: async ({ request }) => {
     const form = await request.formData();
+    console.log(form.get('data'));
     const schema = Joi.object({
       ticketId: Joi.number().empty('').required(),
       usuarioId: Joi.number().empty('').required()
     });
-    return {};
+    return {
+      message: 'ok'
+    };
   },
 
   cambiarEstado: async ({ request, locals }) => {
