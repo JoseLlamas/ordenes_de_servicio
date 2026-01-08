@@ -34,12 +34,12 @@ export async function obtenerCategoriasActivoPorArea (areaId, signal) {
  * @param {AbortSignal} [signal]
  * @returns {Promise<import('$lib/types').UsuarioResumenDTO[]>}
  */
-export async function obtenerUsuariosConPermisoAgente (areaId, nombre, signal) {
+export async function obtenerAgentes (areaId, nombre, signal) {
   const queryString = new URLSearchParams;
   if (typeof nombre !== 'undefined') {
     queryString.append('nombre', nombre);
   }
-  return api(`/api/areas/${areaId}/con-permiso-agente?${queryString}`, { signal });
+  return api(`/api/areas/${areaId}/agentes?${queryString}`, { signal });
 }
 
 

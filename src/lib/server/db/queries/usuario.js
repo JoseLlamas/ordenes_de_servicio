@@ -337,7 +337,7 @@ export async function existeNombreUsuario (nombreUsuario, dbOrTx = db) {
  * @param {DbOrTx} [dbOrTx = db]
  * @return {Promise<import('$lib/types').UsuarioResumenDTO[]>}
  */
-export async function obtenerUsuariosConPermisoAgente (areaId, filters = {}, dbOrTx = db) {
+export async function obtenerAgentes (areaId, filters = {}, dbOrTx = db) {
   const subquery = dbOrTx
     .select({
       id: usuarios.id

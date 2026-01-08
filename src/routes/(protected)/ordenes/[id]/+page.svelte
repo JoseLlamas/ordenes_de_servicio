@@ -3,11 +3,26 @@
   import Modal from '$lib/components/Modal.svelte';
   import { formatearFecha, formatearFechaRelativa, normalizePalabras } from '$lib/utils';
   import SelectorAgentesMultiple from '$lib/components/SelectorAgentesMultiple.svelte';
+  import { enhance } from '$app/forms';
+  import ButtonAccept from '$lib/components/ButtonAccept.svelte';
+  import LoadingScreen from '$lib/components/LoadingScreen.svelte';
 
-  let { data } = $props();
+  let { data, form } = $props();
 
   let ordenServicio = $derived(data.ordenServicio);
   let historialOrden = $derived(data.historialOrden);
+
+  let submitting = $state(false);
+
+  /**
+   * @type {SelectorAgentesMultiple | undefined}
+   */
+  let selectorAgentesMultiple = $state();
+
+  /**
+   * @type {import('$lib/types').UsuarioResumenDTO[]}
+   */
+  let agentesSeleccionados = $state([]);
 
   /**
    * @type {HTMLDialogElement | undefined}
@@ -16,11 +31,11 @@
 
   let tabActual = $state('detalles');
 
-  const tabs = [
+  const tabs = $derived([
     { id: 'detalles', nombre: 'Detalles', icono: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
     { id: 'activos', nombre: 'Activos', icono: 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4', badge: ordenServicio.activos.length || 0 },
     { id: 'historial', nombre: 'Historial', icono: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z' }
-  ];
+  ]);
 
   /**
    * Mapeo de estados a colores
@@ -63,14 +78,41 @@
   <title>Orden #{ordenServicio.id}</title>
 </svelte:head>
 
+<LoadingScreen hidden={!submitting} />
+
 <Modal
   bind:dialog={modalAsignacion}
   title="Asignar agentes"
 >
   <SelectorAgentesMultiple
     areaId={ordenServicio.areaAsignada.id}
-    ordenServicioId={ordenServicio.id}
+    bind:agentesSeleccionados={agentesSeleccionados}
+    bind:this={selectorAgentesMultiple}
   />
+  <form
+    method="POST"
+    action="?/asignarAgentes"
+    use:enhance={({ formData }) => {
+      const data = {
+        ordenServicioId: ordenServicio.id,
+        agentesId: agentesSeleccionados.map(u => u.id)
+      };
+      formData.set('data', JSON.stringify(data));
+      submitting = true;
+      return async ({ update, result }) => {
+        await update();
+        if (result.status === 200) {
+          agentesSeleccionados = [];
+          selectorAgentesMultiple?.limpiarFormulario();
+        }
+        submitting = false;
+      };
+    }}
+  >
+    <ButtonAccept class="w-full">
+      Asignar
+    </ButtonAccept>
+  </form>
 </Modal>
 
 <!-- Header -->

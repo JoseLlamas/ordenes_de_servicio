@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit';
-import { obtenerUsuariosConPermisoAgente } from '$lib/server/db/queries';
+import { obtenerAgentes } from '$lib/server/db/queries';
 
 /**
  *
@@ -19,7 +19,7 @@ export async function GET ({ params, locals, url }) {
     if (nombre.length >= 1) {
       filters.nombre = nombre.toUpperCase();
     }
-    const usuarios = await obtenerUsuariosConPermisoAgente(areaId, filters);
+    const usuarios = await obtenerAgentes(areaId, filters);
     return json(usuarios);
   } catch (err) {
     if (err instanceof Error) {

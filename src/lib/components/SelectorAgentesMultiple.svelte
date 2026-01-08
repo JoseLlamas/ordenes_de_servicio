@@ -1,105 +1,99 @@
 <script>
-  import { enhance } from '$app/forms';
-  import { obtenerUsuariosConPermisoAgente } from '$lib/api';
+  import { obtenerAgentes } from '$lib/api';
   import { normalizePalabras } from '$lib/utils';
   import Avatar from './Avatar.svelte';
-  import ButtonAccept from './ButtonAccept.svelte';
   import ButtonSubmitting from './ButtonSubmitting.svelte';
   import Input from './Input.svelte';
-    import LoadingScreen from './LoadingScreen.svelte';
   import Paginador from './Paginador.svelte';
 
   /**
-   * @typedef {Awaited<ReturnType<typeof obtenerUsuariosConPermisoAgente>>[number]} UsuarioConPermisoAgente
+   * @typedef {Awaited<ReturnType<typeof obtenerAgentes>>[number]} Agente
   */
 
   /**
    * @type {{
    *  areaId: number,
-   *  ordenServicioId: number
+   *  agentesSeleccionados: Agente[]
    * }}
    */
   let {
     areaId,
-    ordenServicioId
+    agentesSeleccionados = $bindable([])
   } = $props();
 
-  /**
-   * @type {UsuarioConPermisoAgente[]}
-   */
-  let usuariosConPermisoAgentesSeleccionados = $state([]);
-
   let loading = $state(false);
-  let submitting = $state(false);
   let busqueda = $state('');
   let mostrandoSeleccionados = $state(false);
 
   /**
-   * @type {UsuarioConPermisoAgente[]}
+   * @type {Agente[]}
    */
-  let usuariosConPermisoAgente = $state([]);
+  let agentes = $state([]);
 
   /**
-   * @type {UsuarioConPermisoAgente[]}
+   * @type {Agente[]}
    */
-  let usuariosConPermisoAgenteParaMostrar = $state([]);
+  let agentesParaMostrar = $state([]);
 
   /**
    *
-   * @param {UsuarioConPermisoAgente} agente
+   * @param {Agente} agente
    */
   function toggleAgente (agente) {
-    const index = usuariosConPermisoAgentesSeleccionados.findIndex(a => a.id === agente.id);
+    const index = agentesSeleccionados.findIndex(a => a.id === agente.id);
     if (index >= 0) {
-      usuariosConPermisoAgentesSeleccionados =
-        usuariosConPermisoAgentesSeleccionados.filter(a => a.id !== agente.id);
-      usuariosConPermisoAgenteParaMostrar = [...usuariosConPermisoAgentesSeleccionados];
+      agentesSeleccionados = agentesSeleccionados.filter(a => a.id !== agente.id);
+      agentesParaMostrar = [...agentesSeleccionados];
     } else {
-      usuariosConPermisoAgentesSeleccionados.push(agente);
-      usuariosConPermisoAgente = usuariosConPermisoAgente.filter(a => a.id !== agente.id);
-      usuariosConPermisoAgenteParaMostrar = [...usuariosConPermisoAgente];
+      agentesSeleccionados.push(agente);
+      agentes = agentes.filter(a => a.id !== agente.id);
+      agentesParaMostrar = [...agentes];
     }
   }
 
-  function mostrarUsuariosConPermisoAgenteToggle () {
+  function mostrarAgentesToggle () {
     mostrandoSeleccionados = !mostrandoSeleccionados;
     if (mostrandoSeleccionados) {
-      usuariosConPermisoAgenteParaMostrar = [...usuariosConPermisoAgentesSeleccionados];
+      agentesParaMostrar = [...agentesSeleccionados];
     } else {
-      usuariosConPermisoAgenteParaMostrar = [...usuariosConPermisoAgente];
+      agentesParaMostrar = [...agentes];
     }
   }
 
   function estaSeleccionado (agenteId) {
-    return usuariosConPermisoAgentesSeleccionados.some(a => a.id === agenteId);
+    return agentesSeleccionados.some(a => a.id === agenteId);
   }
 
-  function buscarUsuariosConPermisosAgente () {
+  function buscarAgentes () {
     const b = busqueda.trim().toUpperCase();
     loading = true;
-    void obtenerUsuariosConPermisoAgente(areaId, b)
+    void obtenerAgentes(areaId, b)
       .then(result => {
         mostrandoSeleccionados = false;
-        const usuariosIds = usuariosConPermisoAgentesSeleccionados.map(u => u.id);
-        usuariosConPermisoAgente = result.filter(u => !usuariosIds.includes(u.id));
-        usuariosConPermisoAgenteParaMostrar = [...usuariosConPermisoAgente];
+        const usuariosIds = agentesSeleccionados.map(u => u.id);
+        agentes = result.filter(u => !usuariosIds.includes(u.id));
+        agentesParaMostrar = [...agentes];
       })
       .finally(() => {
         loading = false;
       });
   }
 
+  export function limpiarFormulario () {
+    agentes = [];
+    agentesParaMostrar = [];
+    mostrandoSeleccionados = false;
+  }
+
   /**
    *
-   * @param {UsuarioConPermisoAgente[]} xs
+   * @param {Agente[]} xs
    */
-  const asUsuariosConPermisosAgente = (xs) => xs;
+  const asAgentes = (xs) => xs;
 </script>
 
-<LoadingScreen hidden={!submitting} />
-
-{#snippet imprimirUsuariosConPermisoAgente(a)}
-  {@const agentes = asUsuariosConPermisosAgente(a)}
+{#snippet imprimirAgentes(a)}
+  {@const agentes = asAgentes(a)}
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
     {#each agentes as agente (agente.id)}
       <button
@@ -160,12 +154,12 @@
       {#if true}
         <button
           type="submit"
-          onclick={mostrarUsuariosConPermisoAgenteToggle}
+          onclick={mostrarAgentesToggle}
           class="cursor-pointer"
         >
           <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold
             { mostrandoSeleccionados ? 'bg-blue-500 text-white dark:bg-blue-600' : 'bg-green-500 text-white dark:bg-green-600' }">
-            {usuariosConPermisoAgentesSeleccionados.length} seleccionado(s) { mostrandoSeleccionados ? '(No Mostrar)' : '(Mostrar)'}
+            {agentesSeleccionados.length} seleccionado(s) { mostrandoSeleccionados ? '(No Mostrar)' : '(Mostrar)'}
           </span>
         </button>
       {/if}
@@ -185,7 +179,7 @@
           text="Buscar"
           type="button"
           class="w-full"
-          onclick={buscarUsuariosConPermisosAgente}
+          onclick={buscarAgentes}
         />
       </div>
     </div>
@@ -199,7 +193,7 @@
       <p class="text-sm text-gray-500 dark:text-gray-400">Cargando agentes...</p>
     </div>
   {:else}
-    {#if usuariosConPermisoAgenteParaMostrar.length === 0}
+    {#if agentesParaMostrar.length === 0}
       <!-- Empty State -->
       <div class="flex flex-col items-center justify-center py-12 space-y-4">
         <svg class="w-16 h-16 text-gray-400 dark:text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -211,38 +205,11 @@
       </div>
     {:else}
       <Paginador
-        records={usuariosConPermisoAgenteParaMostrar}
+        records={agentesParaMostrar}
         perPagina={6}
         showTopMenu={false}
-        render={imprimirUsuariosConPermisoAgente}
+        render={imprimirAgentes}
       />
     {/if}
   {/if}
 </div>
-
-<form
-  method="POST"
-  action="?/asignarAgentes"
-  use:enhance={({ formData }) => {
-    const data = {
-      ordenServicioId,
-      usuariosConPermisoAgenteId: usuariosConPermisoAgentesSeleccionados.map(u => u.id)
-    };
-    formData.set('data', JSON.stringify(data));
-    submitting = true;
-    return async ({ update, result }) => {
-      await update();
-      if (result.status === 200) {
-        usuariosConPermisoAgente = [];
-        usuariosConPermisoAgentesSeleccionados = [];
-        usuariosConPermisoAgenteParaMostrar = [];
-        mostrandoSeleccionados = false;
-      }
-      submitting = false;
-    };
-  }}
->
-  <ButtonAccept class="w-full">
-    Asignar
-  </ButtonAccept>
-</form>
