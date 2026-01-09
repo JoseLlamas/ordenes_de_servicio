@@ -14,10 +14,17 @@ const schema = Joi.object({
       'any.required': 'El orden de servicio es requerido'
     }),
   agentesId: Joi
-
+    .array()
+    .empty(['', null])
+    .items(Joi.number())
+    .min(1)
+    .required()
+    .messages({
+      'array.min': 'Debe seleccionar aunque sea un agente'
+    })
 });
 
 /**
  * @type {Validator<{ orderServicioId: number, agentesId: number[] }>}
  */
-export const validateAsignacionAgente = createValidator(schema);
+export const validateAsignacionAgentes = createValidator(schema);

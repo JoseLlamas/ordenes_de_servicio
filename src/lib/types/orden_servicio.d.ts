@@ -1,5 +1,22 @@
 import type { AreaDTO, CategoriaOrdenDTO, EmpleadoDTO, ActivoDetalleDTO, RolDTO } from '.';
 
+export interface OrdenServicioResumenDTO {
+
+  id: number;
+  descripcion: string;
+  estado : 'NUEVO' | 'PROCESO' | 'PENDIENTE' | 'RESUELTO' | 'CERRADO' | 'CANCELADO';
+  prioridad: 'BAJA' | 'MEDIA' | 'ALTA' | 'CRITICA';
+  tipoEntrada: 'PRESENCIAL' | 'OFICIO' | 'LLAMADA_TELEFONICA' | 'INDICACION_SUPERIOR';
+  numeroOficio: string | null;
+  categoriaOrden: CategoriaOrdenDTO,
+  otroCategoriaOrden: string | null;
+  areaSolicitante: AreaDTO;
+  empleadoSolicitante: Omit<EmpleadoDTO, 'activo'>;
+  telefonoSolicitante: string;
+  areaAsignada: AreaDTO;
+
+}
+
 export interface OrdenServicioDetalleDTO {
 
   id: number;

@@ -2,8 +2,8 @@ import { assertAuthenticated } from '$lib/server/auth/guards';
 import { BusinessRuleException, ForbiddenException } from '$lib/server/exceptions';
 import { createObtenerDetalleOrdenServicioUseCase } from '$lib/server/use_cases/orden_servicio';
 import { obtenerHistorialOrden } from '$lib/server/db/queries';
-import { error, redirect } from '@sveltejs/kit';
-import Joi from 'joi';
+import { error, fail, redirect } from '@sveltejs/kit';
+import { validateAsignacionAgentes } from '$lib/server/validators';
 
 /**
  *
@@ -40,11 +40,12 @@ export const actions = {
 
   asignarAgentes: async ({ request }) => {
     const form = await request.formData();
-    console.log(form.get('data'));
-    const schema = Joi.object({
-      ticketId: Joi.number().empty('').required(),
-      usuarioId: Joi.number().empty('').required()
-    });
+    const validationResult = await validateAsignacionAgentes(JSON.parse(/** @type {string} */ (form.get('data') ?? '{}')));
+    if ('errors' in validationResult) {
+      return fail(422, {
+        errorsAsignacionAgentes: validationResult.errors
+      });
+    }
     return {
       message: 'ok'
     };

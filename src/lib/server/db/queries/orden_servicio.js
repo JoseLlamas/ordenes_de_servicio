@@ -4,7 +4,7 @@ import * as schemas from '../schema';
 
 /**
  * @import { DbOrTx } from './types';
- * @import { OrdenServicioDetalleDTO } from '$lib/types';
+ * @import { OrdenServicioDetalleDTO, OrdenServicioResumenDTO } from '$lib/types';
  */
 
 /**
@@ -34,6 +34,58 @@ export async function registrarOrdenServicio (data, dbOrTx = db) {
       ...data,
       estado: 'NUEVO'
     });
+}
+
+/**
+ *
+ * @param {number} ordenServicioId
+ * @param {DbOrTx} [dbOrTx = db]
+ * @return {Promise<OrdenServicioResumenDTO | null>}
+ */
+export async function obtenerOrdenServicioResumenPorId (ordenServicioId, dbOrTx = db) {
+  return await dbOrTx.query.ordenesServicio.findFirst({
+    where: eq(schemas.ordenesServicio.id, ordenServicioId),
+    columns: {
+      id: true,
+      descripcion: true,
+      estado: true,
+      prioridad: true,
+      tipoEntrada: true,
+      numeroOficio: true,
+      otroCategoriaOrden: true,
+      telefonoSolicitante: true
+    },
+    with: {
+      categoriaOrden: {
+        columns: {
+          id: true,
+          descripcion: true
+        }
+      },
+      areaSolicitante: {
+        columns: {
+          id: true,
+          nombre: true
+        }
+      },
+      empleadoSolicitante: {
+        columns: {
+          id: true,
+          numeroEmpleado: true,
+          nombre: true,
+          primerApellido: true,
+          segundoApellido: true,
+          cargo: true
+        }
+      },
+      areaAsignada: {
+        columns: {
+          id: true,
+          nombre: true
+        }
+      }
+    }
+  }) ?? null;
 }
 
 /**
@@ -180,4 +232,13 @@ export async function obtenerOrdenServicioDetallePorId (id, dbOrTx = db) {
       }
     }
   }) ?? null;
+}
+
+/**
+ *
+ * @param {{ usuarioId: number[], fechaAsignacion: Date }} data
+ * @param {number} ordenServicioId
+ * @param {DbOrTx} [dbOrTx = db]
+ */
+export async function asignarAgentes (data, ordenServicioId, dbOrTx = db) {
 }

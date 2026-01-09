@@ -6,6 +6,7 @@
   import { enhance } from '$app/forms';
   import ButtonAccept from '$lib/components/ButtonAccept.svelte';
   import LoadingScreen from '$lib/components/LoadingScreen.svelte';
+    import ErrorMessage from '$lib/components/ErrorMessage.svelte';
 
   let { data, form } = $props();
 
@@ -84,6 +85,11 @@
   bind:dialog={modalAsignacion}
   title="Asignar agentes"
 >
+  {#if form?.errorsAsignacionAgentes?.agentesId}
+    <ErrorMessage>
+      {form.errorsAsignacionAgentes.agentesId}
+    </ErrorMessage>
+  {/if}
   <SelectorAgentesMultiple
     areaId={ordenServicio.areaAsignada.id}
     bind:agentesSeleccionados={agentesSeleccionados}
