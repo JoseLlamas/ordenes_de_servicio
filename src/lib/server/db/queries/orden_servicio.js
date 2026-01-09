@@ -236,9 +236,15 @@ export async function obtenerOrdenServicioDetallePorId (id, dbOrTx = db) {
 
 /**
  *
- * @param {{ usuarioId: number[], fechaAsignacion: Date }} data
+ * @param {{ usuariosId: number[], fechaAsignacion: Date }} data
  * @param {number} ordenServicioId
  * @param {DbOrTx} [dbOrTx = db]
  */
 export async function asignarAgentes (data, ordenServicioId, dbOrTx = db) {
+  const values = data.usuariosId.map(usuarioId => ({
+    usuarioId,
+    ordenServicioId,
+    fechaAsignacion: data.fechaAsignacion
+  }));
+  return await dbOrTx.insert(schemas.asignaciones).values(values).$returningId();
 }
