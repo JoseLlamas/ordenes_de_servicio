@@ -56,4 +56,10 @@ export interface OrdenServicioDetalleDTO {
     empleado: Omit<EmpleadoDTO, 'activo'>
   } | null;
   activos: ActivoDetalleDTO[];
+  agentes: {
+    id: number;
+    nombreUsuario: string;
+    avatar: string | null,
+    empleado: Omit<EmpleadoDTO, 'activo'>
+  }[]
 }

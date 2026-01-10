@@ -6,14 +6,15 @@
   import { enhance } from '$app/forms';
   import ButtonAccept from '$lib/components/ButtonAccept.svelte';
   import LoadingScreen from '$lib/components/LoadingScreen.svelte';
-    import ErrorMessage from '$lib/components/ErrorMessage.svelte';
+  import ErrorMessage from '$lib/components/ErrorMessage.svelte';
+  import InfoMessage from '$lib/components/InfoMessage.svelte';
 
   let { data, form } = $props();
 
   let ordenServicio = $derived(data.ordenServicio);
   let historialOrden = $derived(data.historialOrden);
 
-  let submitting = $state(false);
+  let submittingAsignacion = $state(false);
 
   /**
    * @type {SelectorAgentesMultiple | undefined}
@@ -79,15 +80,25 @@
   <title>Orden #{ordenServicio.id}</title>
 </svelte:head>
 
-<LoadingScreen hidden={!submitting} />
 
 <Modal
   bind:dialog={modalAsignacion}
   title="Asignar agentes"
 >
+  <LoadingScreen hidden={!submittingAsignacion} />
+  {#if form?.messageAsignacionAgentes}
+    <InfoMessage>
+      {form.messageAsignacionAgentes}
+    </InfoMessage>
+  {/if}
   {#if form?.errorsAsignacionAgentes?.agentesId}
     <ErrorMessage>
       {form.errorsAsignacionAgentes.agentesId}
+    </ErrorMessage>
+  {/if}
+  {#if form?.errorAsignacionAgentes}
+    <ErrorMessage>
+      {form.errorAsignacionAgentes}
     </ErrorMessage>
   {/if}
   <SelectorAgentesMultiple
@@ -104,14 +115,14 @@
         agentesId: agentesSeleccionados.map(u => u.id)
       };
       formData.set('data', JSON.stringify(data));
-      submitting = true;
+      submittingAsignacion = true;
       return async ({ update, result }) => {
         await update();
         if (result.status === 200) {
           agentesSeleccionados = [];
           selectorAgentesMultiple?.limpiarFormulario();
         }
-        submitting = false;
+        submittingAsignacion = false;
       };
     }}
   >

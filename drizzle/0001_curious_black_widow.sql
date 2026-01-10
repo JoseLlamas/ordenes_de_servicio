@@ -1,2 +1,0 @@
-ALTER TABLE `ordenes_servicio` MODIFY COLUMN `estado` enum('NUEVO','PROCESO','PENDIENTE','RESUELTO','CERRADO','CANCELADO') NOT NULL;--> statement-breakpoint
-ALTER TABLE `historial_ordenes` ADD `creado_en` timestamp NOT NULL;

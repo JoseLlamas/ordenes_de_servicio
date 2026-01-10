@@ -137,10 +137,9 @@ export const encargadosAreas = mysqlTable('encargados_areas', {
 export const asignaciones = mysqlTable('asignaciones', {
   id: int('id', { unsigned: true }).primaryKey().autoincrement(),
   ordenServicioId: int('orden_servicio_id', { unsigned: true }).notNull().references(() => ordenesServicio.id, { onDelete: 'restrict' }),
-  usuarioId: int('usuario_id', { unsigned: true }).notNull().references(() => usuarios.id, { onDelete: 'restrict' }),
-  fechaAsignacion: timestamp('fecha_asignacion').notNull()
+  agenteId: int('agente_id', { unsigned: true }).notNull().references(() => usuarios.id, { onDelete: 'restrict' })
 }, (table) => [
-  uniqueIndex('asingaciones_orden_servicio_id_usuario_id').on(table.ordenServicioId, table.usuarioId)
+  uniqueIndex('asingaciones_orden_servicio_id_usuario_id').on(table.ordenServicioId, table.agenteId)
 ]);
 
 export const observaciones = mysqlTable('observaciones', {
@@ -229,7 +228,8 @@ export const ordenesServicioRelations = relations(ordenesServicio, ({ one, many 
     fields: [ordenesServicio.canceladoPorId],
     references: [usuarios.id]
   }),
-  activos: many(activos)
+  activos: many(activos),
+  asignaciones: many(asignaciones)
 }));
 
 export const usuariosRelations = relations(usuarios, ({ one }) => ({
@@ -281,5 +281,16 @@ export const encargadosAreasRelations = relations(encargadosAreas, ({ one }) => 
   empleado: one(empleados, {
     fields: [encargadosAreas.empleadoId],
     references: [empleados.id]
+  })
+}));
+
+export const asignacionesRelations = relations(asignaciones, ({ one }) => ({
+  ordenServicio: one(ordenesServicio, {
+    fields: [asignaciones.ordenServicioId],
+    references: [ordenesServicio.id]
+  }),
+  agente: one(usuarios, {
+    fields: [asignaciones.agenteId],
+    references: [usuarios.id]
   })
 }));

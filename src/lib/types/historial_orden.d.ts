@@ -53,7 +53,7 @@ type AsignacionHistorialOrden = {
   creadoEn: Date;
   datosAdicionales: {
     asignadoPor: UsuarioHistorialOrden,
-    usuarioAsignado: UsuarioHistorialOrden,
+    agentesAsignados: UsuarioHistorialOrden[],
     estado: string
   }
 

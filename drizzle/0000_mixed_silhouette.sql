@@ -21,10 +21,9 @@ CREATE TABLE `areas` (
 CREATE TABLE `asignaciones` (
 	`id` int unsigned AUTO_INCREMENT NOT NULL,
 	`orden_servicio_id` int unsigned NOT NULL,
-	`usuario_id` int unsigned NOT NULL,
-	`fecha_asignacion` timestamp NOT NULL,
+	`agente_id` int unsigned NOT NULL,
 	CONSTRAINT `asignaciones_id` PRIMARY KEY(`id`),
-	CONSTRAINT `asingaciones_orden_servicio_id_usuario_id` UNIQUE(`orden_servicio_id`,`usuario_id`)
+	CONSTRAINT `asingaciones_orden_servicio_id_usuario_id` UNIQUE(`orden_servicio_id`,`agente_id`)
 );
 --> statement-breakpoint
 CREATE TABLE `categorias_activo` (
@@ -56,7 +55,7 @@ CREATE TABLE `empleados` (
 	`direccion_general_id` int unsigned NOT NULL,
 	`area_id` int unsigned NOT NULL,
 	`cargo` varchar(100),
-	`activo` boolean NOT NULL DEFAULT true,
+	`activo` boolean NOT NULL,
 	CONSTRAINT `empleados_id` PRIMARY KEY(`id`),
 	CONSTRAINT `empleados_numero_empleado_unique` UNIQUE(`numero_empleado`)
 );
@@ -80,8 +79,9 @@ CREATE TABLE `folios` (
 CREATE TABLE `historial_ordenes` (
 	`id` int unsigned AUTO_INCREMENT NOT NULL,
 	`orden_servicio_id` int unsigned NOT NULL,
-	`tipo` varchar(50) NOT NULL,
+	`tipo` enum('CREACION','CAMBIO_ESTADO','ASIGNACION','DESASIGNACION') NOT NULL,
 	`descripcion` text NOT NULL,
+	`creado_en` timestamp NOT NULL,
 	`datos_adicionales` text NOT NULL,
 	CONSTRAINT `historial_ordenes_id` PRIMARY KEY(`id`)
 );
@@ -120,7 +120,7 @@ CREATE TABLE `observaciones` (
 CREATE TABLE `ordenes_servicio` (
 	`id` int unsigned NOT NULL,
 	`descripcion` text NOT NULL,
-	`estado` enum('NUEVO','ASIGNADO','PROCESO','PENDIENTE','RESUELTO','CERRADO','CANCELADO') NOT NULL,
+	`estado` enum('NUEVO','PROCESO','PENDIENTE','RESUELTO','CERRADO','CANCELADO') NOT NULL,
 	`prioridad` enum('BAJA','MEDIA','ALTA','CRITICA') NOT NULL,
 	`tipo_entrada` enum('PRESENCIAL','OFICIO','LLAMADA_TELEFONICA','INDICACION_SUPERIOR') NOT NULL,
 	`numero_oficio` varchar(100),
@@ -176,7 +176,7 @@ CREATE TABLE `usuarios` (
 	`id` int unsigned AUTO_INCREMENT NOT NULL,
 	`nombre_usuario` varchar(50) NOT NULL,
 	`password` varchar(255) NOT NULL,
-	`activo` boolean NOT NULL DEFAULT true,
+	`activo` boolean NOT NULL,
 	`empleado_id` int unsigned NOT NULL,
 	`rol_id` int unsigned NOT NULL,
 	`avatar` varchar(255),
@@ -190,7 +190,7 @@ ALTER TABLE `activos` ADD CONSTRAINT `activos_orden_servicio_id_ordenes_servicio
 ALTER TABLE `activos` ADD CONSTRAINT `activos_categoria_activo_id_categorias_activo_id_fk` FOREIGN KEY (`categoria_activo_id`) REFERENCES `categorias_activo`(`id`) ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `areas` ADD CONSTRAINT `areas_direccion_general_id_direcciones_generales_id_fk` FOREIGN KEY (`direccion_general_id`) REFERENCES `direcciones_generales`(`id`) ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `asignaciones` ADD CONSTRAINT `asignaciones_orden_servicio_id_ordenes_servicio_id_fk` FOREIGN KEY (`orden_servicio_id`) REFERENCES `ordenes_servicio`(`id`) ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE `asignaciones` ADD CONSTRAINT `asignaciones_usuario_id_usuarios_id_fk` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios`(`id`) ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE `asignaciones` ADD CONSTRAINT `asignaciones_agente_id_usuarios_id_fk` FOREIGN KEY (`agente_id`) REFERENCES `usuarios`(`id`) ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `categorias_activo` ADD CONSTRAINT `categorias_activo_area_id_areas_id_fk` FOREIGN KEY (`area_id`) REFERENCES `areas`(`id`) ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `categorias_orden` ADD CONSTRAINT `categorias_orden_area_id_areas_id_fk` FOREIGN KEY (`area_id`) REFERENCES `areas`(`id`) ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `empleados` ADD CONSTRAINT `empleados_direccion_general_id_direcciones_generales_id_fk` FOREIGN KEY (`direccion_general_id`) REFERENCES `direcciones_generales`(`id`) ON DELETE restrict ON UPDATE no action;--> statement-breakpoint

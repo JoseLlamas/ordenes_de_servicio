@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { db } from '..';
 import * as schemas from '../schema';
 
@@ -94,7 +94,7 @@ export async function obtenerOrdenServicioResumenPorId (ordenServicioId, dbOrTx 
  * @return {Promise<OrdenServicioDetalleDTO | null>}
  */
 export async function obtenerOrdenServicioDetallePorId (id, dbOrTx = db) {
-  return await dbOrTx.query.ordenesServicio.findFirst({
+  const result = await dbOrTx.query.ordenesServicio.findFirst({
     where: eq(schemas.ordenesServicio.id, id),
     columns: {
       id: true,
@@ -229,22 +229,63 @@ export async function obtenerOrdenServicioDetallePorId (id, dbOrTx = db) {
             }
           }
         }
+      },
+      asignaciones: {
+        columns: {},
+        with: {
+          agente: {
+            columns: {
+              id: true,
+              nombreUsuario: true,
+              avatar: true
+            },
+            with: {
+              empleado: {
+                columns: {
+                  id: true,
+                  numeroEmpleado: true,
+                  nombre: true,
+                  primerApellido: true,
+                  segundoApellido: true,
+                  cargo: true
+                }
+              }
+            }
+          }
+        }
       }
     }
-  }) ?? null;
+  });
+  if (!result) {
+    return null;
+  }
+  const {
+    asignaciones: _,
+    ...ordenServicioResult
+  } = result;
+  return {
+    ...ordenServicioResult,
+    agentes: _.map(asignacion => asignacion.agente)
+  };
 }
 
 /**
  *
- * @param {{ usuariosId: number[], fechaAsignacion: Date }} data
  * @param {number} ordenServicioId
+ * @param {number[]} agentesId
  * @param {DbOrTx} [dbOrTx = db]
  */
-export async function asignarAgentes (data, ordenServicioId, dbOrTx = db) {
-  const values = data.usuariosId.map(usuarioId => ({
-    usuarioId,
-    ordenServicioId,
-    fechaAsignacion: data.fechaAsignacion
+export async function asignarAgentes (ordenServicioId, agentesId, dbOrTx = db) {
+  const values = agentesId.map(agenteId => ({
+    agenteId,
+    ordenServicioId
   }));
-  return await dbOrTx.insert(schemas.asignaciones).values(values).$returningId();
+  return await dbOrTx
+    .insert(schemas.asignaciones)
+    .values(values)
+    .onDuplicateKeyUpdate({
+      set: { agenteId: sql`VALUES(agente_id)` }
+    })
+    .$returningId();
 }
+

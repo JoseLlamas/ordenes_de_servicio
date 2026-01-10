@@ -6,7 +6,7 @@ import { createValidator } from '../../validators/validator';
  */
 
 const schema = Joi.object({
-  orderServicioId: Joi
+  ordenServicioId: Joi
     .number()
     .empty(['', null])
     .required()
@@ -25,6 +25,6 @@ const schema = Joi.object({
 });
 
 /**
- * @type {Validator<{ orderServicioId: number, agentesId: number[] }>}
+ * @type {Validator<{ ordenServicioId: number, agentesId: number[] }>}
  */
 export const validateAsignacionAgentes = createValidator(schema);

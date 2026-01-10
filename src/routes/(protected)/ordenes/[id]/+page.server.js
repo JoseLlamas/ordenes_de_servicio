@@ -1,6 +1,6 @@
 import { assertAuthenticated } from '$lib/server/auth/guards';
 import { BusinessRuleException, ForbiddenException } from '$lib/server/exceptions';
-import { createObtenerDetalleOrdenServicioUseCase } from '$lib/server/use_cases/orden_servicio';
+import { createAsignarAgentesUseCase, createObtenerDetalleOrdenServicioUseCase } from '$lib/server/use_cases/orden_servicio';
 import { obtenerHistorialOrden } from '$lib/server/db/queries';
 import { error, fail, redirect } from '@sveltejs/kit';
 import { validateAsignacionAgentes } from '$lib/server/validators';
@@ -38,7 +38,8 @@ export async function load ({ params, locals }) {
  */
 export const actions = {
 
-  asignarAgentes: async ({ request }) => {
+  asignarAgentes: async ({ request, locals }) => {
+    assertAuthenticated(locals);
     const form = await request.formData();
     const validationResult = await validateAsignacionAgentes(JSON.parse(/** @type {string} */ (form.get('data') ?? '{}')));
     if ('errors' in validationResult) {
@@ -46,9 +47,25 @@ export const actions = {
         errorsAsignacionAgentes: validationResult.errors
       });
     }
-    return {
-      message: 'ok'
-    };
+    try {
+      const agendarAgentes = createAsignarAgentesUseCase(locals.usuario, locals.authorize);
+      await agendarAgentes(validationResult.values.ordenServicioId, validationResult.values.agentesId);
+      return {
+        messageAsignacionAgentes: 'Agentes asignados'
+      };
+    } catch (exc) {
+      if (exc instanceof ForbiddenException) {
+        return fail(403, {
+          errorAsignacionAgentes: exc.message
+        });
+      }
+      if (exc instanceof BusinessRuleException) {
+        return fail(422, {
+          errorAsignacionAgentes: exc.message
+        });
+      }
+      throw exc;
+    }
   },
 
   cambiarEstado: async ({ request, locals }) => {

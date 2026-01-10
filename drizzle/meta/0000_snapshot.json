@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "0dcfae49-4176-429e-9649-4446151ec86f",
+  "id": "edc7ffe5-8b69-41e3-949a-27942bb20ceb",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "activos": {
@@ -181,16 +181,9 @@
           "notNull": true,
           "autoincrement": false
         },
-        "usuario_id": {
-          "name": "usuario_id",
+        "agente_id": {
+          "name": "agente_id",
           "type": "int unsigned",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "fecha_asignacion": {
-          "name": "fecha_asignacion",
-          "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -201,7 +194,7 @@
           "name": "asingaciones_orden_servicio_id_usuario_id",
           "columns": [
             "orden_servicio_id",
-            "usuario_id"
+            "agente_id"
           ],
           "isUnique": true
         }
@@ -220,12 +213,12 @@
           "onDelete": "restrict",
           "onUpdate": "no action"
         },
-        "asignaciones_usuario_id_usuarios_id_fk": {
-          "name": "asignaciones_usuario_id_usuarios_id_fk",
+        "asignaciones_agente_id_usuarios_id_fk": {
+          "name": "asignaciones_agente_id_usuarios_id_fk",
           "tableFrom": "asignaciones",
           "tableTo": "usuarios",
           "columnsFrom": [
-            "usuario_id"
+            "agente_id"
           ],
           "columnsTo": [
             "id"
@@ -444,8 +437,7 @@
           "type": "boolean",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
-          "default": true
+          "autoincrement": false
         }
       },
       "indexes": {},
@@ -646,7 +638,7 @@
         },
         "tipo": {
           "name": "tipo",
-          "type": "varchar(50)",
+          "type": "enum('CREACION','CAMBIO_ESTADO','ASIGNACION','DESASIGNACION')",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -654,6 +646,13 @@
         "descripcion": {
           "name": "descripcion",
           "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "creado_en": {
+          "name": "creado_en",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -963,7 +962,7 @@
         },
         "estado": {
           "name": "estado",
-          "type": "enum('NUEVO','ASIGNADO','PROCESO','PENDIENTE','RESUELTO','CERRADO','CANCELADO')",
+          "type": "enum('NUEVO','PROCESO','PENDIENTE','RESUELTO','CERRADO','CANCELADO')",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -1462,8 +1461,7 @@
           "type": "boolean",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
-          "default": true
+          "autoincrement": false
         },
         "empleado_id": {
           "name": "empleado_id",

@@ -5,29 +5,8 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1767456278709,
-      "tag": "0000_soft_unus",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1767490094436,
-      "tag": "0001_curious_black_widow",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1767594147637,
-      "tag": "0002_real_speed_demon",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "5",
-      "when": 1767643005244,
-      "tag": "0003_smart_wiccan",
+      "when": 1767982639275,
+      "tag": "0000_mixed_silhouette",
       "breakpoints": true
     }
   ]
