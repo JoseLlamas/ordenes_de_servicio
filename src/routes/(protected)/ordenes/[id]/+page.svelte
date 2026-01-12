@@ -8,6 +8,7 @@
   import LoadingScreen from '$lib/components/LoadingScreen.svelte';
   import ErrorMessage from '$lib/components/ErrorMessage.svelte';
   import InfoMessage from '$lib/components/InfoMessage.svelte';
+    import AsignacionesOrden from '$lib/components/AsignacionesOrden.svelte';
 
   let { data, form } = $props();
 
@@ -316,6 +317,11 @@
                   </div>
                 </div>
               </div>
+
+              <AsignacionesOrden
+                agentes={ordenServicio.agentes}
+                ordenServicioId={ordenServicio.id}
+              />
             </div>
           </div>
 

@@ -60,6 +60,10 @@ export interface OrdenServicioDetalleDTO {
     id: number;
     nombreUsuario: string;
     avatar: string | null,
+    rol: {
+      id: number,
+      nombre: string
+    },
     empleado: Omit<EmpleadoDTO, 'activo'>
   }[]
 }

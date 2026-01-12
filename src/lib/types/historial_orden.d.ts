@@ -19,6 +19,24 @@ interface UsuarioHistorialOrden {
 
 }
 
+export interface AgenteHistorialOrdenDTO {
+
+  id: number;
+  nombreUsuario: string;
+  rol: string,
+  empleado: {
+    id: number;
+    nombre: string;
+    primerApellido: string;
+    segundoApellido: string | null;
+    area: {
+      id: number;
+      nombre: string;
+    }
+  }
+
+}
+
 type CreacionHistorialOrden = {
 
   ordenServicioId: number;
@@ -53,7 +71,7 @@ type AsignacionHistorialOrden = {
   creadoEn: Date;
   datosAdicionales: {
     asignadoPor: UsuarioHistorialOrden,
-    agentesAsignados: UsuarioHistorialOrden[],
+    agentesAsignados: AgenteHistorialOrdenDTO[],
     estado: string
   }
 
@@ -67,7 +85,7 @@ type DesasignacionHistorialOrden = {
   creadoEn: Date;
   datosAdicionales: {
     desasignadoPor: UsuarioHistorialOrden,
-    usuarioDesasignado: UsuarioHistorialOrden,
+    agenteDesasignado: AgenteHistorialOrdenDTO,
     estado: string
   }
 

@@ -1,4 +1,4 @@
-import { eq, sql } from 'drizzle-orm';
+import { and, eq, sql } from 'drizzle-orm';
 import { db } from '..';
 import * as schemas from '../schema';
 
@@ -240,6 +240,12 @@ export async function obtenerOrdenServicioDetallePorId (id, dbOrTx = db) {
               avatar: true
             },
             with: {
+              rol: {
+                columns: {
+                  id: true,
+                  nombre: true
+                }
+              },
               empleado: {
                 columns: {
                   id: true,
@@ -287,5 +293,32 @@ export async function asignarAgentes (ordenServicioId, agentesId, dbOrTx = db) {
       set: { agenteId: sql`VALUES(agente_id)` }
     })
     .$returningId();
+}
+
+/**
+ *
+ * @param {number} ordenServicioId
+ * @param {number} agenteId
+ * @param {DbOrTx} [dbOrTx = db]
+ */
+export async function desasignarAgente (ordenServicioId, agenteId, dbOrTx = db) {
+  await dbOrTx
+    .delete(schemas.asignaciones)
+    .where(
+      and(
+        eq(schemas.asignaciones.ordenServicioId, ordenServicioId),
+        eq(schemas.asignaciones.agenteId, agenteId)
+      )
+    );
+}
+
+/**
+ *
+ * @param {number} ordenServicioId
+ * @param {DbOrTx} [dbOrTx = db]
+ * @return {Promise<number>}
+ */
+export async function obtenerCantidadAgentes (ordenServicioId, dbOrTx = db) {
+  return dbOrTx.$count(schemas.asignaciones, eq(schemas.asignaciones.ordenServicioId, ordenServicioId));
 }
 
