@@ -1,4 +1,4 @@
-import { eq, and, inArray, isNotNull, like } from 'drizzle-orm';
+import { eq, and, inArray, isNotNull, like, ne } from 'drizzle-orm';
 import { db } from '../index';
 import {
   usuarios,
@@ -392,6 +392,7 @@ export async function obtenerAgentes (areaId, filters = {}, dbOrTx = db) {
       and(
         eq(usuarios.activo, true),
         isNotNull(usuarios.areasAccesoId),
+        ne(roles.nombre, 'Encargado'),
         eq(permisos.sujeto, 'Orden'),
         inArray(permisos.accion, ['read', 'start', 'resolve']),
         sql`JSON_CONTAINS(${usuarios.areasAccesoId}, ${JSON.stringify(areaId)}, '$')`

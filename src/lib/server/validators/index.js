@@ -8,3 +8,4 @@ export * from './registro_invitacion_validator';
 export * from './registro_usuario_validator';
 export * from './registro_orden_servicio_validator';
 export * from './asignacion_agente_validator';
+export * from './desasignacion_agente_validator';
