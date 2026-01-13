@@ -1,9 +1,6 @@
 import { obtenerOrdenServicioResumenPorId, asignarAgentes } from '$lib/server/db/queries';
 import { db } from '$lib/server/db';
-import { BusinessRuleException, ForbiddenException } from '$lib/server/exceptions';
-import { Temporal } from 'temporal-polyfill';
-import { registrarHistorialOrden, obtenerAgentesParaHistorial } from '$lib/server/db/queries';
-import { BusinessRules } from '$lib/server/exceptions';
+import { BusinessRuleException, ForbiddenException, BusinessRules } from '$lib/server/exceptions';
 
 /**
  *
@@ -28,33 +25,6 @@ export function createAsignarAgentesUseCase (usuario, authorize) {
         throw new BusinessRuleException('Ya no se puede asignar (sólo en nuevo, proceso y pendiente)', BusinessRules.ASIGNACION_FUERA_DE_ESTADO);
       }
       await asignarAgentes(ordenServicio.id, agentesId, tx);
-      const agentes = await obtenerAgentesParaHistorial(agentesId, tx);
-      await registrarHistorialOrden({
-        ordenServicioId: ordenServicio.id,
-        tipo: 'ASIGNACION',
-        descripcion: 'ASIGNACIÓN DE AGENTES A ORDEN DE SERVICIO',
-        creadoEn: new Date(Temporal.Now.instant().epochMilliseconds),
-        datosAdicionales: {
-          estado: ordenServicio.estado,
-          asignadoPor: {
-            id: usuario.id,
-            nombreUsuario: usuario.nombreUsuario,
-            areasAcceso: usuario.areasAcceso,
-            rol: usuario.rol.nombre,
-            empleado: {
-              id: usuario.empleado.id,
-              nombre: usuario.empleado.nombre,
-              primerApellido: usuario.empleado.primerApellido,
-              segundoApellido: usuario.empleado.segundoApellido,
-              area: {
-                id: usuario.empleado.area.id,
-                nombre: usuario.empleado.area.nombre
-              }
-            }
-          },
-          agentesAsignados: agentes
-        }
-      }, tx);
     });
   };
 }

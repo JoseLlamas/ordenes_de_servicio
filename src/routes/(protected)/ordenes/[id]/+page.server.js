@@ -5,7 +5,6 @@ import {
   createObtenerDetalleOrdenServicioUseCase,
   createDesasignarAgenteUseCase
 } from '$lib/server/use_cases/orden_servicio';
-import { obtenerHistorialOrden } from '$lib/server/db/queries';
 import { error, fail, redirect } from '@sveltejs/kit';
 import { validateAsignacionAgentes } from '$lib/server/validators';
 import { validateDesasignacionAgente } from '$lib/server/validators';
@@ -22,10 +21,8 @@ export async function load ({ params, locals }) {
   }
   try {
     const ordenServicio = await createObtenerDetalleOrdenServicioUseCase(locals.usuario, locals.authorize)(ordenServicioId);
-    const historialOrden = await obtenerHistorialOrden(ordenServicio.id);
     return {
-      ordenServicio,
-      historialOrden
+      ordenServicio
     };
   } catch (exc) {
     if (exc instanceof BusinessRuleException) {

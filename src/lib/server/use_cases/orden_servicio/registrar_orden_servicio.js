@@ -65,23 +65,16 @@ export function createRegistrarOrdenServicioUseCase (usuario, authorize) {
       await registrarHistorialOrden({
         ordenServicioId: folio,
         tipo: 'CREACION',
-        descripcion: `SE CREA UNA NUEVA ORDEN DE SERVICIO CON FOLIO ${folio}`,
+        descripcion: 'SE CREA UNA NUEVA ORDEN DE SERVICIO',
         creadoEn: creadoEn,
         datosAdicionales: {
           creadoPor: {
             id: usuario.id,
             nombreUsuario: usuario.nombreUsuario,
-            areasAcceso: usuario.areasAcceso,
-            rol: usuario.rol.nombre,
             empleado: {
-              id: usuario.empleado.id,
               nombre: usuario.empleado.nombre,
               primerApellido: usuario.empleado.primerApellido,
-              segundoApellido: usuario.empleado.segundoApellido,
-              area: {
-                id: usuario.empleado.area.id,
-                nombre: usuario.empleado.area.nombre
-              }
+              segundoApellido: usuario.empleado.segundoApellido
             }
           }
         }

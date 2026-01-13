@@ -12,7 +12,6 @@
   let { data, form } = $props();
 
   let ordenServicio = $derived(data.ordenServicio);
-  let historialOrden = $derived(data.historialOrden);
 
   let submittingAsignacion = $state(false);
 
@@ -40,8 +39,7 @@
 
   const tabs = $derived([
     { id: 'detalles', nombre: 'Detalles', icono: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
-    { id: 'activos', nombre: 'Activos', icono: 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4', badge: ordenServicio.activos.length || 0 },
-    { id: 'historial', nombre: 'Historial', icono: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z' }
+    { id: 'activos', nombre: 'Activos', icono: 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4', badge: ordenServicio.activos.length || 0 }
   ]);
 
   /**
@@ -668,61 +666,6 @@
                 Agregar activo
               </button>
             </div>
-          </div>
-        {/if}
-      </div>
-
-    {:else if tabActual === 'historial'}
-      <!-- ==================== TAB HISTORIAL ==================== -->
-      <div>
-        <div class="flow-root">
-          <ul class="-mb-8">
-            {#each historialOrden as registroHistorial(registroHistorial.id)}
-              <li>
-                <div class="relative pb-8">
-                  <span class="absolute left-5 top-5 -ml-px h-full w-0.5 bg-gray-200 dark:bg-gray-700" aria-hidden="true"></span>
-                  <div class="relative flex items-start space-x-3">
-                    <div>
-                      <div class="relative px-1">
-                        <div class="flex h-10 w-10 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/30 ring-8 ring-white dark:ring-gray-800">
-                          <svg class="h-5 w-5 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                          </svg>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="min-w-0 flex-1">
-                      {#if registroHistorial.tipo === 'CREACION'}
-                        <div>
-                          <div class="text-sm">
-                            <span class="font-medium text-gray-900 dark:text-white">
-                              {normalizePalabras(
-                                registroHistorial.datosAdicionales.creadoPor.empleado.nombre,
-                                registroHistorial.datosAdicionales.creadoPor.empleado.primerApellido,
-                                registroHistorial.datosAdicionales.creadoPor.empleado.segundoApellido ?? ''
-                              )}
-                            </span>
-                            <span class="text-gray-500 dark:text-gray-400"> creó la orden</span>
-                          </div>
-                          <p class="mt-0.5 text-sm text-gray-500 dark:text-gray-400">
-                            {formatearFecha(registroHistorial.creadoEn)}
-                          </p>
-                        </div>
-                      {/if}
-                    </div>
-                  </div>
-                </div>
-              </li>
-            {/each}
-          </ul>
-        </div>
-
-        <!-- Mensaje si no hay eventos -->
-        {#if !ordenServicio.cerradoEn && !ordenServicio.canceladoEn}
-          <div class="mt-8 text-center py-8 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
-            <p class="text-sm text-gray-500 dark:text-gray-400">
-              No hay más eventos en el historial
-            </p>
           </div>
         {/if}
       </div>

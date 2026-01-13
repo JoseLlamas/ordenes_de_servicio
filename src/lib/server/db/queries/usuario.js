@@ -1,19 +1,17 @@
-import { eq, and, inArray, isNotNull, like, ne } from 'drizzle-orm';
+import { eq, and, inArray, isNotNull, like } from 'drizzle-orm';
 import { db } from '../index';
 import {
   usuarios,
   empleados,
   areas,
   invitaciones,
-  roles,
-  rolesPermisos,
-  permisos
+  roles
 } from '../schema';
 import { sql, asc } from 'drizzle-orm';
 
 /**
  * @import { DbOrTx} from './types';
- * @import { UsuarioLoginDTO, UsuarioDetalleDTO, UsuarioResumenDTO, InvitacionDTO, AgenteHistorialOrdenDTO } from '$lib/types';
+ * @import { UsuarioLoginDTO, UsuarioDetalleDTO, UsuarioResumenDTO, InvitacionDTO } from '$lib/types';
  */
 
 /**
@@ -44,8 +42,6 @@ function createQueryParaUsuarioResumen (dbOrTx = db) {
   return query;
 }
 
-
-
 /**
  *
  * @param {{ nombreUsuario: string,
@@ -69,48 +65,6 @@ export async function registrarUsuario (data, dbOrTx = db) {
     })
     .$returningId();
   return id;
-}
-
-/**
- *
- * @param {number[]} ids
- * @param {DbOrTx} [dbOrTx = db]
- * @return {Promise<AgenteHistorialOrdenDTO[]>}
- */
-export async function obtenerAgentesParaHistorial (ids, dbOrTx = db) {
-  const rows = await dbOrTx
-    .select({
-      id: usuarios.id,
-      nombreUsuario: usuarios.nombreUsuario,
-      'empleado.id': empleados.id,
-      'empleado.nombre': empleados.nombre,
-      'empleado.primerApellido': empleados.primerApellido,
-      'empleado.segundoApellido': empleados.segundoApellido,
-      'empleado.area.id': areas.id,
-      'empleado.area.nombre': areas.nombre,
-      'rol.nombre': roles.nombre
-    })
-    .from(usuarios)
-    .innerJoin(empleados, eq(usuarios.empleadoId, empleados.id))
-    .innerJoin(areas, eq(empleados.areaId, areas.id))
-    .innerJoin(roles, eq(usuarios.rolId, roles.id))
-    .where(inArray(usuarios.id, ids))
-    .orderBy(asc(empleados.nombre), asc(empleados.primerApellido));
-  return rows.map(row => ({
-    id: row.id,
-    nombreUsuario: row.nombreUsuario,
-    rol: row['rol.nombre'],
-    empleado: {
-      id: row['empleado.id'],
-      nombre: row['empleado.nombre'],
-      primerApellido: row['empleado.primerApellido'],
-      segundoApellido: row['empleado.segundoApellido'],
-      area: {
-        id: row['empleado.area.id'],
-        nombre: row['empleado.area.nombre']
-      }
-    }
-  }));
 }
 
 /**
@@ -386,20 +340,14 @@ export async function obtenerAgentes (areaId, filters = {}, dbOrTx = db) {
     })
     .from(usuarios)
     .innerJoin(roles, eq(usuarios.rolId, roles.id))
-    .innerJoin(rolesPermisos, eq(roles.id, rolesPermisos.rolId))
-    .innerJoin(permisos, eq(rolesPermisos.permisoId, permisos.id))
     .where(
       and(
+        eq(roles.nombre, 'Agente'),
         eq(usuarios.activo, true),
         isNotNull(usuarios.areasAccesoId),
-        ne(roles.nombre, 'Encargado'),
-        eq(permisos.sujeto, 'Orden'),
-        inArray(permisos.accion, ['read', 'start', 'resolve']),
         sql`JSON_CONTAINS(${usuarios.areasAccesoId}, ${JSON.stringify(areaId)}, '$')`
       )
     )
-    .groupBy(usuarios.id)
-    .having(sql`count(distinct ${permisos.accion}) = 3`)
     .orderBy(usuarios.id)
     .as('usuarios_con_permisos');
   const rows = await createQueryParaUsuarioResumen(dbOrTx)

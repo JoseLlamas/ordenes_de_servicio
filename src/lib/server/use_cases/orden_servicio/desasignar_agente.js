@@ -1,9 +1,6 @@
 import { obtenerOrdenServicioResumenPorId, desasignarAgente, obtenerCantidadAgentes } from '$lib/server/db/queries';
 import { db } from '$lib/server/db';
-import { BusinessRuleException, ForbiddenException } from '$lib/server/exceptions';
-import { Temporal } from 'temporal-polyfill';
-import { registrarHistorialOrden, obtenerAgentesParaHistorial } from '$lib/server/db/queries';
-import { BusinessRules } from '$lib/server/exceptions';
+import { BusinessRuleException, ForbiddenException, BusinessRules } from '$lib/server/exceptions';
 
 /**
  *
@@ -32,33 +29,6 @@ export function createDesasignarAgenteUseCase (usuario, authorize) {
         throw new BusinessRuleException('Mientas este en proceso o pendiente, no puede quitar a todos los agentes', BusinessRules.SIN_AGENTES_EN_ORDEN_SERVICIO);
       }
       await desasignarAgente(ordenServicio.id, agenteId, tx);
-      const [agente] = await obtenerAgentesParaHistorial([agenteId], tx);
-      await registrarHistorialOrden({
-        ordenServicioId: ordenServicio.id,
-        tipo: 'DESASIGNACION',
-        descripcion: 'DESASIGNACIÓN DE AGENTES A ORDEN DE SERVICIO',
-        creadoEn: new Date(Temporal.Now.instant().epochMilliseconds),
-        datosAdicionales: {
-          estado: ordenServicio.estado,
-          desasignadoPor: {
-            id: usuario.id,
-            nombreUsuario: usuario.nombreUsuario,
-            areasAcceso: usuario.areasAcceso,
-            rol: usuario.rol.nombre,
-            empleado: {
-              id: usuario.empleado.id,
-              nombre: usuario.empleado.nombre,
-              primerApellido: usuario.empleado.primerApellido,
-              segundoApellido: usuario.empleado.segundoApellido,
-              area: {
-                id: usuario.empleado.area.id,
-                nombre: usuario.empleado.area.nombre
-              }
-            }
-          },
-          agenteDesasignado: agente
-        }
-      }, tx);
     });
   };
 }

@@ -1,4 +1,4 @@
-import { and, eq, sql } from 'drizzle-orm';
+import { and, eq, exists, inArray, sql } from 'drizzle-orm';
 import { db } from '..';
 import * as schemas from '../schema';
 
@@ -34,6 +34,41 @@ export async function registrarOrdenServicio (data, dbOrTx = db) {
       ...data,
       estado: 'NUEVO'
     });
+}
+
+/**
+ * @param {{ agenteId?: number, areasAsignadasId?: number[] }} [filters]
+ * @param {DbOrTx} [dbOrTx = db]
+ */
+export async function obtenerOrdenesServicioResumen (filters = {}, dbOrTx = db) {
+  const query = dbOrTx
+    .select()
+    .from(schemas.ordenesServicio)
+    .innerJoin(schemas.categoriasOrden, eq(schemas.ordenesServicio.categoriaOrdenId, schemas.categoriasOrden.id))
+    .innerJoin(schemas.empleados, eq(schemas.ordenesServicio.empleadoSolicitanteId, schemas.empleados.id))
+    .innerJoin(schemas.areas, eq(schemas.ordenesServicio.areaSolicitanteId, schemas.areas.id))
+    .innerJoin(schemas.areas, eq(schemas.ordenesServicio.areaAsignadaId, schemas.areas.id))
+    .innerJoin(schemas.usuarios, eq(schemas.ordenesServicio.creadoPorId, schemas.usuarios.id))
+    .innerJoin(schemas.empleados, eq(schemas.usuarios.empleadoId, schemas.empleados.id));
+  const params = [];
+  if (typeof filters.areasAsignadasId !== 'undefined') {
+    params.push(inArray(schemas.ordenesServicio.areaAsignadaId, filters.areasAsignadasId));
+  }
+  if (typeof filters.agenteId !== 'undefined') {
+    params.push(
+      exists(
+        dbOrTx
+          .select()
+          .from(schemas.asignaciones)
+          .where(
+            and(
+              eq(schemas.asignaciones.ordenServicioId, schemas.ordenesServicio.id),
+              eq(schemas.asignaciones.agenteId, filters.agenteId)
+            )
+          )
+      )
+    );
+  }
 }
 
 /**
