@@ -106,7 +106,6 @@ export async function obtenerOrdenServicioResumenPorId (ordenServicioId, dbOrTx 
       empleadoSolicitante: {
         columns: {
           id: true,
-          numeroEmpleado: true,
           nombre: true,
           primerApellido: true,
           segundoApellido: true,
@@ -155,7 +154,6 @@ export async function obtenerOrdenServicioDetallePorId (id, dbOrTx = db) {
       empleadoSolicitante: {
         columns: {
           id: true,
-          numeroEmpleado: true,
           nombre: true,
           primerApellido: true,
           segundoApellido: true,
@@ -177,7 +175,6 @@ export async function obtenerOrdenServicioDetallePorId (id, dbOrTx = db) {
       encargadoAreaAsignada: {
         columns: {
           id: true,
-          numeroEmpleado: true,
           nombre: true,
           primerApellido: true,
           segundoApellido: true,
@@ -200,7 +197,6 @@ export async function obtenerOrdenServicioDetallePorId (id, dbOrTx = db) {
           empleado: {
             columns: {
               id: true,
-              numeroEmpleado: true,
               nombre: true,
               primerApellido: true,
               segundoApellido: true,
@@ -216,10 +212,15 @@ export async function obtenerOrdenServicioDetallePorId (id, dbOrTx = db) {
           avatar: true
         },
         with: {
+          rol: {
+            columns: {
+              id: true,
+              nombre: true
+            }
+          },
           empleado: {
             columns: {
               id: true,
-              numeroEmpleado: true,
               nombre: true,
               primerApellido: true,
               segundoApellido: true,
@@ -235,10 +236,15 @@ export async function obtenerOrdenServicioDetallePorId (id, dbOrTx = db) {
           avatar: true
         },
         with: {
+          rol: {
+            columns: {
+              id: true,
+              nombre: true
+            }
+          },
           empleado: {
             columns: {
               id: true,
-              numeroEmpleado: true,
               nombre: true,
               primerApellido: true,
               segundoApellido: true,
@@ -275,16 +281,9 @@ export async function obtenerOrdenServicioDetallePorId (id, dbOrTx = db) {
               avatar: true
             },
             with: {
-              rol: {
-                columns: {
-                  id: true,
-                  nombre: true
-                }
-              },
               empleado: {
                 columns: {
                   id: true,
-                  numeroEmpleado: true,
                   nombre: true,
                   primerApellido: true,
                   segundoApellido: true,

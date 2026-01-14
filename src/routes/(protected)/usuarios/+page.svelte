@@ -7,6 +7,7 @@
   import SinResultados from '$lib/components/SinResultados.svelte';
   import ButtonSubmitting from '$lib/components/ButtonSubmitting.svelte';
   import Checkbox from '$lib/components/Checkbox.svelte';
+  import ErrorCard from '$lib/components/ErrorCard.svelte';
 
   let { data, form } = $props();
 
@@ -35,6 +36,12 @@
     {/each}
   </div>
 {/snippet}
+
+{#if form?.error}
+  <ErrorCard>
+    {form.error}
+  </ErrorCard>
+{/if}
 
 <form
   method="POST"

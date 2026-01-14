@@ -6,7 +6,7 @@ import jsonCategoriasActivos from './cat_tipo.json' with { type: 'json' };
 import jsonDireccionesGenerales from './direcciones_generales_202511061058.json' with { type: 'json' };
 import jsonAreas from './areas_202511061102.json' with { type: 'json' };
 import jsonEmpleadosInformatica from './empleados_informatica.json' with { type: 'json' };
-import { eq } from 'drizzle-orm';
+import { eq, and } from 'drizzle-orm';
 
 const uri = `mysql://${process.env.MYSQL_USER}:${process.env.MYSQL_PASSWORD}@${process.env.MYSQL_HOST}:${process.env.MYSQL_PORT}/${process.env.MYSQL_DATABASE}`;
 
@@ -72,6 +72,7 @@ const rolesPermisos = [
 
 async function seed () {
 
+  await db.delete(schema.asignaciones);
   await db.delete(schema.folios);
   await db.delete(schema.activos);
   await db.delete(schema.historialOrdenes);
@@ -103,7 +104,7 @@ async function seed () {
   }).flat());
 
   await db.insert(schema.direccionesGenerales).values(jsonDireccionesGenerales.direcciones_generales);
-  await db.insert(schema.areas).values(jsonAreas.areas.map(area => ({ ...area, activo: area.activo === 1, direccionGeneralId: area.direccion_general_id })));
+  await db.insert(schema.areas).values(jsonAreas.areas.filter((area) => area.activo === 1).map(area => ({ ...area, direccionGeneralId: area.direccion_general_id })));
   await db.insert(schema.categoriasActivo).values(jsonCategoriasActivos.data.filter((c) => c.tipo > 0).map(c => ({ descripcion: c.descripcion, areaId: 317 })));
   await db.insert(schema.empleados).values(jsonEmpleadosInformatica.map((empl) => ({ ...empl, direccionGeneralId: 21, activo: true })));
 
@@ -130,7 +131,6 @@ async function seed () {
   ]);
 
   await db.insert(schema.empleados).values({
-    numeroEmpleado: 1,
     nombre: 'ADMINISTRADOR',
     primerApellido: 'ADMINISTRADOR',
     direccionGeneralId: 21,
@@ -139,7 +139,7 @@ async function seed () {
     activo: true
   });
 
-  const empleado = await db.select().from(schema.empleados).where(eq(schema.empleados.numeroEmpleado, 1)).limit(1);
+  const empleado = await db.select().from(schema.empleados).where(eq(schema.empleados.nombre, 'ADMINISTRADOR')).limit(1);
   await db.insert(schema.usuarios).values({
     nombreUsuario: 'Administrador',
     password: await generateHashPassword('lobo@estepario044@administrador'),
@@ -149,9 +149,9 @@ async function seed () {
     areasAccesoId: null
   });
 
-  const oscar = await db.query.empleados.findFirst({ columns: { id: true }, where: eq(schema.empleados.numeroEmpleado, 983693) });
-  const hugo = await db.query.empleados.findFirst({ columns: { id: true }, where: eq(schema.empleados.numeroEmpleado, 1137041) });
-  const mauricio = await db.query.empleados.findFirst({ columns: { id: true }, where: eq(schema.empleados.numeroEmpleado, 1183787) });
+  const oscar = await db.query.empleados.findFirst({ columns: { id: true }, where: and(eq(schema.empleados.nombre, 'OSCAR'), eq(schema.empleados.primerApellido, 'LUNA')) });
+  const hugo = await db.query.empleados.findFirst({ columns: { id: true }, where: and(eq(schema.empleados.nombre, 'VICTOR HUGO'), eq(schema.empleados.primerApellido, 'IBARRA')) });
+  const mauricio = await db.query.empleados.findFirst({ columns: { id: true }, where: and(eq(schema.empleados.nombre, 'MAURICIO'), eq(schema.empleados.primerApellido, 'RIOS')) });
 
   if (oscar && hugo && mauricio) {
     await db

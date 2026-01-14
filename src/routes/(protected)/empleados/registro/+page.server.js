@@ -1,7 +1,7 @@
 import { fail, redirect } from '@sveltejs/kit';
 import { validateRegistroEmpleado } from '$lib/server/validators';
 import { createRegistrarEmpleadoUseCase } from '$lib/server/use_cases/empleado';
-import { BusinessRuleException } from '$lib/server/exceptions';
+import { BusinessRuleException, ForbiddenException } from '$lib/server/exceptions';
 import { obtenerDireccionesGenerales } from '$lib/server/db/queries';
 import { assertAuthenticated } from '$lib/server/auth/guards';
 
@@ -39,9 +39,9 @@ export const actions = {
         mensaje: `Empleado registrado ${id}`
       };
     } catch (exc) {
-      if (exc instanceof BusinessRuleException) {
+      if (exc instanceof ForbiddenException) {
         return fail(exc.statusCode, {
-          ruleException: exc.message
+          error: exc.message
         });
       }
       throw exc;

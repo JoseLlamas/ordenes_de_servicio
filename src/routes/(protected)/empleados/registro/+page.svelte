@@ -70,9 +70,9 @@
     {form.mensaje}
   </InfoMessage>
 {/if}
-{#if form?.ruleException}
+{#if form?.error}
   <ErrorCard>
-    {form.ruleException}
+    {form.error}
   </ErrorCard>
 {/if}
 
@@ -128,18 +128,6 @@
 
   <div>
     <Input
-      label="Numero de empleado"
-      name="numeroEmpleado"
-    />
-    {#if form?.errors?.numeroEmpleado}
-      <ErrorMessage>
-        {form.errors.numeroEmpleado}
-      </ErrorMessage>
-    {/if}
-  </div>
-
-  <div>
-    <Input
       label="Nombre"
       name="nombre"
       class="uppercase"
@@ -179,7 +167,7 @@
     {/if}
   </div>
 
-  <div class="lg:col-span-3">
+  <div>
     <Input
       label="Cargo"
       name="cargo"

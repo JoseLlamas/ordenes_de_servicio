@@ -47,12 +47,14 @@ export interface OrdenServicioDetalleDTO {
     id: number;
     nombreUsuario: string;
     avatar: string | null;
+    rol: Omit<RolDTO, 'descripcion'>;
     empleado: Omit<EmpleadoDTO, 'activo'>;
   } | null;
   canceladoPor: {
     id: number;
     nombreUsuario: string;
     avatar: string | null;
+    rol: Omit<RolDTO, 'descripcion'>;
     empleado: Omit<EmpleadoDTO, 'activo'>
   } | null;
   activos: ActivoDetalleDTO[];
@@ -60,10 +62,6 @@ export interface OrdenServicioDetalleDTO {
     id: number;
     nombreUsuario: string;
     avatar: string | null,
-    rol: {
-      id: number,
-      nombre: string
-    },
     empleado: Omit<EmpleadoDTO, 'activo'>
   }[]
 }

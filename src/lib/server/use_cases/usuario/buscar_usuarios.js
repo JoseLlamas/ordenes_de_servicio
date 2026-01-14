@@ -19,7 +19,7 @@ export function createBuscarUsuariosUseCase (authorize) {
   */
   return async (filters) => {
     if (authorize.cannot('read', 'Usuario', { areaId: filters.areaId })) {
-      throw new ForbiddenException;
+      throw new ForbiddenException('No puede buscar usuarios del area que está consultando');
     }
     const params = {
       areaId: filters.areaId

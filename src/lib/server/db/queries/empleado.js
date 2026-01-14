@@ -20,7 +20,6 @@ export async function obtenerEmpleadosPorArea (areaId, filters = { activo: true 
   return dbOrTx.query.empleados.findMany({
     columns: {
       id: true,
-      numeroEmpleado: true,
       nombre: true,
       primerApellido: true,
       segundoApellido: true,
@@ -61,7 +60,6 @@ export async function obtenerEmpleadoPorId (id, dbOrTx = db) {
   return (await dbOrTx.query.empleados.findFirst({
     columns: {
       id: true,
-      numeroEmpleado: true,
       nombre: true,
       primerApellido: true,
       segundoApellido: true,
@@ -87,40 +85,6 @@ export async function obtenerEmpleadoPorId (id, dbOrTx = db) {
 }
 
 /**
- * @param {number} numeroEmpleado
- * @param {DbOrTx} [dbOrTx = db]
- * @return {Promise<EmpleadoDetalleDTO | null>}
- */
-export async function obtenerEmpleadoPorNumeroEmpleado (numeroEmpleado, dbOrTx = db) {
-  return (await dbOrTx.query.empleados.findFirst({
-    columns: {
-      id: true,
-      numeroEmpleado: true,
-      nombre: true,
-      primerApellido: true,
-      segundoApellido: true,
-      activo: true,
-      cargo: true
-    },
-    with: {
-      area: {
-        columns: {
-          id: true,
-          nombre: true
-        }
-      },
-      direccionGeneral: {
-        columns: {
-          id: true,
-          nombre: true
-        }
-      }
-    },
-    where: eq(empleados.numeroEmpleado, numeroEmpleado)
-  })) ?? null;
-}
-
-/**
  * @param {string} nombre
  * @param {string} primerApellido
  * @param {string} [segundoApellido]
@@ -136,7 +100,6 @@ export async function obtenerEmpleadoPorNombre (nombre, primerApellido, segundoA
   return await dbOrTx.query.empleados.findMany({
     columns: {
       id: true,
-      numeroEmpleado: true,
       nombre: true,
       primerApellido: true,
       segundoApellido: true,
@@ -166,18 +129,16 @@ export async function obtenerEmpleadoPorNombre (nombre, primerApellido, segundoA
  * @param {DbOrTx} [dbOrTx = db]
  * @return {Promise<EmpleadoDTO[]>}
  */
-export async function obtenerEmpleadosSinUsuario (filters = {}, dbOrTx = db) {
+export async function obtenerEmpleadosSinUsuario (filters = { activo: true }, dbOrTx = db) {
   const conditions = [
     typeof filters.areaId !== 'undefined' ? eq(empleados.areaId, filters.areaId) : undefined,
     typeof filters.activo !== 'undefined' ? eq(empleados.activo, filters.activo) : undefined,
     notExists(dbOrTx.select().from(invitaciones).where(eq(invitaciones.empleadoId, empleados.id))),
     notExists(dbOrTx.select().from(usuarios).where(eq(usuarios.empleadoId, empleados.id)))
   ].filter(Boolean);
-
   return await dbOrTx.query.empleados.findMany({
     columns: {
       id: true,
-      numeroEmpleado: true,
       nombre: true,
       primerApellido: true,
       segundoApellido: true,
@@ -192,7 +153,6 @@ export async function obtenerEmpleadosSinUsuario (filters = {}, dbOrTx = db) {
 /**
  *
  * @param {{
- *  numeroEmpleado: number | null,
  *  nombre: string,
  *  primerApellido: string,
  *  segundoApellido: string | null,
@@ -207,15 +167,6 @@ export async function obtenerEmpleadosSinUsuario (filters = {}, dbOrTx = db) {
 export async function registrarEmpleado (dataRegistroEmpleado, dbOrTx = db) {
   const [{ id }] = await dbOrTx.insert(empleados).values(dataRegistroEmpleado).$returningId();
   return id;
-}
-
-/**
- * @param {number} numeroEmpleado
- * @param {DbOrTx} [dbOrTx = db]
- * @return {Promise<boolean>}
- */
-export async function existeEmpleadoPorNumero (numeroEmpleado, dbOrTx = db) {
-  return await dbOrTx.$count(empleados, eq(empleados.numeroEmpleado, numeroEmpleado)) > 0;
 }
 
 /**
@@ -235,7 +186,6 @@ export async function obtenerEncargadoArea (areaId, filters = { activo: true }, 
   const [encargado] = await dbOrTx
     .select({
       id: empleados.id,
-      numeroEmpleado: empleados.numeroEmpleado,
       nombre: empleados.nombre,
       primerApellido: empleados.primerApellido,
       segundoApellido: empleados.segundoApellido,

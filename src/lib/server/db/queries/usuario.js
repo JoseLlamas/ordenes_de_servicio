@@ -15,9 +15,9 @@ import { sql, asc } from 'drizzle-orm';
  */
 
 /**
- * @param {DbOrTx} [dbOrTx = db]
+ * @param {DbOrTx} dbOrTx
  */
-function createQueryParaUsuarioResumen (dbOrTx = db) {
+function createQueryParaUsuarioResumen (dbOrTx) {
   const query = dbOrTx
     .select({
       id: usuarios.id,
@@ -25,7 +25,6 @@ function createQueryParaUsuarioResumen (dbOrTx = db) {
       activo: usuarios.activo,
       avatar: usuarios.avatar,
       'empleado.id': empleados.id,
-      'empleado.numeroEmpleado': empleados.numeroEmpleado,
       'empleado.nombre': empleados.nombre,
       'empleado.primerApellido': empleados.primerApellido,
       'empleado.segundoApellido': empleados.segundoApellido,
@@ -90,7 +89,6 @@ export async function obtenerUsuariosResumenes (filters = {}, dbOrTx = db) {
     avatar: row.avatar,
     empleado: {
       id: row['empleado.id'],
-      numeroEmpleado: row['empleado.numeroEmpleado'],
       nombre: row['empleado.nombre'],
       primerApellido: row['empleado.primerApellido'],
       segundoApellido: row['empleado.segundoApellido'],
@@ -160,7 +158,6 @@ export async function obtenerUsuarioDetalle (id, dbOrTx = db) {
       empleado: {
         columns: {
           id: true,
-          numeroEmpleado: true,
           nombre: true,
           primerApellido: true,
           segundoApellido: true,
@@ -188,6 +185,7 @@ export async function obtenerUsuarioDetalle (id, dbOrTx = db) {
         },
         with: {
           rolesPermisos: {
+            columns: {},
             with: {
               permiso: true
             }
@@ -331,7 +329,7 @@ export async function existeNombreUsuario (nombreUsuario, dbOrTx = db) {
  * @param {number} areaId
  * @param {{ nombre?: string }} [filters = {}]
  * @param {DbOrTx} [dbOrTx = db]
- * @return {Promise<import('$lib/types').UsuarioResumenDTO[]>}
+ * @return {Promise<UsuarioResumenDTO[]>}
  */
 export async function obtenerAgentes (areaId, filters = {}, dbOrTx = db) {
   const subquery = dbOrTx
@@ -365,7 +363,6 @@ export async function obtenerAgentes (areaId, filters = {}, dbOrTx = db) {
     avatar: row.avatar,
     empleado: {
       id: row['empleado.id'],
-      numeroEmpleado: row['empleado.numeroEmpleado'],
       nombre: row['empleado.nombre'],
       primerApellido: row['empleado.primerApellido'],
       segundoApellido: row['empleado.segundoApellido'],

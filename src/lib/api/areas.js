@@ -9,6 +9,5 @@ import { api } from './client';
 export async function obtenerAreasPorDireccion (direccionGeneralId, signal) {
   const queryString = new URLSearchParams();
   queryString.append('direccionGeneralId', String(direccionGeneralId));
-  queryString.append('activo', '');
   return api(`/api/areas?${queryString.toString()}`, { signal });
 }

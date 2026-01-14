@@ -1,4 +1,4 @@
-import { eq, asc, and, inArray, exists } from 'drizzle-orm';
+import { eq, asc, and, inArray, exists, sql } from 'drizzle-orm';
 import { db } from '..';
 import { areas, categoriasOrden } from '../schema';
 
@@ -8,7 +8,7 @@ import { areas, categoriasOrden } from '../schema';
  */
 
 /**
- * @param {{ direccionGeneralId?: number, activo?: boolean, ids?: number[] }} [filters]
+ * @param {{ direccionGeneralId?: number, ids?: number[] }} [filters]
  * @param {DbOrTx} [dbOrTx = db]
  * @return {Promise<AreaDTO[]>}
  */
@@ -16,9 +16,6 @@ export async function obtenerAreas (filters = {}, dbOrTx = db) {
   const conditions = [];
   if (typeof filters.direccionGeneralId !== 'undefined') {
     conditions.push(eq(areas.direccionGeneralId, filters.direccionGeneralId));
-  }
-  if (typeof filters.activo !== 'undefined') {
-    conditions.push(eq(areas.activo, filters.activo));
   }
   if (typeof filters.ids !== 'undefined' && filters.ids.length > 0) {
     conditions.push(inArray(areas.id, filters.ids));
@@ -36,13 +33,14 @@ export async function obtenerAreas (filters = {}, dbOrTx = db) {
 }
 
 /**
- * @param {{ activo?: boolean }} [filters]
  * @param {DbOrTx} [dbOrTx = db]
  * @return {Promise<AreaDTO[]>}
  */
-export async function obtenerAreasParaAsignar (filters = { activo: true }, dbOrTx = db) {
+export async function obtenerAreasParaAsignar (dbOrTx = db) {
   const subQuery = dbOrTx
-    .select()
+    .select({
+      a: sql`1`
+    })
     .from(categoriasOrden)
     .where(eq(categoriasOrden.areaId, areas.id))
     .limit(1);
@@ -52,12 +50,7 @@ export async function obtenerAreasParaAsignar (filters = { activo: true }, dbOrT
       nombre: areas.nombre
     })
     .from(areas)
-    .where(
-      and(
-        exists(subQuery),
-        typeof filters.activo !== 'undefined' ? eq(areas.activo, filters.activo) : undefined
-      )
-    )
+    .where(exists(subQuery))
     .orderBy(asc(areas.nombre));
 }
 

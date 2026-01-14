@@ -1,8 +1,9 @@
 import { obtenerAreasParaAsignar } from '$lib/server/db/queries';
 import { createBuscarUsuariosUseCase } from '$lib/server/use_cases/usuario';
 import { validateBuscarUsuarios } from '$lib/server/validators';
-import { fail, error, redirect } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 import { assertAuthenticated } from '$lib/server/auth/guards';
+import { ForbiddenException } from '$lib/server/exceptions';
 
 /**
  * @type {import('./$types').PageServerLoad}
@@ -29,10 +30,19 @@ export const actions = {
     if ('errors' in resultValidator) {
       return fail(422, { errors: resultValidator.errors });
     }
-    const buscarUsuariosResumenes = createBuscarUsuariosUseCase(locals.authorize);
-    const usuariosResumenes = await buscarUsuariosResumenes(resultValidator.values);
-    return {
-      usuariosResumenes
-    };
+    try {
+      const buscarUsuariosResumenes = createBuscarUsuariosUseCase(locals.authorize);
+      const usuariosResumenes = await buscarUsuariosResumenes(resultValidator.values);
+      return {
+        usuariosResumenes
+      };
+    } catch (exc) {
+      if (exc instanceof ForbiddenException) {
+        return fail(403, {
+          error: exc.message
+        });
+      }
+      throw exc;
+    }
   }
 };

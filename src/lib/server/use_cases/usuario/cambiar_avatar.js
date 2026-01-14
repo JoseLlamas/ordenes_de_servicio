@@ -3,7 +3,7 @@ import { guardarArchivo, procesarAvatar, borrarArchivo } from '$lib/server/utils
 import { patchUsuario } from '$lib/server/db/queries';
 
 /**
- * @param {import('$lib/server/db/queries/types').UsuarioDetalleDTO} usuario
+ * @param {NonNullable<App.Locals['usuario']>} usuario
  */
 export function createCambiarAvatarUseCase (usuario) {
   /**

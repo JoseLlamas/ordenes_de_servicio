@@ -87,15 +87,6 @@
       <dl class="space-y-4">
         <div>
           <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">
-            Número de Empleado
-          </dt>
-          <dd class="mt-1 text-sm text-gray-900 dark:text-white font-semibold">
-            {usuario.empleado.numeroEmpleado ?? 'No registrado'}
-          </dd>
-        </div>
-
-        <div>
-          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">
             Nombre Completo
           </dt>
           <dd class="mt-1 text-sm text-gray-900 dark:text-white">

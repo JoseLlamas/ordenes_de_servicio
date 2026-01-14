@@ -8,6 +8,20 @@
       "when": 1767982639275,
       "tag": "0000_mixed_silhouette",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1768321035679,
+      "tag": "0001_chubby_yellowjacket",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1768336805290,
+      "tag": "0002_strong_deathstrike",
+      "breakpoints": true
     }
   ]
 }

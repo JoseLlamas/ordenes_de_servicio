@@ -6,10 +6,6 @@ import { createValidator } from '../../validators/validator';
  */
 
 const schemaRegistroEmpleado = Joi.object({
-  numeroEmpleado: Joi
-    .number()
-    .empty(['', null])
-    .default(null),
   direccionGeneralId: Joi
     .number()
     .empty(['', null])
@@ -70,7 +66,6 @@ const schemaRegistroEmpleado = Joi.object({
 
 /**
  * @type {Validator<{
- *  numeroEmpleado: number | null,
  *  nombre: string,
  *  primerApellido: string,
  *  segundoApellido: string | null,

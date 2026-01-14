@@ -11,13 +11,9 @@ export async function GET ({ url, locals }) {
       return json({ message: 'No autorizado' }, { status: 401 });
     }
     const direccionGeneralId = Number(url.searchParams.get('direccionGeneralId'));
-    const activo = url.searchParams.get('activo');
     const params = {};
     if (direccionGeneralId && direccionGeneralId > 0) {
       params.direccionGeneralId = direccionGeneralId;
-    }
-    if (activo != null) {
-      params.activo = true;
     }
     const areas = await obtenerAreas(params);
     return json(areas);

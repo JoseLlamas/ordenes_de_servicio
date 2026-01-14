@@ -4,7 +4,7 @@ import { compareHashPassword, generateHashPassword } from '$lib/server/utils';
 
 /**
  *
- * @param {import('$lib/server/db/queries/types').UsuarioDetalleDTO} usuario
+ * @param {NonNullable<App.Locals['usuario']>} usuario
  */
 export function createCambiarPasswordUseCase (usuario) {
 

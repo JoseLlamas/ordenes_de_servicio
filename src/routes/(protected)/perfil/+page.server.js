@@ -4,6 +4,16 @@ import { validateCambioAvatar } from '$lib/server/validators';
 import { createCambiarPasswordUseCase } from '$lib/server/use_cases/usuario';
 import { BusinessRuleException } from '$lib/server/exceptions';
 import { createCambiarAvatarUseCase } from '$lib/server/use_cases/usuario';
+import { assertAuthenticated } from '$lib/server/auth/guards';
+
+/**
+ *
+ * @type {import('./$types').PageServerLoad}
+ */
+export async function load ({ locals }) {
+  assertAuthenticated(locals);
+  return {};
+}
 
 /**
  * @type {import('./$types').Actions}
@@ -11,6 +21,7 @@ import { createCambiarAvatarUseCase } from '$lib/server/use_cases/usuario';
 export const actions = {
 
   async cambiarPassword ({ request, locals }) {
+    assertAuthenticated(locals);
     const formData = Object.fromEntries(await request.formData());
     const resultValidate = await validateCambioPassword(formData);
     if ('errors' in resultValidate) {
@@ -34,6 +45,7 @@ export const actions = {
   },
 
   async cambiarAvatar ({ request, locals }) {
+    assertAuthenticated(locals);
     const formData = await request.formData();
     const file = formData.get('avatar');
     if (file != null && file instanceof File) {

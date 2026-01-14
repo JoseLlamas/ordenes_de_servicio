@@ -21,8 +21,7 @@ export const direccionesGenerales = mysqlTable('direcciones_generales', {
 export const areas = mysqlTable('areas', {
   id: int('id', { unsigned: true }).primaryKey(),
   nombre: varchar('nombre', { length: 100 }).notNull(),
-  direccionGeneralId: int('direccion_general_id', { unsigned: true }).notNull().references(() => direccionesGenerales.id, { onDelete: 'restrict' }),
-  activo: boolean('activo').default(true)
+  direccionGeneralId: int('direccion_general_id', { unsigned: true }).notNull().references(() => direccionesGenerales.id, { onDelete: 'restrict' })
 });
 
 export const folios = mysqlTable('folios', {
@@ -41,7 +40,6 @@ export const categoriasActivo = mysqlTable('categorias_activo', {
 
 export const empleados = mysqlTable('empleados', {
   id: int('id', { unsigned: true }).primaryKey().autoincrement(),
-  numeroEmpleado: int('numero_empleado', { unsigned: true }).unique(),
   nombre: varchar('nombre', { length: 100 }).notNull(),
   primerApellido: varchar('primer_apellido', { length: 100 }).notNull(),
   segundoApellido: varchar('segundo_apellido', { length: 100 }),
