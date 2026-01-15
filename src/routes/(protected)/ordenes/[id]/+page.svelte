@@ -1,7 +1,7 @@
 <script>
   import Avatar from '$lib/components/Avatar.svelte';
   import Modal from '$lib/components/Modal.svelte';
-  import { formatearFecha, formatearFechaRelativa, normalizePalabras } from '$lib/utils';
+  import { formatearFecha, formatearFechaRelativa, getEstadoColor, escribirNombreCompleto, getPrioridadColor } from '$lib/utils';
   import SelectorAgentesMultiple from '$lib/components/SelectorAgentesMultiple.svelte';
   import { enhance } from '$app/forms';
   import ButtonAccept from '$lib/components/ButtonAccept.svelte';
@@ -41,46 +41,6 @@
     { id: 'detalles', nombre: 'Detalles', icono: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
     { id: 'activos', nombre: 'Activos', icono: 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4', badge: ordenServicio.activos.length || 0 }
   ]);
-
-  /**
-   * Mapeo de estados a colores
-   * @param {(typeof ordenServicio)['estado']} estado
-   * @return {string}
-   */
-  function getEstadoColor (estado) {
-    const colores = {
-      'NUEVO': 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 border-blue-200 dark:border-blue-800',
-      'PROCESO': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800',
-      'PENDIENTE': 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300 border-green-200 dark:border-green-800',
-      'RESUELTO': 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300 border-green-200 dark:border-green-800',
-      'CERRADO': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800',
-      'CANCELADO': 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300 border-red-200 dark:border-red-800'
-    };
-    return colores[estado] || 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-300';
-  }
-
-  /**
-   * Mapeo de prioridades a colores
-   * @param {(typeof ordenServicio)['prioridad']} prioridad
-   * @return {string}
-   */
-  function getPrioridadColor (prioridad) {
-    const colores = {
-      'BAJA': 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-300 border-gray-200 dark:border-gray-700',
-      'MEDIA': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800',
-      'ALTA': 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300 border-orange-200 dark:border-orange-800',
-      'CRITICA': 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300 border-red-200 dark:border-red-800'
-    };
-    return colores[prioridad] || colores.MEDIA;
-  }
-
-  /**
-   * Formatear nombre completo
-   * @param {{ nombre: string, primerApellido: string, segundoApellido: string | null }} persona
-   */
-  function escribirNombreCompleto (persona) {
-    return normalizePalabras(persona.nombre, persona.primerApellido, persona.segundoApellido ?? '');
-  }
 </script>
 
 <svelte:head>
@@ -272,9 +232,6 @@
                       {escribirNombreCompleto(ordenServicio.empleadoSolicitante)}
                     </p>
                     <p class="text-xs text-gray-500 dark:text-gray-400">
-                      #{ordenServicio.empleadoSolicitante.numeroEmpleado ?? 'N/A'}
-                    </p>
-                    <p class="text-xs text-gray-500 dark:text-gray-400">
                       {ordenServicio.empleadoSolicitante.cargo}
                     </p>
                   </div>
@@ -290,9 +247,6 @@
                   <div class="flex-1 min-w-0">
                     <p class="text-sm font-medium text-gray-900 dark:text-white">
                       {escribirNombreCompleto(ordenServicio.encargadoAreaAsignada)}
-                    </p>
-                    <p class="text-xs text-gray-500 dark:text-gray-400">
-                      #{ordenServicio.encargadoAreaAsignada.numeroEmpleado ?? 'N/A'}
                     </p>
                     <p class="text-xs text-gray-500 dark:text-gray-400">
                       {ordenServicio.encargadoAreaAsignada.cargo}
@@ -352,13 +306,13 @@
                         <Avatar
                           size="medium"
                           avatar={agente.avatar}
-                          usuarioNombreCompleto={normalizePalabras(agente.empleado.nombre, agente.empleado.primerApellido, agente.empleado.segundoApellido ?? '')}
-                          rolNombre={agente.rol.nombre}
+                          usuarioNombreCompleto={escribirNombreCompleto(agente.empleado)}
+                          rolNombre="Agente"
                         />
 
                         <div class="flex-1 min-w-0">
                           <p class="text-sm font-medium text-gray-900 dark:text-white">
-                            {normalizePalabras(agente.empleado.nombre, agente.empleado.primerApellido, agente.empleado.segundoApellido ?? '')}
+                            {escribirNombreCompleto(agente.empleado)}
                           </p>
                           <p class="text-xs text-gray-500 dark:text-gray-400">
                             @{agente.nombreUsuario}
@@ -526,7 +480,7 @@
                     </p>
                     {#if ordenServicio.cerradoPor}
                       <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        Por: {ordenServicio.cerradoPor.empleado.nombre} {ordenServicio.cerradoPor.empleado.primerApellido}
+                        Por: {escribirNombreCompleto(ordenServicio.cerradoPor.empleado)}
                       </p>
                     {/if}
                   </div>
@@ -542,7 +496,7 @@
                     </p>
                     {#if ordenServicio.canceladoPor}
                       <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        Por: {ordenServicio.canceladoPor.empleado.nombre} {ordenServicio.canceladoPor.empleado.primerApellido}
+                        Por: {escribirNombreCompleto(ordenServicio.canceladoPor.empleado)}
                       </p>
                     {/if}
                   </div>

@@ -15,6 +15,7 @@
   import ErrorCard from '$lib/components/ErrorCard.svelte';
   import ConfirmModal from '$lib/components/ConfirmModal.svelte';
   import { confirmBeforeEnhance } from '$lib/actions/confirm_before_enhance.js';
+    import LoaderLine from '$lib/components/LoaderLine.svelte';
 
   let { data, form } = $props();
 
@@ -134,6 +135,8 @@
   */
   let confirmModal = $state();
 
+  let fetchingCategoriasOrden = $state(false);
+
   function handleAreaParaAsignarChange () {
     categoriaOrden = null;
     activos = [];
@@ -141,14 +144,20 @@
     if (areaParaAsignar == null) {
       return;
     }
+    fetchingCategoriasOrden = true;
     void obtenerCategoriasOrdenPorArea(areaParaAsignar.id)
       .then(result => {
         categoriasOrden = result;
       })
       .catch(() => {
         categoriasOrden = [];
+      })
+      .finally(() => {
+        fetchingCategoriasOrden = false;
       });
   }
+
+  let fetchingAreas = $state(false);
 
   function handleDireccionGeneralChange () {
     areas = [];
@@ -157,11 +166,20 @@
     if (direccionGeneralEmpleadoSolicitante == null) {
       return;
     }
+    fetchingAreas = true;
     void obtenerAreasPorDireccion(direccionGeneralEmpleadoSolicitante.id)
       .then(result => {
         areas = result;
+      })
+      .catch(() => {
+        areas = [];
+      })
+      .finally(() => {
+        fetchingAreas = false;
       });
   }
+
+  let fetchingEmpleados = $state(false);
 
   function handleAreaChange () {
     empleadoSolicitante = null;
@@ -169,9 +187,16 @@
     if (areaEmpleadoSolicitante == null) {
       return;
     }
+    fetchingEmpleados = true;
     void obtenerEmpleadosPorArea(areaEmpleadoSolicitante.id)
       .then((result) => {
         empleados = result;
+      })
+      .catch(() => {
+        empleados = [];
+      })
+      .finally(() => {
+        fetchingEmpleados = false;
       });
   }
 </script>
@@ -232,6 +257,9 @@
         {#if form?.errors?.areaParaAsignarId}
           <ErrorMessage>{form.errors.areaParaAsignarId}</ErrorMessage>
         {/if}
+        {#if fetchingCategoriasOrden}
+          <LoaderLine />
+        {/if}
       </div>
 
       <div class="lg:col-span-8">
@@ -252,6 +280,9 @@
             <option value={direccionGeneral}>{direccionGeneral.nombre}</option>
           {/each}
         </Select>
+        {#if fetchingAreas}
+          <LoaderLine />
+        {/if}
       </div>
 
       <div class="lg:col-span-4">
@@ -265,6 +296,9 @@
             <option value={area}>{area.nombre}</option>
           {/each}
         </Select>
+        {#if fetchingEmpleados}
+          <LoaderLine />
+        {/if}
       </div>
 
       <div class="lg:col-span-4">

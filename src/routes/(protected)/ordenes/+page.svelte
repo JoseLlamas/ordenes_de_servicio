@@ -1,0 +1,347 @@
+<!-- src/routes/(protected)/ordenes/+page.svelte -->
+<script>
+  import { goto } from '$app/navigation';
+  import { page } from '$app/stores';
+    import Input from '$lib/components/Input.svelte';
+    import Select from '$lib/components/Select.svelte';
+  import { formatearFechaRelativa, getEstadoColor, getPrioridadColor, escribirNombreCompleto } from '$lib/utils';
+
+  let { data } = $props();
+
+  // Funciones de paginación
+  function irAPagina (nuevaPagina) {
+    const url = new URL($page.url);
+    url.searchParams.set('pagina', nuevaPagina.toString());
+    goto(url.toString());
+  }
+
+  function cambiarPorPagina (event) {
+    const url = new URL($page.url);
+    url.searchParams.set('porPagina', event.target.value);
+    url.searchParams.set('pagina', '1');
+    goto(url.toString());
+  }
+
+  // Generar páginas visibles
+  let paginasVisibles = $derived.by(() => {
+    const { paginaActual, totalPaginas } = data.paginacion;
+    const paginas = [];
+
+    let inicio = Math.max(1, paginaActual - 3);
+    let fin = Math.min(totalPaginas, paginaActual + 3);
+
+    if (paginaActual <= 4) {
+      fin = Math.min(7, totalPaginas);
+    }
+    if (paginaActual >= totalPaginas - 3) {
+      inicio = Math.max(1, totalPaginas - 6);
+    }
+
+    for (let i = inicio; i <= fin; i++) {
+      paginas.push(i);
+    }
+    return paginas;
+  });
+</script>
+
+<svelte:head>
+  <title>Órdenes de Servicio</title>
+</svelte:head>
+
+<!-- Header -->
+<div class="mb-6 sm:mb-8">
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div>
+      <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+        Gestiona y da seguimiento a todas las órdenes
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- Filtros -->
+<div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-4 mb-6">
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div>
+      <Input
+        label="Día"
+        type="date"
+      />
+    </div>
+
+    <div>
+      <Select
+        label="Estado"
+      >
+        <option>Nuevo</option>
+        <option>Proceso</option>
+        <option>Pendiente</option>
+        <option>Resuelto</option>
+        <option>Cerrado</option>
+        <option>Cancelado</option>
+      </Select>
+    </div>
+
+    <div>
+      <Select
+        label="Prioridad"
+      >
+        <option>Baja</option>
+        <option>Media</option>
+        <option>Alta</option>
+        <option>Crítica</option>
+      </Select>
+    </div>
+
+    <div>
+      <Select
+        label="Area asignada"
+      >
+        {#each data.areasParaAsignar as areaParaAsignar(areaParaAsignar.id)}
+          <option>{areaParaAsignar.nombre}</option>
+        {/each}
+      </Select>
+    </div>
+  </div>
+</div>
+
+<!-- Lista de Órdenes -->
+<div class="space-y-2">
+  {#each data.ordenesServicio as orden (orden.id)}
+    <a
+      href="/ordenes/{orden.id}"
+      class="block bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-4 sm:p-6 hover:shadow-lg hover:border-blue-300 dark:hover:border-blue-700 transition-all group"
+    >
+      <!-- Header -->
+      <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4">
+        <div class="flex-1 min-w-0">
+          <!-- ID y Badges -->
+          <div class="flex flex-wrap items-center gap-2 mb-2">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400">
+              OS-{orden.id}
+            </h3>
+
+            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium border {getEstadoColor(orden.estado)}">
+              <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
+              {orden.estado}
+            </span>
+
+            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium border {getPrioridadColor(orden.prioridad)}">
+              {orden.prioridad}
+            </span>
+
+            {#if orden.tipoEntrada === 'OFICIO' && orden.numeroOficio}
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800 border border-purple-200 dark:bg-purple-900/30 dark:text-purple-400 dark:border-purple-800">
+                Oficio: {orden.numeroOficio}
+              </span>
+            {/if}
+          </div>
+
+          <!-- Descripción -->
+          <p class="text-sm text-gray-600 dark:text-gray-300 line-clamp-2 mb-3">
+            {orden.descripcion}
+          </p>
+
+          <!-- Categoría -->
+          {#if orden.categoriaOrden && orden.categoriaOrden.descripcion}
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-gray-100 dark:bg-gray-800 rounded-lg text-xs text-gray-700 dark:text-gray-300">
+              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+              </svg>
+              {orden.categoriaOrden.descripcion}
+            </span>
+          {/if}
+        </div>
+
+        <!-- Fecha -->
+        <div class="text-sm text-gray-500 dark:text-gray-400">
+          {formatearFechaRelativa(orden.creadoEn)}
+        </div>
+      </div>
+
+      <!-- Info Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pt-4 border-t border-gray-100 dark:border-gray-800">
+        <!-- Solicitante -->
+        <div class="flex items-start gap-3">
+          <div class="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white text-sm font-semibold">
+            {orden.empleadoSolicitante.nombre.charAt(0)}{orden.empleadoSolicitante.primerApellido.charAt(0)}
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+              Solicitante
+            </p>
+            <p class="text-sm font-medium text-gray-900 dark:text-white truncate">
+              {escribirNombreCompleto(orden.empleadoSolicitante)}
+            </p>
+            <p class="text-xs text-gray-500 dark:text-gray-400 truncate">
+              {orden.areaSolicitante.nombre}
+            </p>
+          </div>
+        </div>
+
+        <!-- Área Asignada -->
+        <div class="flex items-start gap-3">
+          <div class="flex-shrink-0 w-10 h-10 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
+            <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+            </svg>
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+              Asignada a
+            </p>
+            <p class="text-sm font-medium text-gray-900 dark:text-white truncate">
+              {orden.areaAsignada.nombre}
+            </p>
+            {#if orden.telefonoSolicitante}
+              <p class="text-xs text-gray-500 dark:text-gray-400">
+                Tel: {orden.telefonoSolicitante}
+              </p>
+            {/if}
+          </div>
+        </div>
+
+        <!-- Estado -->
+        <div class="flex items-start gap-3">
+          <div class="flex-shrink-0 w-10 h-10 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
+            <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+              Proceso
+            </p>
+            {#if orden.cerradoEn}
+              <p class="text-sm font-medium text-green-600 dark:text-green-400">
+                Cerrada
+              </p>
+            {:else if orden.canceladoEn}
+              <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
+                Cancelada
+              </p>
+            {:else}
+              <p class="text-sm font-medium text-blue-600 dark:text-blue-400">
+                En curso
+              </p>
+            {/if}
+          </div>
+        </div>
+      </div>
+    </a>
+  {/each}
+
+  {#if data.ordenesServicio.length === 0}
+    <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-12 text-center">
+      <svg class="mx-auto h-16 w-16 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+      </svg>
+      <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">
+        No se encontraron órdenes
+      </h3>
+      <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">
+        Comienza creando tu primera orden de servicio
+      </p>
+      <a
+        href="/ordenes/registro"
+        class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg font-medium text-sm hover:bg-blue-700"
+      >
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+        </svg>
+        Nueva Orden
+      </a>
+    </div>
+  {/if}
+</div>
+
+<!-- Paginación inline -->
+{#if data.ordenesServicio.length > 0}
+  <div class="mt-6 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800">
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 px-4 py-3">
+      <!-- Info de registros -->
+      <div class="text-sm text-gray-700 dark:text-gray-300">
+        Mostrando
+        <span class="font-medium">{(data.paginacion.paginaActual - 1) * data.paginacion.porPagina + 1}</span>
+        a
+        <span class="font-medium">{Math.min(data.paginacion.paginaActual * data.paginacion.porPagina, data.paginacion.totalRegistros)}</span>
+        de
+        <span class="font-medium">{data.paginacion.totalRegistros}</span>
+        resultados
+      </div>
+
+      <!-- Controles -->
+      <div class="flex items-center gap-2">
+        <!-- Por página -->
+        <select
+          onchange={cambiarPorPagina}
+          value={data.paginacion.porPagina}
+          class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm bg-white dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200"
+        >
+          <option value="10">10</option>
+          <option value="20">20</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select>
+
+        <!-- Anterior -->
+        <button
+          onclick={() => irAPagina(data.paginacion.paginaActual - 1)}
+          disabled={!data.paginacion.tienePaginaAnterior}
+          class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-700"
+        >
+          Anterior
+        </button>
+
+        <!-- Números -->
+        <div class="hidden sm:flex gap-1">
+          {#if paginasVisibles[0] > 1}
+            <button
+              onclick={() => irAPagina(1)}
+              class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-700"
+            >
+              1
+            </button>
+            {#if paginasVisibles[0] > 2}
+              <span class="px-2 py-1.5 text-gray-500">...</span>
+            {/if}
+          {/if}
+
+          {#each paginasVisibles as numeroPagina, index(index)}
+            <button
+              onclick={() => irAPagina(numeroPagina)}
+              class="px-3 py-1.5 border rounded-lg text-sm font-medium transition-colors
+                      {numeroPagina === data.paginacion.paginaActual
+                        ? 'bg-blue-500 text-white border-blue-500 dark:bg-blue-600'
+                        : 'border-gray-300 text-gray-700 hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-700'
+                      }"
+            >
+              {numeroPagina}
+            </button>
+          {/each}
+
+          {#if paginasVisibles[paginasVisibles.length - 1] < data.paginacion.totalPaginas}
+            {#if paginasVisibles[paginasVisibles.length - 1] < data.paginacion.totalPaginas - 1}
+              <span class="px-2 py-1.5 text-gray-500">...</span>
+            {/if}
+            <button
+              onclick={() => irAPagina(data.paginacion.totalPaginas)}
+              class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-700"
+            >
+              {data.paginacion.totalPaginas}
+            </button>
+          {/if}
+        </div>
+
+        <!-- Siguiente -->
+        <button
+          onclick={() => irAPagina(data.paginacion.paginaActual + 1)}
+          disabled={!data.paginacion.tienePaginaSiguiente}
+          class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-700"
+        >
+          Siguiente
+        </button>
+      </div>
+    </div>
+  </div>
+{/if}

@@ -14,6 +14,9 @@ export interface OrdenServicioResumenDTO {
   empleadoSolicitante: Omit<EmpleadoDTO, 'activo'>;
   telefonoSolicitante: string;
   areaAsignada: AreaDTO;
+  creadoEn: Date;
+  cerradoEn: Date | null;
+  canceladoEn: Date | null;
 
 }
 

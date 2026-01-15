@@ -2,8 +2,8 @@ import { assertAuthenticated } from '$lib/server/auth/guards';
 import { BusinessRuleException, ForbiddenException } from '$lib/server/exceptions';
 import {
   createAsignarAgentesUseCase,
-  createObtenerDetalleOrdenServicioUseCase,
-  createDesasignarAgenteUseCase
+  createDesasignarAgenteUseCase,
+  createObtenerDetalleOrdenServicioUseCase
 } from '$lib/server/use_cases/orden_servicio';
 import { error, fail, redirect } from '@sveltejs/kit';
 import { validateAsignacionAgentes } from '$lib/server/validators';
@@ -15,12 +15,16 @@ import { validateDesasignacionAgente } from '$lib/server/validators';
  */
 export async function load ({ params, locals }) {
   assertAuthenticated(locals);
+  if (!locals.authorize.has('read', 'Orden')) {
+    redirect(303, '/sin-acceso');
+  }
   const ordenServicioId = Number(params.id);
   if (Number.isNaN(ordenServicioId)) {
     error(404, 'Recurso no encontrado');
   }
   try {
-    const ordenServicio = await createObtenerDetalleOrdenServicioUseCase(locals.usuario, locals.authorize)(ordenServicioId);
+    const obtenerOrdenServicioDetalle = createObtenerDetalleOrdenServicioUseCase(locals.usuario, locals.authorize);
+    const ordenServicio = await obtenerOrdenServicioDetalle(ordenServicioId);
     return {
       ordenServicio
     };

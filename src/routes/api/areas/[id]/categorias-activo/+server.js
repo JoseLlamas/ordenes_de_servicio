@@ -1,6 +1,5 @@
-
-import { json } from '@sveltejs/kit';
-import { obtenerEmpleadosSinUsuario } from '$lib/server/db/queries';
+import { error, json } from '@sveltejs/kit';
+import { obtenerCategoriasActivoPorArea } from '$lib/server/db/queries';
 
 /**
  *
@@ -8,15 +7,15 @@ import { obtenerEmpleadosSinUsuario } from '$lib/server/db/queries';
  */
 export async function GET ({ params, locals }) {
   try {
-    if (!locals.authorize) {
-      return json({ message: 'No autorizado' }, { status: 401 });
+    if (typeof locals.authorize === 'undefined') {
+      throw json({ mensaje: 'No autorizado' }, { status: 401 });
     }
     const areaId = Number(params.id);
     if (!areaId || areaId < 1) {
       return json({ message: 'areaId requerido' }, { status: 400 });
     }
-    const areas = await obtenerEmpleadosSinUsuario({ activo: true, areaId });
-    return json(areas);
+    const categoriasActivo = await obtenerCategoriasActivoPorArea(Number(areaId));
+    return json(categoriasActivo);
   } catch (err) {
     if (err instanceof Error) {
       return json({

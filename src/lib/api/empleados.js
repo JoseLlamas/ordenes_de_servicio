@@ -7,9 +7,7 @@ import { api } from './client';
  * @return {Promise<import('$lib/types').EmpleadoDTO[]>}
  */
 export async function obtenerEmpleadosSinUsuarioPorArea (areaId, signal) {
-  const queryString = new URLSearchParams();
-  queryString.append('activo', '');
-  return api(`/api/areas/${areaId}/empleados/sin-usuario?${queryString.toString()}`, { signal });
+  return api(`/api/areas/${areaId}/empleados/sin-usuario`, { signal });
 }
 
 
@@ -20,7 +18,5 @@ export async function obtenerEmpleadosSinUsuarioPorArea (areaId, signal) {
  * @return {Promise<import('$lib/types').EmpleadoDTO[]>}
  */
 export async function obtenerEmpleadosPorArea (areaId, signal) {
-  const queryString = new URLSearchParams();
-  queryString.append('activo', '');
-  return api(`/api/areas/${areaId}/empleados?${queryString.toString()}`, { signal });
+  return api(`/api/areas/${areaId}/empleados`, { signal });
 }

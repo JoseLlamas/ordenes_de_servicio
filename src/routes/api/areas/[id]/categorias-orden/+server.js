@@ -5,13 +5,13 @@ import { obtenerCategoriasOrdenPorArea } from '$lib/server/db/queries';
  *
  * @type {import('./$types').RequestHandler}
  */
-export async function GET ({ url, locals }) {
+export async function GET ({ params, locals }) {
   try {
     if (typeof locals.authorize === 'undefined') {
       return json({ message: 'No autorizado' }, { status: 401 });
     }
-    const areaId = Number(url.searchParams.get('areaId'));
-    if (!areaId || areaId <= 0) {
+    const areaId = Number(params.id);
+    if (!areaId || areaId < 1) {
       return json({ message: 'areaId requerido' }, { status: 400 });
     }
     const categoriasOrden = await obtenerCategoriasOrdenPorArea(areaId);

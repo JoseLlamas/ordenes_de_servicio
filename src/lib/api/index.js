@@ -10,9 +10,7 @@ export * from './empleados';
  * @returns {Promise<import('$lib/types').CategoriaOrdenDTO[]>}
  */
 export async function obtenerCategoriasOrdenPorArea (areaId, signal) {
-  const queryString = new URLSearchParams();
-  queryString.append('areaId', String(areaId));
-  return await api(`/api/categorias-orden?${queryString.toString()}`, { signal });
+  return await api(`/api/areas/${areaId}/categorias-orden`, { signal });
 }
 
 /**
@@ -22,9 +20,7 @@ export async function obtenerCategoriasOrdenPorArea (areaId, signal) {
  * @returns {Promise<import('$lib/types').CategoriaActivoDTO[]>}
  */
 export async function obtenerCategoriasActivoPorArea (areaId, signal) {
-  const queryString = new URLSearchParams();
-  queryString.append('areaId', String(areaId));
-  return api(`/api/categorias-activo?${queryString.toString()}`, { signal });
+  return api(`/api/areas/${areaId}/categorias-activo`, { signal });
 }
 
 /**
