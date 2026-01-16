@@ -17,9 +17,6 @@ const schema = Joi.object({
     .string()
     .empty(['', null])
     .valid('BAJA', 'MEDIA', 'ALTA', 'CRITICA'),
-  areaAsignadaId: Joi
-    .number()
-    .empty(['', null]),
   pagina: Joi
     .number()
     .empty(['', null])
@@ -35,7 +32,6 @@ const schema = Joi.object({
  *  fecha?: string,
  *  estado?: 'NUEVO' | 'PROCESO' | 'PENDIENTE' | 'RESUELTO' | 'CERRADO' | 'CANCELADO',
  *  prioridad?: 'BAJA' | 'MEDIA' | 'ALTA' | 'CRITICA',
- *  areaAsignadaId?: number,
  *  pagina: number,
  *  porPagina: number
  * }>}

@@ -13,15 +13,13 @@
    * @type {{
    *  fecha: string,
    *  estado: string | null,
-   *  prioridad: string | null,
-   *  areaAsignada: null | typeof data.areasParaAsignar[number]
+   *  prioridad: string | null
    * }}
    */
   let filtrosSeleccionados = $state({
     fecha: '',
     estado: null,
-    prioridad: null,
-    areaAsignada: null
+    prioridad: null
   });
 
   let filtrosCache = { ...filtrosSeleccionados };
@@ -42,9 +40,6 @@
     }
     if (filtros.prioridad) {
       url.searchParams.set('prioridad', filtros.prioridad);
-    }
-    if (filtros.areaAsignada) {
-      url.searchParams.set('areaAsignadaId', String(filtros.areaAsignada.id));
     }
     goto(url.toString(), { invalidateAll: true, replaceState: false });
   }
@@ -93,7 +88,7 @@
 
 <!-- Filtros -->
 <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-4 mb-6">
-  <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
     <div>
       <Input
         label="Fecha"
@@ -128,18 +123,7 @@
       </Select>
     </div>
 
-    <div>
-      <Select
-        label="Area asignada"
-        bind:value={filtrosSeleccionados.areaAsignada}
-      >
-        {#each data.areasParaAsignar as areaParaAsignar(areaParaAsignar.id)}
-          <option value={areaParaAsignar}>{areaParaAsignar.nombre}</option>
-        {/each}
-      </Select>
-    </div>
-
-    <div class="lg:col-span-4">
+    <div class="lg:col-span-3">
       <ButtonAccept
         type="button"
         class="w-full"

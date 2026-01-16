@@ -2,6 +2,7 @@ import { and, asc, count, desc, eq, exists, inArray, sql } from 'drizzle-orm';
 import { db } from '..';
 import * as schemas from '../schema';
 import { alias } from 'drizzle-orm/mysql-core';
+import { Temporal } from 'temporal-polyfill';
 
 /**
  * @import { DbOrTx } from './types';
@@ -42,18 +43,23 @@ export async function registrarOrdenServicio (data, dbOrTx = db) {
  *  fecha?: string,
  *  estado?: 'NUEVO' | 'PROCESO' | 'PENDIENTE' | 'RESUELTO' | 'CERRADO' | 'CANCELADO',
  *  prioridad?: 'BAJA' | 'MEDIA' | 'ALTA' | 'CRITICA',
- *  areaAsignadaId?: number
- * }} F
+ * }} Filtros
  *
- * @typedef {{ agenteId: number } | { areasAsignadasId: number[] }} FiltrosPaginador
+ * @typedef {{
+ *  agenteId: number
+ * } & Filtros} FiltrosAgente
+ *
+ * @typedef {{
+ *  areasAsignadasId: number[]
+ * } & Filtros} FiltrosEncargadoYCapturista
+ *
  */
 
 /**
  * @param {object} opciones
  * @param {number} opciones.pagina
  * @param {number} opciones.porPagina
- * @param {'asc' | 'desc'} opciones.orden
- * @param {{} | { agenteId: number } | { areasAsignadasId: number[] }} [opciones.filtros = {}]
+ * @param {Filtros | FiltrosAgente | FiltrosEncargadoYCapturista} [opciones.filtros = {}]
  * @param {DbOrTx} [dbOrTx = db]
  * @return {Promise<{
  *  ordenesServicio: OrdenServicioResumenDTO[],
@@ -66,7 +72,6 @@ export async function registrarOrdenServicio (data, dbOrTx = db) {
 export async function paginarOrdenesServicioResumen ({
   pagina = 1,
   porPagina = 10,
-  orden = 'desc',
   filtros = {}
 }, dbOrTx = db) {
   const areaAsignadaAlias = alias(schemas.areas, 'areaAsignada');
@@ -120,16 +125,22 @@ export async function paginarOrdenesServicioResumen ({
   if ('areasAsignadasId' in filtros) {
     params.push(inArray(schemas.ordenesServicio.areaAsignadaId, filtros.areasAsignadasId));
   }
+  if (typeof filtros.fecha !== 'undefined') {
+    const since = Temporal.PlainDate.from(filtros.fecha).toZonedDateTime({
+      timeZone: 'UTC',
+      plainTime: Temporal.PlainTime.from('00:00:00')
+    });
+    const until = Temporal.PlainDate.from(filtros.fecha).toZonedDateTime({
+      timeZone: 'UTC',
+      plainTime: Temporal.PlainTime.from('23:59:59')
+    });
+    params.push();
+  }
   if (params.length > 0) {
     query.where(and(...params));
   }
-  if (orden === 'desc') {
-    query.orderBy(desc(schemas.ordenesServicio.id));
-  } else {
-    query.orderBy(asc(schemas.ordenesServicio.id));
-  }
   let offset = (pagina - 1) * porPagina;
-  const rows = await query.limit(porPagina).offset(offset);
+  const rows = await query.orderBy(desc(schemas.ordenesServicio.id)).limit(porPagina).offset(offset);
   const [{ total }] = await dbOrTx.select({
     total: count()
   })
