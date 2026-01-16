@@ -1,25 +1,57 @@
 <!-- src/routes/(protected)/ordenes/+page.svelte -->
 <script>
   import { goto } from '$app/navigation';
-  import { page } from '$app/stores';
-    import Input from '$lib/components/Input.svelte';
-    import Select from '$lib/components/Select.svelte';
+  import { page } from '$app/state';
+  import ButtonAccept from '$lib/components/ButtonAccept.svelte';
+  import Input from '$lib/components/Input.svelte';
+  import Select from '$lib/components/Select.svelte';
   import { formatearFechaRelativa, getEstadoColor, getPrioridadColor, escribirNombreCompleto } from '$lib/utils';
 
   let { data } = $props();
 
-  // Funciones de paginación
-  function irAPagina (nuevaPagina) {
-    const url = new URL($page.url);
+  /**
+   * @type {{
+   *  fecha: string,
+   *  estado: string | null,
+   *  prioridad: string | null,
+   *  areaAsignada: null | typeof data.areasParaAsignar[number]
+   * }}
+   */
+  let filtrosSeleccionados = $state({
+    fecha: '',
+    estado: null,
+    prioridad: null,
+    areaAsignada: null
+  });
+
+  let filtrosCache = { ...filtrosSeleccionados };
+
+  /**
+   *
+   * @param {number} nuevaPagina
+   * @param {typeof filtrosCache} filtros
+   */
+  function irAPagina (nuevaPagina, filtros) {
+    const url = new URL(page.url);
     url.searchParams.set('pagina', nuevaPagina.toString());
-    goto(url.toString());
+    if (filtros.fecha) {
+      url.searchParams.set('fecha', filtros.fecha);
+    }
+    if (filtros.estado) {
+      url.searchParams.set('estado', filtros.estado);
+    }
+    if (filtros.prioridad) {
+      url.searchParams.set('prioridad', filtros.prioridad);
+    }
+    if (filtros.areaAsignada) {
+      url.searchParams.set('areaAsignadaId', String(filtros.areaAsignada.id));
+    }
+    goto(url.toString(), { invalidateAll: true, replaceState: false });
   }
 
-  function cambiarPorPagina (event) {
-    const url = new URL($page.url);
-    url.searchParams.set('porPagina', event.target.value);
-    url.searchParams.set('pagina', '1');
-    goto(url.toString());
+  function buscar () {
+    filtrosCache = { ...filtrosSeleccionados };
+    irAPagina(1, filtrosCache);
   }
 
   // Generar páginas visibles
@@ -61,46 +93,60 @@
 
 <!-- Filtros -->
 <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-4 mb-6">
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+  <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
     <div>
       <Input
-        label="Día"
+        label="Fecha"
         type="date"
+        bind:value={filtrosSeleccionados.fecha}
       />
     </div>
 
     <div>
       <Select
         label="Estado"
+        bind:value={filtrosSeleccionados.estado}
       >
-        <option>Nuevo</option>
-        <option>Proceso</option>
-        <option>Pendiente</option>
-        <option>Resuelto</option>
-        <option>Cerrado</option>
-        <option>Cancelado</option>
+        <option value="NUEVO">Nuevo</option>
+        <option value="PROCESO">Proceso</option>
+        <option value="PENDIENTE">Pendiente</option>
+        <option value="RESUELTO">Resuelto</option>
+        <option value="CERRADO">Cerrado</option>
+        <option value="CANCELADO">Cancelado</option>
       </Select>
     </div>
 
     <div>
       <Select
         label="Prioridad"
+        bind:value={filtrosSeleccionados.prioridad}
       >
-        <option>Baja</option>
-        <option>Media</option>
-        <option>Alta</option>
-        <option>Crítica</option>
+        <option value="BAJA">Baja</option>
+        <option value="MEDIA">Media</option>
+        <option value="ALTA">Alta</option>
+        <option value="CRITICA">Crítica</option>
       </Select>
     </div>
 
     <div>
       <Select
         label="Area asignada"
+        bind:value={filtrosSeleccionados.areaAsignada}
       >
         {#each data.areasParaAsignar as areaParaAsignar(areaParaAsignar.id)}
-          <option>{areaParaAsignar.nombre}</option>
+          <option value={areaParaAsignar}>{areaParaAsignar.nombre}</option>
         {/each}
       </Select>
+    </div>
+
+    <div class="lg:col-span-4">
+      <ButtonAccept
+        type="button"
+        class="w-full"
+        onclick={buscar}
+      >
+        Enviar
+      </ButtonAccept>
     </div>
   </div>
 </div>
@@ -239,18 +285,6 @@
       <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">
         No se encontraron órdenes
       </h3>
-      <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">
-        Comienza creando tu primera orden de servicio
-      </p>
-      <a
-        href="/ordenes/registro"
-        class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg font-medium text-sm hover:bg-blue-700"
-      >
-        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-        </svg>
-        Nueva Orden
-      </a>
     </div>
   {/if}
 </div>
@@ -272,22 +306,11 @@
 
       <!-- Controles -->
       <div class="flex items-center gap-2">
-        <!-- Por página -->
-        <select
-          onchange={cambiarPorPagina}
-          value={data.paginacion.porPagina}
-          class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm bg-white dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200"
-        >
-          <option value="10">10</option>
-          <option value="20">20</option>
-          <option value="50">50</option>
-          <option value="100">100</option>
-        </select>
 
         <!-- Anterior -->
         <button
-          onclick={() => irAPagina(data.paginacion.paginaActual - 1)}
-          disabled={!data.paginacion.tienePaginaAnterior}
+          onclick={() => irAPagina(data.paginacion.paginaActual - 1, filtrosCache)}
+          disabled={!(data.paginacion.paginaActual > 1)}
           class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-700"
         >
           Anterior
@@ -297,7 +320,7 @@
         <div class="hidden sm:flex gap-1">
           {#if paginasVisibles[0] > 1}
             <button
-              onclick={() => irAPagina(1)}
+              onclick={() => irAPagina(1, filtrosCache)}
               class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-700"
             >
               1
@@ -307,9 +330,9 @@
             {/if}
           {/if}
 
-          {#each paginasVisibles as numeroPagina, index(index)}
+          {#each paginasVisibles as numeroPagina(numeroPagina)}
             <button
-              onclick={() => irAPagina(numeroPagina)}
+              onclick={() => irAPagina(numeroPagina, filtrosCache)}
               class="px-3 py-1.5 border rounded-lg text-sm font-medium transition-colors
                       {numeroPagina === data.paginacion.paginaActual
                         ? 'bg-blue-500 text-white border-blue-500 dark:bg-blue-600'
@@ -325,7 +348,7 @@
               <span class="px-2 py-1.5 text-gray-500">...</span>
             {/if}
             <button
-              onclick={() => irAPagina(data.paginacion.totalPaginas)}
+              onclick={() => irAPagina(data.paginacion.totalPaginas, filtrosCache)}
               class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-700"
             >
               {data.paginacion.totalPaginas}
@@ -335,8 +358,8 @@
 
         <!-- Siguiente -->
         <button
-          onclick={() => irAPagina(data.paginacion.paginaActual + 1)}
-          disabled={!data.paginacion.tienePaginaSiguiente}
+          onclick={() => irAPagina(data.paginacion.paginaActual + 1, filtrosCache)}
+          disabled={!(data.paginacion.paginaActual < data.paginacion.totalPaginas)}
           class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-700"
         >
           Siguiente

@@ -9,3 +9,4 @@ export * from './registro_usuario_validator';
 export * from './registro_orden_servicio_validator';
 export * from './asignacion_agente_validator';
 export * from './desasignacion_agente_validator';
+export * from './filtros_paginador_ordenes_servicio_validator';

@@ -38,21 +38,28 @@ export async function registrarOrdenServicio (data, dbOrTx = db) {
 }
 
 /**
+ * @typedef {{
+ *  fecha?: string,
+ *  estado?: 'NUEVO' | 'PROCESO' | 'PENDIENTE' | 'RESUELTO' | 'CERRADO' | 'CANCELADO',
+ *  prioridad?: 'BAJA' | 'MEDIA' | 'ALTA' | 'CRITICA',
+ *  areaAsignadaId?: number
+ * }} F
+ *
+ * @typedef {{ agenteId: number } | { areasAsignadasId: number[] }} FiltrosPaginador
+ */
+
+/**
  * @param {object} opciones
  * @param {number} opciones.pagina
  * @param {number} opciones.porPagina
  * @param {'asc' | 'desc'} opciones.orden
- * @param {{} | { agenteId: number } | { areasAsignadasId: number[] }} opciones.filtros
+ * @param {{} | { agenteId: number } | { areasAsignadasId: number[] }} [opciones.filtros = {}]
  * @param {DbOrTx} [dbOrTx = db]
  * @return {Promise<{
  *  ordenesServicio: OrdenServicioResumenDTO[],
  *  paginacion: {
- *    paginaActual: number,
- *    porPagina: number,
  *    totalRegistros: number,
- *    totalPaginas: number,
- *    tienePaginaAnterior: boolean,
- *    tienePaginaSiguiente: boolean
+ *    totalPaginas: number
  *  }
  * }>}
  */
@@ -163,12 +170,8 @@ export async function paginarOrdenesServicioResumen ({
       cerradoEn: ordenServicio.cerradoEn
     })),
     paginacion: {
-      paginaActual: pagina,
-      porPagina,
       totalRegistros: total,
-      totalPaginas,
-      tienePaginaAnterior: pagina > 1,
-      tienePaginaSiguiente: pagina < totalPaginas
+      totalPaginas
     }
   };
 }
