@@ -2,7 +2,6 @@ import { assertAuthenticated } from '$lib/server/auth/guards';
 import { paginarOrdenesServicioResumen } from '$lib/server/db/queries';
 import { redirect } from '@sveltejs/kit';
 import { validateFiltrosPaginadorOrdenesServicio } from '$lib/server/validators';
-import { Temporal } from 'temporal-polyfill';
 
 /**
  * @type {import('./$types').PageServerLoad}
@@ -12,11 +11,13 @@ export async function load ({ locals, url }) {
   if (!locals.authorize.has('read', 'Orden')) {
     redirect(403, '/sin-acceso');
   }
+  /**
+   * @type {Parameters<typeof paginarOrdenesServicioResumen>[0]}
+   */
   const parameters = {
     pagina: 1,
     porPagina: 10,
-    filtros: {},
-    orden: /** @type {'desc'} */ ('desc')
+    filtros: {}
   };
   const resultValidation = await validateFiltrosPaginadorOrdenesServicio(Object.fromEntries(url.searchParams));
   if ('values' in resultValidation) {
@@ -25,9 +26,15 @@ export async function load ({ locals, url }) {
   }
   const rolNombre = locals.usuario.rol.nombre;
   if (rolNombre === 'Agente') {
-    parameters.filtros.agenteId = locals.usuario.id;
+    parameters.filtros = {
+      agenteId: locals.usuario.id
+    };
   } else if (rolNombre === 'Encargado' || rolNombre === 'Capturista') {
-    parameters.filtros.areasAsignadasId = locals.usuario.areasAcceso?.map(area => area.id);
+    if (locals.usuario.areasAcceso != null) {
+      parameters.filtros = {
+        areasAsignadasId: locals.usuario.areasAcceso.map(area => area.id)
+      };
+    }
   }
   const paginacion = await paginarOrdenesServicioResumen(parameters);
   return {

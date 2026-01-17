@@ -8,6 +8,7 @@ import { createValidator } from '../../validators/validator';
 const schema = Joi.object({
   ordenServicioId: Joi
     .number()
+    .integer()
     .empty(['', null])
     .required()
     .messages({
@@ -16,7 +17,7 @@ const schema = Joi.object({
   agentesId: Joi
     .array()
     .empty(['', null])
-    .items(Joi.number())
+    .items(Joi.number().integer())
     .min(1)
     .required()
     .messages({
