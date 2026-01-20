@@ -6,7 +6,7 @@ import Joi from 'joi';
 import { createValidator } from '../../validators/validator';
 
 const schema = Joi.object({
-  areaId: Joi.number().empty(['', null]).required().messages({
+  areaId: Joi.number().integer().empty(['', null]).required().messages({
     'any.required': 'El area es requerida'
   }),
   soloActivos: Joi.boolean().empty(['', null]).truthy('on')

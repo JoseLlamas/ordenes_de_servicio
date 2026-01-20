@@ -5,9 +5,10 @@
 import Joi from 'joi';
 import { createValidator } from '../../validators/validator';
 
-const schemaLogin = Joi.object({
+const schemaInvitacion = Joi.object({
   empleadoId: Joi
     .number()
+    .integer()
     .empty(['', null])
     .required()
     .messages({
@@ -15,6 +16,7 @@ const schemaLogin = Joi.object({
     }),
   rolId: Joi
     .number()
+    .integer()
     .empty(['', null])
     .required()
     .messages({
@@ -23,7 +25,7 @@ const schemaLogin = Joi.object({
   areasAccesoId: Joi
     .array()
     .empty(['', null])
-    .items(Joi.number().empty(['', null]))
+    .items(Joi.number().integer().empty(['', null]))
     .messages({
       'array.max': 'Cuando se selecciona el rol de administrador, no debe agregar ninguna area de alcalce',
       'any.required': 'El alcalce de rol es requerido'
@@ -33,4 +35,4 @@ const schemaLogin = Joi.object({
 /**
  * @type {Validator<{ empleadoId: number, rolId: number, areasAccesoId: number[] }>}
  */
-export const validateRegistroInvitacion = createValidator(schemaLogin);
+export const validateRegistroInvitacion = createValidator(schemaInvitacion);

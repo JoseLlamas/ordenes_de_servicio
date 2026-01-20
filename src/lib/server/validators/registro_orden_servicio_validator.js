@@ -8,6 +8,7 @@ import { createValidator } from '$lib/validators/validator';
 const schema = Joi.object({
   areaParaAsignarId: Joi
     .number()
+    .integer()
     .empty(['', null])
     .required()
     .messages({
@@ -15,6 +16,7 @@ const schema = Joi.object({
     }),
   empleadoSolicitanteId: Joi
     .number()
+    .integer()
     .empty([null, ''])
     .required()
     .messages({
@@ -33,6 +35,7 @@ const schema = Joi.object({
     }),
   categoriaOrdenId: Joi
     .number()
+    .integer()
     .empty(['', null])
     .required()
     .messages({
@@ -84,6 +87,7 @@ const schema = Joi.object({
     .required(),
   ordenServicioRelacionadoId: Joi
     .number()
+    .integer()
     .empty(['', null])
     .default(null)
     .optional(),

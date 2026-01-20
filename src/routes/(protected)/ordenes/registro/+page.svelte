@@ -9,7 +9,7 @@
   import ButtonSecundary from '$lib/components/ButtonSecundary.svelte';
   import ErrorMessage from '$lib/components/ErrorMessage.svelte';
   import { obtenerAreasPorDireccion, obtenerEmpleadosPorArea, obtenerCategoriasOrdenPorArea } from '$lib/api';
-  import { normalizePalabras } from '$lib/utils/normalize_palabras.js';
+  import { escribirNombreCompleto } from '$lib/utils';
   import SinResultados from '$lib/components/SinResultados.svelte';
   import InfoMessage from '$lib/components/InfoMessage.svelte';
   import ErrorCard from '$lib/components/ErrorCard.svelte';
@@ -310,7 +310,7 @@
           required
         >
           {#each empleados as empleado(empleado.id)}
-            <option value={empleado}>{normalizePalabras(empleado.nombre, empleado.primerApellido, empleado.segundoApellido ?? '')}</option>
+            <option value={empleado}>{escribirNombreCompleto(empleado)}</option>
           {/each}
         </Select>
         {#if form?.errors?.empleadoSolicitanteId}

@@ -1,4 +1,4 @@
-import { and, count, desc, eq, exists, inArray, sql } from 'drizzle-orm';
+import { and, count, desc, eq, exists, gte, inArray, lte, sql } from 'drizzle-orm';
 import { db } from '..';
 import * as schemas from '../schema';
 import { alias } from 'drizzle-orm/mysql-core';
@@ -6,6 +6,23 @@ import { alias } from 'drizzle-orm/mysql-core';
 /**
  * @import { DbOrTx } from './types';
  * @import { OrdenServicioDetalleDTO, OrdenServicioResumenDTO } from '$lib/types';
+ */
+
+/**
+ * @typedef {{
+ *  rangoFechas?: [Date, Date],
+ *  estado?: 'NUEVO' | 'PROCESO' | 'PENDIENTE' | 'RESUELTO' | 'CERRADO' | 'CANCELADO',
+ *  prioridad?: 'BAJA' | 'MEDIA' | 'ALTA' | 'CRITICA',
+ * }} Filtros
+ *
+ * @typedef {{
+ *  agenteId: number
+ * } & Filtros} FiltrosAgente
+ *
+ * @typedef {{
+ *  areasAsignadasId: number[]
+ * } & Filtros} FiltrosEncargadoYCapturista
+ *
  */
 
 /**
@@ -36,23 +53,6 @@ export async function registrarOrdenServicio (data, dbOrTx = db) {
       estado: 'NUEVO'
     });
 }
-
-/**
- * @typedef {{
- *  fecha?: string,
- *  estado?: 'NUEVO' | 'PROCESO' | 'PENDIENTE' | 'RESUELTO' | 'CERRADO' | 'CANCELADO',
- *  prioridad?: 'BAJA' | 'MEDIA' | 'ALTA' | 'CRITICA',
- * }} Filtros
- *
- * @typedef {{
- *  agenteId: number
- * } & Filtros} FiltrosAgente
- *
- * @typedef {{
- *  areasAsignadasId: number[]
- * } & Filtros} FiltrosEncargadoYCapturista
- *
- */
 
 /**
  * @param {object} opciones
@@ -124,6 +124,20 @@ export async function paginarOrdenesServicioResumen ({
   if ('areasAsignadasId' in filtros) {
     params.push(inArray(schemas.ordenesServicio.areaAsignadaId, filtros.areasAsignadasId));
   }
+  if (typeof filtros.rangoFechas !== 'undefined') {
+    params.push(
+      and(
+        gte(schemas.ordenesServicio.creadoEn, filtros.rangoFechas[0]),
+        lte(schemas.ordenesServicio.creadoEn, filtros.rangoFechas[1])
+      )
+    );
+  }
+  if (typeof filtros.estado !== 'undefined') {
+    params.push(eq(schemas.ordenesServicio.estado, filtros.estado));
+  }
+  if (typeof filtros.prioridad !== 'undefined') {
+    params.push(eq(schemas.ordenesServicio.prioridad, filtros.prioridad));
+  }
   if (params.length > 0) {
     query.where(and(...params));
   }
@@ -133,7 +147,7 @@ export async function paginarOrdenesServicioResumen ({
       .where(params.length > 0 ? and(...params) : undefined)
       .limit(porPagina)
       .offset(offset)
-      .orderBy(desc(schemas.ordenesServicio.id)),
+      .orderBy(desc(schemas.ordenesServicio.creadoEn)),
     dbOrTx
       .select({ total: count() })
       .from(schemas.ordenesServicio)

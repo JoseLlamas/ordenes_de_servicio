@@ -8,6 +8,7 @@ import { createValidator } from '../../validators/validator';
 const schemaRegistroEmpleado = Joi.object({
   direccionGeneralId: Joi
     .number()
+    .integer()
     .empty(['', null])
     .required()
     .messages({
@@ -15,6 +16,7 @@ const schemaRegistroEmpleado = Joi.object({
     }),
   areaId: Joi
     .number()
+    .integer()
     .empty(['', null])
     .required()
     .messages({

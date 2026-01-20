@@ -1,5 +1,5 @@
 <script>
-  import { normalizePalabras } from '$lib/utils/normalize_palabras';
+  import { escribirNombreCompleto } from '$lib/utils';
   import Avatar from './Avatar.svelte';
 
   /**
@@ -9,7 +9,7 @@
    */
   let { usuarioResumen: usuario } = $props();
 
-  let nombreCompleto = $derived(normalizePalabras(usuario.empleado.nombre, usuario.empleado.primerApellido, usuario.empleado.segundoApellido ?? ''));
+  let nombreCompleto = $derived(escribirNombreCompleto(usuario.empleado));
 </script>
 
 <div

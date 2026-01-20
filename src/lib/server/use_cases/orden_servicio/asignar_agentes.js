@@ -19,7 +19,7 @@ export function createAsignarAgentesUseCase (usuario, authorize) {
         throw new BusinessRuleException('Orden no encontrada', BusinessRules.ORDEN_DE_SERVICIO_NO_ENCONTRADA);
       }
       if (authorize.cannot('assign', 'Orden', { areaId: ordenServicio.areaAsignada.id })) {
-        throw new ForbiddenException('No puede asignar agentes');
+        throw new ForbiddenException('No puede asignar agentes a esta orden de servicio');
       }
       if (!['NUEVO', 'PROCESO', 'PENDIENTE'].includes(ordenServicio.estado)) {
         throw new BusinessRuleException('Ya no se puede asignar (sólo en nuevo, proceso y pendiente)', BusinessRules.ASIGNACION_FUERA_DE_ESTADO);

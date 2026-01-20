@@ -9,6 +9,7 @@ import { createValidator } from '../../validators/validator';
 const schema = Joi.object({
   ordenServicioId: Joi
     .number()
+    .integer()
     .empty(['', null])
     .required()
     .messages({
@@ -16,6 +17,7 @@ const schema = Joi.object({
     }),
   agenteId: Joi
     .number()
+    .integer()
     .empty(['', null])
     .required()
     .messages({

@@ -19,6 +19,9 @@ export function createObtenerDetalleOrdenServicioUseCase (usuario, authorize) {
     if (authorize.cannot('read', 'Orden', { areaId: ordenServicio.areaAsignada.id })) {
       throw new ForbiddenException('No tiene permisos para ver esta orden de servicio');
     }
+    if (usuario.rol.nombre === 'Agente' && !ordenServicio.agentes.some(agente => agente.id === usuario.id)) {
+      throw new ForbiddenException('No es agente de esta orden de servicio');
+    }
     return ordenServicio;
   };
 }

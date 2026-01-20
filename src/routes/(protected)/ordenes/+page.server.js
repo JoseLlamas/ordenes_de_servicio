@@ -2,6 +2,7 @@ import { assertAuthenticated } from '$lib/server/auth/guards';
 import { paginarOrdenesServicioResumen } from '$lib/server/db/queries';
 import { redirect } from '@sveltejs/kit';
 import { validateFiltrosPaginadorOrdenesServicio } from '$lib/server/validators';
+import { createDesdeHastaUTC } from '$lib/utils';
 
 /**
  * @type {import('./$types').PageServerLoad}
@@ -16,13 +17,23 @@ export async function load ({ locals, url }) {
    */
   const parameters = {
     pagina: 1,
-    porPagina: 10,
+    porPagina: 5,
     filtros: {}
   };
   const resultValidation = await validateFiltrosPaginadorOrdenesServicio(Object.fromEntries(url.searchParams));
   if ('values' in resultValidation) {
     parameters.pagina = resultValidation.values.pagina;
     parameters.porPagina = resultValidation.values.porPagina;
+    if (typeof resultValidation.values.fecha !== 'undefined') {
+      const fecha = resultValidation.values.fecha;
+      parameters.filtros.rangoFechas = createDesdeHastaUTC(fecha, fecha);
+    }
+    if (typeof resultValidation.values.estado !== 'undefined') {
+      parameters.filtros.estado = resultValidation.values.estado;
+    }
+    if (typeof resultValidation.values.prioridad !== 'undefined') {
+      parameters.filtros.prioridad = resultValidation.values.prioridad;
+    }
   }
   const rolNombre = locals.usuario.rol.nombre;
   if (rolNombre === 'Agente') {

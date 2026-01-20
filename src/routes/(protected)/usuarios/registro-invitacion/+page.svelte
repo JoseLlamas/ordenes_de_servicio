@@ -9,7 +9,7 @@
   import TitleSection from '$lib/components/TitleSection.svelte';
   import ButtonSecundary from '$lib/components/ButtonSecundary.svelte';
   import { obtenerEmpleadosSinUsuarioPorArea } from '$lib/api';
-  import { normalizePalabras } from '$lib/utils/normalize_palabras.js';
+  import { escribirNombreCompleto } from '$lib/utils';
   import ConfirmModal from '$lib/components/ConfirmModal.svelte';
   import { confirmBeforeEnhance } from '$lib/actions/confirm_before_enhance.js';
   import InfoMessage from '$lib/components/InfoMessage.svelte';
@@ -137,7 +137,7 @@
       bind:value={empleadoSeleccionado}
     >
       {#each empleados as empleado(empleado.id)}
-        <option value={empleado}>{normalizePalabras(empleado.nombre, empleado.primerApellido, empleado.segundoApellido ?? '')}</option>
+        <option value={empleado}>{escribirNombreCompleto(empleado)}</option>
       {/each}
     </Select>
     {#if form?.errors && form.errors.empleadoId}

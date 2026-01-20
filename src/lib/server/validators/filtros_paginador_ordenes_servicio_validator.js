@@ -28,8 +28,9 @@ const schema = Joi.object({
     .number()
     .integer()
     .min(1)
+    .max(20)
     .empty(['', null])
-    .default(10)
+    .default(5)
 });
 
 /**

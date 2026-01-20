@@ -68,3 +68,22 @@ export function formatearFechaRelativa (fecha) {
 
   return formatearFecha(fecha);
 }
+
+/**
+ *
+ * @param {string} since
+ * @param {string} until
+ * @param {string} [timeZone = 'America/Mexico_City']
+ * @return {[Date, Date]}
+ */
+export function createDesdeHastaUTC (since, until, timeZone = 'America/Mexico_City') {
+  const a = Temporal.PlainDate.from(since).toZonedDateTime({
+    timeZone,
+    plainTime: Temporal.PlainTime.from('00:00:00')
+  });
+  const b = Temporal.PlainDate.from(until).toZonedDateTime({
+    timeZone,
+    plainTime: Temporal.PlainTime.from('23:59:59')
+  });
+  return [new Date(a.epochMilliseconds), new Date(b.epochMilliseconds)];
+}

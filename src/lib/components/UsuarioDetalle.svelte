@@ -1,6 +1,6 @@
 <script>
   import Avatar from './Avatar.svelte';
-  import { normalizePalabras } from '$lib/utils';
+  import { escribirNombreCompleto } from '$lib/utils';
 
   /**
    * @type {{
@@ -18,7 +18,7 @@
   };
 
   let colorRol = $derived(coloresRol[usuario.rol.nombre] ?? 'bg-rol-capturista');
-  let nombreCompleto = $derived(normalizePalabras(usuario.empleado.nombre, usuario.empleado.primerApellido, usuario.empleado.segundoApellido ?? ''));
+  let nombreCompleto = $derived(escribirNombreCompleto(usuario.empleado));
 </script>
 
 <div>

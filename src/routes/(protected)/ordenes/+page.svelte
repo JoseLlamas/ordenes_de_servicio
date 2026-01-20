@@ -5,7 +5,13 @@
   import ButtonAccept from '$lib/components/ButtonAccept.svelte';
   import Input from '$lib/components/Input.svelte';
   import Select from '$lib/components/Select.svelte';
-  import { formatearFechaRelativa, getEstadoColor, getPrioridadColor, escribirNombreCompleto } from '$lib/utils';
+  import {
+    formatearFechaRelativa,
+    getEstadoColor,
+    getPrioridadColor,
+    escribirNombreCompleto,
+    obtenerInicialesParaAvatar
+  } from '$lib/utils';
 
   let { data } = $props();
 
@@ -49,7 +55,6 @@
     irAPagina(1, filtrosCache);
   }
 
-  // Generar páginas visibles
   let paginasVisibles = $derived.by(() => {
     const { paginaActual, totalPaginas } = data.paginacion;
     const paginas = [];
@@ -179,6 +184,9 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
               </svg>
               {orden.categoriaOrden.descripcion}
+              {#if orden.otroCategoriaOrden != null}
+                - {orden.otroCategoriaOrden}
+              {/if}
             </span>
           {/if}
         </div>
@@ -193,8 +201,8 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pt-4 border-t border-gray-100 dark:border-gray-800">
         <!-- Solicitante -->
         <div class="flex items-start gap-3">
-          <div class="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white text-sm font-semibold">
-            {orden.empleadoSolicitante.nombre.charAt(0)}{orden.empleadoSolicitante.primerApellido.charAt(0)}
+          <div class="shrink-0 w-10 h-10 bg-linear-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white text-sm font-semibold">
+            {obtenerInicialesParaAvatar(escribirNombreCompleto(orden.empleadoSolicitante))}
           </div>
           <div class="flex-1 min-w-0">
             <p class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-0.5">
@@ -206,12 +214,15 @@
             <p class="text-xs text-gray-500 dark:text-gray-400 truncate">
               {orden.areaSolicitante.nombre}
             </p>
+            <p class="text-xs text-gray-500 dark:text-gray-400">
+              Tel: {orden.telefonoSolicitante}
+            </p>
           </div>
         </div>
 
         <!-- Área Asignada -->
         <div class="flex items-start gap-3">
-          <div class="flex-shrink-0 w-10 h-10 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
+          <div class="shrink-0 w-10 h-10 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
             <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
             </svg>
@@ -223,11 +234,6 @@
             <p class="text-sm font-medium text-gray-900 dark:text-white truncate">
               {orden.areaAsignada.nombre}
             </p>
-            {#if orden.telefonoSolicitante}
-              <p class="text-xs text-gray-500 dark:text-gray-400">
-                Tel: {orden.telefonoSolicitante}
-              </p>
-            {/if}
           </div>
         </div>
 
@@ -242,17 +248,29 @@
             <p class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-0.5">
               Proceso
             </p>
-            {#if orden.cerradoEn}
+            {#if orden.estado === 'NUEVO'}
               <p class="text-sm font-medium text-green-600 dark:text-green-400">
-                Cerrada
+                Ingresado
               </p>
-            {:else if orden.canceladoEn}
-              <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
-                Cancelada
+            {:else if orden.estado === 'PROCESO'}
+              <p class="text-sm font-medium text-green-600 dark:text-green-400">
+                En proceso
+              </p>
+            {:else if orden.estado === 'PENDIENTE'}
+              <p class="text-sm font-medium text-green-600 dark:text-green-400">
+                En espera
+              </p>
+            {:else if orden.estado === 'RESUELTO'}
+              <p class="text-sm font-medium text-green-600 dark:text-green-400">
+                Resuelto
+              </p>
+            {:else if orden.estado === 'CERRADO'}
+              <p class="text-sm font-medium text-green-600 dark:text-green-400">
+                Cerrado
               </p>
             {:else}
-              <p class="text-sm font-medium text-blue-600 dark:text-blue-400">
-                En curso
+              <p class="text-sm font-medium text-green-600 dark:text-green-400">
+                Cancelado
               </p>
             {/if}
           </div>
