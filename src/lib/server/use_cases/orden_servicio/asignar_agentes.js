@@ -1,4 +1,4 @@
-import { obtenerOrdenServicioResumenPorId, asignarAgentes } from '$lib/server/db/queries';
+import { obtenerOrdenServicioResumenPorId, asignarAgentes, obtenerUsuariosResumenPorId } from '$lib/server/db/queries';
 import { db } from '$lib/server/db';
 import { BusinessRuleException, ForbiddenException, BusinessRules } from '$lib/server/exceptions';
 
@@ -24,6 +24,12 @@ export function createAsignarAgentesUseCase (usuario, authorize) {
       if (!['NUEVO', 'PROCESO', 'PENDIENTE'].includes(ordenServicio.estado)) {
         throw new BusinessRuleException('Ya no se puede asignar (sólo en nuevo, proceso y pendiente)', BusinessRules.ASIGNACION_FUERA_DE_ESTADO);
       }
+      const usuarios = await obtenerUsuariosResumenPorId(agentesId, tx);
+      const v = usuarios.some(usuario => {
+        return usuario.rol.nombre !== 'Agente'
+          || !usuario.areasAccesoId?.some(areaId => areaId === ordenServicio.areaAsignada.id);
+      });
+
       await asignarAgentes(ordenServicio.id, agentesId, tx);
     });
   };

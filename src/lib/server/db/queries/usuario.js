@@ -1,4 +1,4 @@
-import { eq, and, inArray, isNotNull, like, count } from 'drizzle-orm';
+import { eq, and, inArray, isNotNull, like } from 'drizzle-orm';
 import { db } from '../index';
 import {
   usuarios,
@@ -24,6 +24,7 @@ function createQueryParaUsuarioResumen (dbOrTx) {
       nombreUsuario: usuarios.nombreUsuario,
       activo: usuarios.activo,
       avatar: usuarios.avatar,
+      areasAccesoId: usuarios.areasAccesoId,
       'empleado.id': empleados.id,
       'empleado.nombre': empleados.nombre,
       'empleado.primerApellido': empleados.primerApellido,
@@ -87,6 +88,7 @@ export async function obtenerUsuariosResumenes (filters = {}, dbOrTx = db) {
     nombreUsuario: row.nombreUsuario,
     activo: row.activo,
     avatar: row.avatar,
+    areasAccesoId: row.areasAccesoId != null ? JSON.parse(row.areasAccesoId) : null,
     empleado: {
       id: row['empleado.id'],
       nombre: row['empleado.nombre'],
@@ -361,6 +363,7 @@ export async function obtenerAgentes (areaId, filters = {}, dbOrTx = db) {
     nombreUsuario: row.nombreUsuario,
     activo: row.activo,
     avatar: row.avatar,
+    areasAccesoId: row.areasAccesoId != null ? JSON.parse(row.areasAccesoId) : null,
     empleado: {
       id: row['empleado.id'],
       nombre: row['empleado.nombre'],
@@ -392,6 +395,7 @@ export async function obtenerUsuariosResumenPorId (id, dbOrTx = db) {
     nombreUsuario: row.nombreUsuario,
     activo: row.activo,
     avatar: row.avatar,
+    areasAccesoId: row.areasAccesoId != null ? JSON.parse(row.areasAccesoId) : null,
     empleado: {
       id: row['empleado.id'],
       nombre: row['empleado.nombre'],

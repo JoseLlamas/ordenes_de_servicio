@@ -37,5 +37,6 @@ export interface UsuarioResumenDTO {
   avatar: string | null;
   empleado: Omit<EmpleadoDTO, 'activo'> & { area: AreaDTO };
   rol: Omit<RolDTO, 'descripcion'>;
+  areasAccesoId: number[] | null;
 
 }
