@@ -15,7 +15,7 @@
   import ErrorCard from '$lib/components/ErrorCard.svelte';
   import ConfirmModal from '$lib/components/ConfirmModal.svelte';
   import { confirmBeforeEnhance } from '$lib/actions/confirm_before_enhance.js';
-    import LoaderLine from '$lib/components/LoaderLine.svelte';
+  import LoaderLine from '$lib/components/LoaderLine.svelte';
 
   let { data, form } = $props();
 

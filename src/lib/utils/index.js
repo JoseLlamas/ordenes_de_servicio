@@ -64,3 +64,19 @@ export function getPrioridadColor (prioridad) {
 export function escribirNombreCompleto (persona) {
   return normalizePalabras(persona.nombre, persona.primerApellido, persona.segundoApellido ?? '');
 }
+
+/**
+ *
+ * @param {URL} url
+ * @param {string} key
+ * @param {string | null} [value]
+ */
+export function setValueQueryString (url, key, value) {
+  if (value) {
+    url.searchParams.set(key, value);
+  } else {
+    if (url.searchParams.has(key)) {
+      url.searchParams.delete(key);
+    }
+  }
+}

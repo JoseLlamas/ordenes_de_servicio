@@ -74,7 +74,7 @@ export const actions = {
     }
   },
 
-  cambiarEstado: async ({ request, locals }) => {
+  iniciar: async ({ request, locals }) => {
     const usuario = locals.usuario;
     return {};
   },
@@ -89,7 +89,8 @@ export const actions = {
           errorsDesasignacionAgente: resultValidation.errors
         });
       }
-      await createDesasignarAgenteUseCase(locals.usuario, locals.authorize)(resultValidation.values.ordenServicioId, resultValidation.values.agenteId);
+      const desasignarAgente = createDesasignarAgenteUseCase(locals.usuario, locals.authorize);
+      await desasignarAgente(resultValidation.values.ordenServicioId, resultValidation.values.agenteId);
       return {
         messageDesasignacionAgente: 'Agente desasignado'
       };

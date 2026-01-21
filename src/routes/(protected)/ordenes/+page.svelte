@@ -10,7 +10,8 @@
     getEstadoColor,
     getPrioridadColor,
     escribirNombreCompleto,
-    obtenerInicialesParaAvatar
+    obtenerInicialesParaAvatar,
+    setValueQueryString
   } from '$lib/utils';
 
   let { data } = $props();
@@ -37,16 +38,10 @@
    */
   function irAPagina (nuevaPagina, filtros) {
     const url = new URL(page.url);
-    url.searchParams.set('pagina', nuevaPagina.toString());
-    if (filtros.fecha) {
-      url.searchParams.set('fecha', filtros.fecha);
-    }
-    if (filtros.estado) {
-      url.searchParams.set('estado', filtros.estado);
-    }
-    if (filtros.prioridad) {
-      url.searchParams.set('prioridad', filtros.prioridad);
-    }
+    setValueQueryString(url, 'pagina', nuevaPagina.toString());
+    setValueQueryString(url, 'fecha', filtros.fecha);
+    setValueQueryString(url, 'estado', filtros.estado);
+    setValueQueryString(url, 'prioridad', filtros.prioridad);
     goto(url.toString(), { invalidateAll: true, replaceState: false });
   }
 

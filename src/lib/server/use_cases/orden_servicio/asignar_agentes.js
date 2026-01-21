@@ -16,20 +16,31 @@ export function createAsignarAgentesUseCase (usuario, authorize) {
     return db.transaction(async (tx) => {
       const ordenServicio = await obtenerOrdenServicioResumenPorId(ordenServicioId, tx);
       if (ordenServicio == null) {
-        throw new BusinessRuleException('Orden no encontrada', BusinessRules.ORDEN_DE_SERVICIO_NO_ENCONTRADA);
+        throw new BusinessRuleException(
+          'Orden no encontrada',
+          BusinessRules.ORDEN_DE_SERVICIO_NO_ENCONTRADA
+        );
       }
       if (authorize.cannot('assign', 'Orden', { areaId: ordenServicio.areaAsignada.id })) {
         throw new ForbiddenException('No puede asignar agentes a esta orden de servicio');
       }
       if (!['NUEVO', 'PROCESO', 'PENDIENTE'].includes(ordenServicio.estado)) {
-        throw new BusinessRuleException('Ya no se puede asignar (sólo en nuevo, proceso y pendiente)', BusinessRules.ASIGNACION_FUERA_DE_ESTADO);
+        throw new BusinessRuleException(
+          'Ya no se puede asignar (sólo en nuevo, proceso y pendiente)',
+          BusinessRules.ASIGNACION_FUERA_DE_ESTADO
+        );
       }
       const usuarios = await obtenerUsuariosResumenPorId(agentesId, tx);
-      const v = usuarios.some(usuario => {
+      const hayUsuarioSinPermiso = usuarios.some(usuario => {
         return usuario.rol.nombre !== 'Agente'
           || !usuario.areasAccesoId?.some(areaId => areaId === ordenServicio.areaAsignada.id);
       });
-
+      if (hayUsuarioSinPermiso) {
+        throw new BusinessRuleException(
+          'Hay un usuario que no es agente o no puede ser asignado a esta OS',
+          BusinessRules.NO_SE_PUEDE_ASIGNAR_USUARIO_COMO_AGENTE
+        );
+      }
       await asignarAgentes(ordenServicio.id, agentesId, tx);
     });
   };

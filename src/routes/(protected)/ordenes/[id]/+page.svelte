@@ -8,12 +8,21 @@
   import LoadingScreen from '$lib/components/LoadingScreen.svelte';
   import ErrorMessage from '$lib/components/ErrorMessage.svelte';
   import InfoMessage from '$lib/components/InfoMessage.svelte';
+  import TextArea from '$lib/components/TextArea.svelte';
+  import { confirmBeforeEnhance } from '$lib/actions/confirm_before_enhance.js';
+  import ConfirmModal from '$lib/components/ConfirmModal.svelte';
 
   let { data, form } = $props();
 
   let ordenServicio = $derived(data.ordenServicio);
 
   let submittingAsignacion = $state(false);
+  let submittingNuevoEstado = $state(false);
+
+  /**
+   * @type {ConfirmModal | undefined}
+  */
+  let confirmModal = $state();
 
   /**
    * @type {SelectorAgentesMultiple | undefined}
@@ -37,6 +46,11 @@
    */
   let agenteRemoviendoId = $state(null);
 
+  /**
+   * @type {(typeof data.ordenServicio)['estado'] | null}
+   */
+  let nuevoEstado = $state(null);
+
   const tabs = $derived([
     { id: 'detalles', nombre: 'Detalles', icono: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
     { id: 'activos', nombre: 'Activos', icono: 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4', badge: ordenServicio.activos.length || 0 }
@@ -47,6 +61,8 @@
   <title>Orden #{ordenServicio.id}</title>
 </svelte:head>
 
+<LoadingScreen hidden={!submittingNuevoEstado} />
+<ConfirmModal bind:this={confirmModal} />
 
 <Modal
   bind:dialog={modalAsignacion}
@@ -76,6 +92,7 @@
   <form
     method="POST"
     action="?/asignarAgentes"
+    use:confirmBeforeEnhance={{ confirm: () => confirmModal?.confirm() ?? Promise.resolve(false) }}
     use:enhance={({ formData }) => {
       const data = {
         ordenServicioId: ordenServicio.id,
@@ -84,7 +101,7 @@
       formData.set('data', JSON.stringify(data));
       submittingAsignacion = true;
       return async ({ update, result }) => {
-        await update();
+        await update({ invalidateAll: true });
         if (result.status === 200) {
           agentesSeleccionados = [];
           selectorAgentesMultiple?.limpiarFormulario();
@@ -132,10 +149,6 @@
     </div>
 
     <div class="flex flex-wrap gap-2">
-
-      <button class="px-4 py-2 rounded-lg text-sm font-medium bg-green-600 text-white hover:bg-green-700 transition-colors flex items-center gap-2">
-        Iniciar
-      </button>
 
       <button class="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors flex items-center gap-2">
         Editar
@@ -628,22 +641,69 @@
 </div>
 
 <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 mb-6">
-  <div class="flex flex-wrap gap-2 justify-center">
+  <div class="flex flex-col gap-6 lg:flex-row lg:justify-around lg:gap-0">
 
-    <button class="px-4 py-2 rounded-lg text-sm font-medium bg-green-600 text-white hover:bg-green-700 transition-colors flex items-center gap-2">
+    <button
+      class="px-4 py-2 rounded-lg text-sm font-medium bg-[#9b1f3d] text-white hover:bg-[#7f182f] transition-colors"
+      onclick={() => nuevoEstado = 'PROCESO'}
+      >
+      Iniciar
+    </button>
+
+    <button
+      class="px-4 py-2 rounded-lg text-sm font-medium bg-green-600 text-white hover:bg-green-700 transition-colors"
+      onclick={() => nuevoEstado = 'PENDIENTE'}
+    >
       Pediente
     </button>
 
-    <button class="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors flex items-center gap-2">
+    <button
+      class="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+      onclick={() => nuevoEstado = 'RESUELTO'}
+    >
       Solucionar
     </button>
 
-    <button class="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors flex items-center gap-2">
+    <button
+      class="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+      onclick={() => nuevoEstado = 'CERRADO'}
+    >
       Cerrar
     </button>
 
-    <button class="px-4 py-2 rounded-lg text-sm font-medium border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors flex items-center gap-2">
+    <button
+      class="px-4 py-2 rounded-lg text-sm font-medium border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
+      onclick={() => nuevoEstado = 'CANCELADO'}
+    >
       Cancelar
     </button>
   </div>
+  {#if nuevoEstado != null}
+    <form
+      action="?/cambiarEstado"
+      method="POST"
+      class="flex flex-col gap-3 pt-5"
+      use:enhance={({ formData }) => {
+        formData.set('data', JSON.stringify({
+          nuevoEstado: nuevoEstado,
+          ordenServicioId: ordenServicio.id
+        }));
+        return async ({ update }) => {
+          await update();
+        };
+      }}
+    >
+      <div class="flex flex-col gap-3 items-stretch w-full">
+        <TextArea
+          name="texto"
+          id="texto"
+        />
+        <ButtonAccept
+          type="submit"
+        >
+          Enviar
+        </ButtonAccept>
+      </div>
+    </form>
+  {/if}
 </div>
