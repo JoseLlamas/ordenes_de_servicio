@@ -74,7 +74,7 @@ export const actions = {
     }
   },
 
-  iniciar: async ({ request, locals }) => {
+  cambiarEstado: async ({ request, locals }) => {
     const usuario = locals.usuario;
     return {};
   },

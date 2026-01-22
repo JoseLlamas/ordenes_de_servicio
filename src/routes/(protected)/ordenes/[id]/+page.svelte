@@ -47,9 +47,25 @@
   let agenteRemoviendoId = $state(null);
 
   /**
-   * @type {(typeof data.ordenServicio)['estado'] | null}
+   * @type {Omit<typeof data.ordenServicio['estado'], 'NUEVO'> | null}
    */
   let nuevoEstado = $state(null);
+
+  let textoLabelNuevoEstado = $derived.by(() => {
+    if (nuevoEstado === 'PROCESO') {
+      return 'Ingrese una observación (opcional)';
+    } else if (nuevoEstado === 'PENDIENTE') {
+      return 'Especifique la razón por la que la orden entra en espera (obligatorio)';
+    } else if (nuevoEstado === 'RESUELTO') {
+      return 'Especifique la solución que se dio (obligatorio)';
+    } else if (nuevoEstado === 'CERRADO') {
+      return 'Ingrese cualquier observación de cierre (opcional)';
+    } else if (nuevoEstado === 'CANCELADO') {
+      return 'Especifique la razón por la que fue cancelado la OS (obligatorio)';
+    } else {
+      return 'Ingrese una observación';
+    }
+  });
 
   const tabs = $derived([
     { id: 'detalles', nombre: 'Detalles', icono: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
@@ -62,59 +78,8 @@
 </svelte:head>
 
 <LoadingScreen hidden={!submittingNuevoEstado} />
+<LoadingScreen hidden={!submittingAsignacion} />
 <ConfirmModal bind:this={confirmModal} />
-
-<Modal
-  bind:dialog={modalAsignacion}
-  title="Asignar agentes"
->
-  <LoadingScreen hidden={!submittingAsignacion} />
-  {#if form?.messageAsignacionAgentes}
-    <InfoMessage>
-      {form.messageAsignacionAgentes}
-    </InfoMessage>
-  {/if}
-  {#if form?.errorsAsignacionAgentes?.agentesId}
-    <ErrorMessage>
-      {form.errorsAsignacionAgentes.agentesId}
-    </ErrorMessage>
-  {/if}
-  {#if form?.errorAsignacionAgentes}
-    <ErrorMessage>
-      {form.errorAsignacionAgentes}
-    </ErrorMessage>
-  {/if}
-  <SelectorAgentesMultiple
-    areaId={ordenServicio.areaAsignada.id}
-    bind:agentesSeleccionados={agentesSeleccionados}
-    bind:this={selectorAgentesMultiple}
-  />
-  <form
-    method="POST"
-    action="?/asignarAgentes"
-    use:confirmBeforeEnhance={{ confirm: () => confirmModal?.confirm() ?? Promise.resolve(false) }}
-    use:enhance={({ formData }) => {
-      const data = {
-        ordenServicioId: ordenServicio.id,
-        agentesId: agentesSeleccionados.map(u => u.id)
-      };
-      formData.set('data', JSON.stringify(data));
-      submittingAsignacion = true;
-      return async ({ update, result }) => {
-        await update({ invalidateAll: true });
-        if (result.status === 200) {
-          agentesSeleccionados = [];
-          selectorAgentesMultiple?.limpiarFormulario();
-        }
-        submittingAsignacion = false;
-      };
-    }}
-  >
-    <ButtonAccept class="w-full">
-      Asignar
-    </ButtonAccept>
-  </form>
-</Modal>
 
 <!-- Header -->
 <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 mb-6">
@@ -172,6 +137,56 @@
   </div>
 </div>
 
+
+<div>
+
+  {#if form?.messageAsignacionAgentes}
+    <InfoMessage>
+      {form.messageAsignacionAgentes}
+    </InfoMessage>
+  {/if}
+  {#if form?.errorsAsignacionAgentes?.agentesId}
+    <ErrorMessage>
+      {form.errorsAsignacionAgentes.agentesId}
+    </ErrorMessage>
+  {/if}
+  {#if form?.errorAsignacionAgentes}
+    <ErrorMessage>
+      {form.errorAsignacionAgentes}
+    </ErrorMessage>
+  {/if}
+  <SelectorAgentesMultiple
+    areaId={ordenServicio.areaAsignada.id}
+    bind:agentesSeleccionados={agentesSeleccionados}
+    bind:this={selectorAgentesMultiple}
+  />
+  <form
+    method="POST"
+    action="?/asignarAgentes"
+    use:confirmBeforeEnhance={{ confirm: () => confirmModal?.confirm() ?? Promise.resolve(false) }}
+    use:enhance={({ formData }) => {
+      const data = {
+        ordenServicioId: ordenServicio.id,
+        agentesId: agentesSeleccionados.map(u => u.id)
+      };
+      formData.set('data', JSON.stringify(data));
+      submittingAsignacion = true;
+      return async ({ update, result }) => {
+        await update({ invalidateAll: true });
+        if (result.status === 200) {
+          agentesSeleccionados = [];
+          selectorAgentesMultiple?.limpiarFormulario();
+        }
+        submittingAsignacion = false;
+      };
+    }}
+  >
+    <ButtonAccept class="w-full">
+      Asignar
+    </ButtonAccept>
+  </form>
+</div>
+
 <!-- Tabs -->
 <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden mb-6">
   <div class="border-b border-gray-200 dark:border-gray-700">
@@ -203,6 +218,7 @@
 
   <div class="p-6">
     {#if tabActual === 'detalles'}
+
       <!-- ==================== TAB DETALLES ==================== -->
       <div class="space-y-6">
 
@@ -697,6 +713,7 @@
         <TextArea
           name="texto"
           id="texto"
+          label={textoLabelNuevoEstado}
         />
         <ButtonAccept
           type="submit"

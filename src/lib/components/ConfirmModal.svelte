@@ -1,6 +1,4 @@
 <script>
-  import Modal from './Modal.svelte';
-
   /**
    * @type {HTMLDialogElement | undefined}
    */
@@ -31,8 +29,6 @@
 
   function clicInCancelar () {
     dialog?.close();
-    resolver?.(false);
-    resolver = null;
   }
 
   function clicInAceptar () {
@@ -44,6 +40,12 @@
 
 <dialog
   bind:this={dialog}
+  onclose={() => {
+    if (resolver != null) {
+      resolver(false);
+      resolver = null;
+    }
+  }}
   closedby="any"
   class="
     fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
@@ -61,9 +63,7 @@
 
     <button
       class="text-gray-500 hover:text-red-500 transition text-xl leading-none cursor-pointer"
-      onclick={() => {
-        dialog?.close();
-      }}
+      onclick={() => clicInCancelar()}
       aria-label="Cerrar"
     >
       &times;
