@@ -50,9 +50,9 @@
   let observaciones = $state('');
 
   /**
-   * @type {HTMLDialogElement | undefined}
+   * @type {Modal | undefined}
    */
-  let dialog = $state();
+  let modal = $state();
 
   let working = $state(false);
 
@@ -62,7 +62,7 @@
   let categoriasActivo = $state([]);
 
   export async function open () {
-    dialog?.showModal();
+    modal?.open();
     working = true;
     if (typeof areaId !== 'undefined') {
       categoriasActivo = await obtenerCategoriasActivoPorArea(areaId);
@@ -105,7 +105,12 @@
   }
 </script>
 
-<Modal bind:dialog title="Agregar Activo" onclose={() => limpiarCampos()}>
+<Modal
+  {working}
+  bind:this={modal}
+  title="Agregar Activo"
+  onclose={() => limpiarCampos()}
+>
   <div class="mt-5 grid grid-cols-1 gap-x-6 gap-y-4 lg:grid-cols-4 mb-5">
     {#if working}
       <div class="lg:col-span-4">
@@ -181,12 +186,19 @@
   </div>
   <hr />
   <div class="flex justify-end gap-2 mt-5">
-    <ButtonCancel onclick={() => {
-      dialog?.close();
-    }}>
+    <ButtonCancel
+      disabled={working}
+      onclick={() => {
+        modal?.close();
+      }}
+    >
       Cerrar
     </ButtonCancel>
-    <ButtonAccept onclick={() => void addActivo()} type="button">
+    <ButtonAccept
+      onclick={() => void addActivo()}
+      type="button"
+      disabled={working}
+    >
       Agregar Activo
     </ButtonAccept>
   </div>

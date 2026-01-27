@@ -37,7 +37,6 @@
 <dialog
   bind:this={dialogRef}
   onclose={handleClose}
-  closedby="none"
   onkeydown={(event) => {
     if (event.key === 'Escape') {
       event.preventDefault();

@@ -46,7 +46,6 @@
       resolver = null;
     }
   }}
-  closedby="any"
   class="
     fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
     rounded-xl p-2 shadow-3xl backdrop:bg-black/50 backdrop:backdrop-blur-md

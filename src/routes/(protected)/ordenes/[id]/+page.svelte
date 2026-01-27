@@ -1,6 +1,5 @@
 <script>
   import Avatar from '$lib/components/Avatar.svelte';
-  import Modal from '$lib/components/Modal.svelte';
   import { formatearFecha, formatearFechaRelativa, getEstadoColor, escribirNombreCompleto, getPrioridadColor } from '$lib/utils';
   import SelectorAgentesMultiple from '$lib/components/SelectorAgentesMultiple.svelte';
   import { enhance } from '$app/forms';
@@ -11,8 +10,14 @@
   import TextArea from '$lib/components/TextArea.svelte';
   import { confirmBeforeEnhance } from '$lib/actions/confirm_before_enhance.js';
   import ConfirmModal from '$lib/components/ConfirmModal.svelte';
+  import Modal from '$lib/components/Modal.svelte';
 
   let { data, form } = $props();
+
+  /**
+   * @type {Modal | undefined}
+   */
+  let modal = $state();
 
   let ordenServicio = $derived(data.ordenServicio);
 
@@ -33,11 +38,6 @@
    * @type {import('$lib/types').UsuarioResumenDTO[]}
    */
   let agentesSeleccionados = $state([]);
-
-  /**
-   * @type {HTMLDialogElement | undefined}
-   */
-  let modalAsignacion = $state();
 
   let tabActual = $state('detalles');
 
@@ -81,65 +81,9 @@
 <LoadingScreen hidden={!submittingAsignacion} />
 <ConfirmModal bind:this={confirmModal} />
 
-<!-- Header -->
-<div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 mb-6">
-  <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
-    <div class="flex-1">
-      <div class="flex items-center gap-3 mb-2">
-        <a
-          title="regresar"
-          href="/ordenes"
-          class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
-        >
-          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-          </svg>
-        </a>
-        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
-          Orden #{ordenServicio.id}
-        </h1>
-        <span class="inline-flex px-3 py-1 rounded-lg text-xs font-medium border {getEstadoColor(ordenServicio.estado)}">
-          {ordenServicio.estado.replace('_', ' ').toUpperCase()}
-        </span>
-        <span class="inline-flex px-3 py-1 rounded-lg text-xs font-medium border {getPrioridadColor(ordenServicio.prioridad)}">
-          {ordenServicio.prioridad.toUpperCase()}
-        </span>
-      </div>
-      <p class="text-sm text-gray-600 dark:text-gray-400">
-        {ordenServicio.categoriaOrden.descripcion}
-      </p>
-      <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">
-        Creado el {formatearFecha(ordenServicio.creadoEn)}
-      </p>
-    </div>
-
-    <div class="flex flex-wrap gap-2">
-
-      <button class="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors flex items-center gap-2">
-        Editar
-      </button>
-
-      <button
-        onclick={() => modalAsignacion?.showModal()}
-        class="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors flex items-center gap-2">
-        Asignar
-      </button>
-
-      <button class="px-4 py-2 rounded-lg text-sm font-medium border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors flex items-center gap-2">
-        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-        </svg>
-        Imprimir
-      </button>
-
-    </div>
-
-  </div>
-</div>
-
-
-<div>
-
+<Modal
+  bind:this={modal}
+>
   {#if form?.messageAsignacionAgentes}
     <InfoMessage>
       {form.messageAsignacionAgentes}
@@ -185,6 +129,62 @@
       Asignar
     </ButtonAccept>
   </form>
+</Modal>
+
+<!-- Header -->
+<div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 mb-6">
+  <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
+    <div class="flex-1">
+      <div class="flex items-center gap-3 mb-2">
+        <a
+          title="regresar"
+          href="/ordenes"
+          class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+        >
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+        </a>
+        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
+          Orden #{ordenServicio.id}
+        </h1>
+        <span class="inline-flex px-3 py-1 rounded-lg text-xs font-medium border {getEstadoColor(ordenServicio.estado)}">
+          {ordenServicio.estado.replace('_', ' ').toUpperCase()}
+        </span>
+        <span class="inline-flex px-3 py-1 rounded-lg text-xs font-medium border {getPrioridadColor(ordenServicio.prioridad)}">
+          {ordenServicio.prioridad.toUpperCase()}
+        </span>
+      </div>
+      <p class="text-sm text-gray-600 dark:text-gray-400">
+        {ordenServicio.categoriaOrden.descripcion}
+      </p>
+      <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">
+        Creado el {formatearFecha(ordenServicio.creadoEn)}
+      </p>
+    </div>
+
+    <div class="flex flex-wrap gap-2">
+
+      <button class="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors flex items-center gap-2">
+        Editar
+      </button>
+
+      <button
+        onclick={() => modal?.open()}
+        class="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors flex items-center gap-2">
+        Asignar
+      </button>
+
+      <button class="px-4 py-2 rounded-lg text-sm font-medium border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors flex items-center gap-2">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+        </svg>
+        Imprimir
+      </button>
+
+    </div>
+
+  </div>
 </div>
 
 <!-- Tabs -->
