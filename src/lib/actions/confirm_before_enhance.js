@@ -23,17 +23,10 @@ export function confirmBeforeEnhance (node, params) {
 
     const button = ev.submitter;
 
-    if (button instanceof HTMLButtonElement || button instanceof HTMLInputElement) {
-      button.disabled = true;
-    }
-
     // 2) Pide confirmación
     const ok = await params.confirm?.();
 
     if (!ok) {
-      if (button instanceof HTMLButtonElement || button instanceof HTMLInputElement) {
-        button.disabled = false;
-      }
       return;
     }
 
@@ -44,9 +37,6 @@ export function confirmBeforeEnhance (node, params) {
     } finally {
       // devuelve el guard a estado normal en el próximo turno
       queueMicrotask(() => {
-        if (button instanceof HTMLButtonElement || button instanceof HTMLInputElement) {
-          button.disabled = false;
-        }
         bypass = false;
       });
     }

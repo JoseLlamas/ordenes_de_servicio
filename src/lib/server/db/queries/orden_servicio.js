@@ -482,3 +482,22 @@ export async function obtenerCantidadAgentes (ordenServicioId, dbOrTx = db) {
   return dbOrTx.$count(schemas.asignaciones, eq(schemas.asignaciones.ordenServicioId, ordenServicioId));
 }
 
+/**
+ * @param {number} ordenServicioId
+ * @param {{
+ *  estado?: 'PROCESO' | 'PENDIENTE' | 'RESUELTO' | 'CERRADO' | 'CANCELADO',
+ *  cerradoEn?: Date,
+ *  cerradoPorId?: number,
+ *  canceladoEn?: Date,
+ *  canceladoPorId?: number,
+ *  ordenServicioRelacionadoId?: number
+ * }} data
+ * @param {DbOrTx} [dbOrTx = db]
+ */
+export async function pathOrdenServicio (ordenServicioId, data, dbOrTx = db) {
+  await dbOrTx
+    .update(schemas.ordenesServicio)
+    .set(data)
+    .where(eq(schemas.ordenesServicio.id, ordenServicioId));
+}
+

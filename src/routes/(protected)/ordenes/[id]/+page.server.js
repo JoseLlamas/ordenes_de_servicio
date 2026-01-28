@@ -2,12 +2,16 @@ import { assertAuthenticated } from '$lib/server/auth/guards';
 import { BusinessRuleException, ForbiddenException } from '$lib/server/exceptions';
 import {
   createAsignarAgentesUseCase,
+  createCambiarEstadoUseCase,
   createDesasignarAgenteUseCase,
   createObtenerDetalleOrdenServicioUseCase
 } from '$lib/server/use_cases/orden_servicio';
 import { error, fail, redirect } from '@sveltejs/kit';
-import { validateAsignacionAgentes } from '$lib/server/validators';
-import { validateDesasignacionAgente } from '$lib/server/validators';
+import {
+  validateAsignacionAgentes,
+  validateDesasignacionAgente,
+  validateCambioEstado
+} from '$lib/server/validators';
 
 /**
  *
@@ -75,8 +79,33 @@ export const actions = {
   },
 
   cambiarEstado: async ({ request, locals }) => {
-    const usuario = locals.usuario;
-    return {};
+    assertAuthenticated(locals);
+    const data = Object.fromEntries(await request.formData());
+    const resultValidation = await validateCambioEstado(data);
+    if ('errors' in resultValidation) {
+      return fail(422, {
+        errorsCambiarEstado: resultValidation.errors
+      });
+    }
+    const cambiarEstado = createCambiarEstadoUseCase(locals.usuario, locals.authorize);
+    try {
+      await cambiarEstado(resultValidation.values);
+      return {
+        messageCambiarEstado: 'Cambio OK'
+      };
+    } catch (exc) {
+      if (exc instanceof ForbiddenException) {
+        return fail(403, {
+          errorCambiarEstado: exc.message
+        });
+      }
+      if (exc instanceof BusinessRuleException) {
+        return fail(422, {
+          errorCambiarEstado: exc.message
+        });
+      }
+      throw exc;
+    }
   },
 
   desasignarAgente: async ({ request, locals }) => {

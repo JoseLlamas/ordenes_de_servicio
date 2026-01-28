@@ -40,7 +40,6 @@ async function handleUploadsFiles ({ event, resolve }) {
  * @type {import('@sveltejs/kit').Handle}
  */
 async function handleAuth ({ event, resolve }) {
-  await new Promise(r => setTimeout(r, 2000));
   const sessionId = getAuthCookies(event.cookies);
   if (sessionId != null) {
     try {

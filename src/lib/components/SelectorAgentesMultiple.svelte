@@ -1,7 +1,9 @@
 <script>
   import { obtenerAgentes } from '$lib/api';
-  import { normalizePalabras } from '$lib/utils';
+  import { escribirNombreCompleto } from '$lib/utils';
   import Avatar from './Avatar.svelte';
+  import ButtonAccept from './ButtonAccept.svelte';
+  import ButtonCancel from './ButtonCancel.svelte';
   import ButtonSubmitting from './ButtonSubmitting.svelte';
   import Input from './Input.svelte';
   import Paginador from './Paginador.svelte';
@@ -13,13 +15,20 @@
   /**
    * @type {{
    *  areaId: number,
-   *  agentesSeleccionados: Agente[]
+   *  onAsignar?: (agentes: Agente[]) => void,
+   *  oncancel?: () => void
    * }}
    */
   let {
     areaId,
-    agentesSeleccionados = $bindable([])
+    onAsignar,
+    oncancel
   } = $props();
+
+  /**
+   * @type {Agente[]}
+   */
+  let agentesSeleccionados = $state([]);
 
   let loading = $state(false);
   let busqueda = $state('');
@@ -79,10 +88,19 @@
       });
   }
 
-  export function limpiarFormulario () {
+  function handleAsignar () {
+    if (agentesSeleccionados.length === 0) {
+      return;
+    }
+    onAsignar?.(agentesSeleccionados);
+  }
+
+  export function limpiar () {
+    agentesSeleccionados = [];
     agentes = [];
     agentesParaMostrar = [];
     mostrandoSeleccionados = false;
+    busqueda = '';
   }
 
   /**
@@ -123,13 +141,13 @@
           size="medium"
           avatar={agente.avatar}
           rolNombre={agente.rol.nombre}
-          usuarioNombreCompleto={normalizePalabras(agente.empleado.nombre, agente.empleado.primerApellido, agente.empleado.segundoApellido ?? '')}
+          usuarioNombreCompleto={escribirNombreCompleto(agente.empleado)}
         />
 
         <!-- Info -->
         <div class="flex-1 min-w-0">
           <h4 class="font-semibold text-sm text-gray-900 truncate dark:text-gray-100">
-            {normalizePalabras(agente.empleado.nombre, agente.empleado.primerApellido, agente.empleado.segundoApellido ?? '')}
+            {escribirNombreCompleto(agente.empleado)}
           </h4>
           <p class="text-xs text-gray-500 truncate dark:text-gray-400">
             {agente.nombreUsuario}
@@ -212,4 +230,25 @@
       />
     {/if}
   {/if}
+
+  <div class="flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+    {#if oncancel}
+      <ButtonCancel
+        type="button"
+        onclick={() => oncancel?.()}
+        class="w-full"
+      >
+        Cancelar
+      </ButtonCancel>
+    {/if}
+
+    <ButtonAccept
+      type="button"
+      disabled={agentesSeleccionados.length === 0}
+      onclick={handleAsignar}
+      class="w-full"
+    >
+      Asignar
+    </ButtonAccept>
+  </div>
 </div>

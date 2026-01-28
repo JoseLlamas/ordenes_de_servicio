@@ -80,3 +80,22 @@ export function setValueQueryString (url, key, value) {
     }
   }
 }
+
+const ESTADOS = {
+  'NUEVO': ['PROCESO', 'CANCELADO'],
+  'PROCESO': ['PENDIENTE', 'RESUELTO', 'CANCELADO'],
+  'PENDIENTE': ['PROCESO', 'CANCELADO'],
+  'RESUELTO': ['PROCESO', 'CERRADO']
+};
+
+/**
+ *
+ * @param {'NUEVO' | 'PROCESO' | 'PENDIENTE' | 'RESUELTO' | 'CERRADO' | 'CANCELADO'} estado
+ * @param {'PROCESO' | 'PENDIENTE' | 'RESUELTO' | 'CERRADO' | 'CANCELADO'} estadoNuevo
+ */
+export function verificarCambioEstado (estado, estadoNuevo) {
+  if (estado === 'CANCELADO' || estado === 'CERRADO') {
+    return false;;
+  }
+  return ESTADOS[estado].includes(estadoNuevo);
+}

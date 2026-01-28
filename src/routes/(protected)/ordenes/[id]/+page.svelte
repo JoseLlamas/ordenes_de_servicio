@@ -11,23 +11,33 @@
   import { confirmBeforeEnhance } from '$lib/actions/confirm_before_enhance.js';
   import ConfirmModal from '$lib/components/ConfirmModal.svelte';
   import Modal from '$lib/components/Modal.svelte';
+    import ErrorCard from '$lib/components/ErrorCard.svelte';
 
   let { data, form } = $props();
 
-  /**
-   * @type {Modal | undefined}
-   */
-  let modal = $state();
-
   let ordenServicio = $derived(data.ordenServicio);
-
-  let submittingAsignacion = $state(false);
-  let submittingNuevoEstado = $state(false);
 
   /**
    * @type {ConfirmModal | undefined}
   */
   let confirmModal = $state();
+
+  let tabActual = $state('detalles');
+
+  const tabs = $derived([
+    { id: 'detalles', nombre: 'Detalles', icono: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
+    { id: 'activos', nombre: 'Activos', icono: 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4', badge: ordenServicio.activos.length || 0 }
+  ]);
+
+
+  /*-------- Asignacion -----------*/
+
+  /**
+   * @type {Modal | undefined}
+   */
+  let modalAsignacion = $state();
+
+  let submittingAsignacion = $state(false);
 
   /**
    * @type {SelectorAgentesMultiple | undefined}
@@ -35,16 +45,34 @@
   let selectorAgentesMultiple = $state();
 
   /**
+   * @type {HTMLFormElement | undefined}
+   */
+  let formAsignacion = $state();
+
+  /**
    * @type {import('$lib/types').UsuarioResumenDTO[]}
    */
-  let agentesSeleccionados = $state([]);
+  let agentesParaAsignar = $state([]);
 
-  let tabActual = $state('detalles');
+  function handleAsignarAgentes (agentes) {
+    agentesParaAsignar = agentes;
+    formAsignacion?.requestSubmit();
+  }
+
+  /*--- Asignacion ---*/
+
+  /*----------- desasignacion agente  -----------*/
 
   /**
    * @type {number | null}
    */
   let agenteRemoviendoId = $state(null);
+
+  /*------------- desasignacion agente -------------*/
+
+  /*---------- cambio de estado  -------------*/
+
+  let submittingNuevoEstado = $state(false);
 
   /**
    * @type {Omit<typeof data.ordenServicio['estado'], 'NUEVO'> | null}
@@ -67,10 +95,8 @@
     }
   });
 
-  const tabs = $derived([
-    { id: 'detalles', nombre: 'Detalles', icono: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
-    { id: 'activos', nombre: 'Activos', icono: 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4', badge: ordenServicio.activos.length || 0 }
-  ]);
+  /*------------------ cambio estado --------------*/
+
 </script>
 
 <svelte:head>
@@ -82,7 +108,8 @@
 <ConfirmModal bind:this={confirmModal} />
 
 <Modal
-  bind:this={modal}
+  bind:this={modalAsignacion}
+  title="Asignar agentes"
 >
   {#if form?.messageAsignacionAgentes}
     <InfoMessage>
@@ -101,34 +128,31 @@
   {/if}
   <SelectorAgentesMultiple
     areaId={ordenServicio.areaAsignada.id}
-    bind:agentesSeleccionados={agentesSeleccionados}
     bind:this={selectorAgentesMultiple}
+    onAsignar={handleAsignarAgentes}
+    oncancel={() => modalAsignacion?.close()}
   />
   <form
+    bind:this={formAsignacion}
     method="POST"
     action="?/asignarAgentes"
-    use:confirmBeforeEnhance={{ confirm: () => confirmModal?.confirm() ?? Promise.resolve(false) }}
+    class="hidden"
     use:enhance={({ formData }) => {
-      const data = {
+      formData.set('data', JSON.stringify({
         ordenServicioId: ordenServicio.id,
-        agentesId: agentesSeleccionados.map(u => u.id)
-      };
-      formData.set('data', JSON.stringify(data));
+        agentesId: agentesParaAsignar.map(u => u.id)
+      }));
       submittingAsignacion = true;
       return async ({ update, result }) => {
-        await update({ invalidateAll: true });
-        if (result.status === 200) {
-          agentesSeleccionados = [];
-          selectorAgentesMultiple?.limpiarFormulario();
-        }
+        await update();
         submittingAsignacion = false;
+        if (result.type === 'success') {
+          agentesParaAsignar = [];
+          selectorAgentesMultiple?.limpiar();
+        }
       };
     }}
-  >
-    <ButtonAccept class="w-full">
-      Asignar
-    </ButtonAccept>
-  </form>
+  ></form>
 </Modal>
 
 <!-- Header -->
@@ -170,7 +194,7 @@
       </button>
 
       <button
-        onclick={() => modal?.open()}
+        onclick={() => modalAsignacion?.open()}
         class="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors flex items-center gap-2">
         Asignar
       </button>
@@ -695,15 +719,25 @@
     </button>
   </div>
   {#if nuevoEstado != null}
+    {#if form?.errorCambiarEstado}
+      <ErrorMessage>{form.errorCambiarEstado}</ErrorMessage>
+    {/if}
+    {#if form?.messageCambiarEstado}
+      <InfoMessage>{form.messageCambiarEstado}</InfoMessage>
+    {/if}
+    {#if form?.errorsCambiarEstado?.nuevoEstado}
+      <ErrorMessage>{form.errorsCambiarEstado.nuevoEstado}</ErrorMessage>
+    {/if}
+    {#if form?.errorsCambiarEstado?.observacion}
+      <ErrorMessage>{form.errorsCambiarEstado.observacion}</ErrorMessage>
+    {/if}
     <form
       action="?/cambiarEstado"
       method="POST"
       class="flex flex-col gap-3 pt-5"
       use:enhance={({ formData }) => {
-        formData.set('data', JSON.stringify({
-          nuevoEstado: nuevoEstado,
-          ordenServicioId: ordenServicio.id
-        }));
+        formData.set('ordenServicioId', ordenServicio.id.toString());
+        formData.set('nuevoEstado', String(nuevoEstado ?? ''));
         return async ({ update }) => {
           await update();
         };
@@ -711,9 +745,10 @@
     >
       <div class="flex flex-col gap-3 items-stretch w-full">
         <TextArea
-          name="texto"
-          id="texto"
+          name="observacion"
+          id="observacion"
           label={textoLabelNuevoEstado}
+          class="uppercase"
         />
         <ButtonAccept
           type="submit"
