@@ -11,3 +11,4 @@ export * from './orden_servicio';
 export * from './folio';
 export * from './activo';
 export * from './historial_orden';
+export * from './observacion';

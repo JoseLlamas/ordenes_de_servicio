@@ -1,7 +1,11 @@
 import { db } from '$lib/server/db';
-import { obtenerOrdenServicioResumenPorId, pathOrdenServicio } from '$lib/server/db/queries';
+import {
+  obtenerOrdenServicioResumenPorId,
+  pathOrdenServicio,
+  registrarObservacion
+} from '$lib/server/db/queries';
 import { BusinessRuleException, BusinessRules, ForbiddenException } from '$lib/server/exceptions';
-import { verificarCambioEstado } from '$lib/utils';
+import { verificarCambioEstado, fromEstadoOrdenATipoObservacion } from '$lib/utils';
 import { Temporal } from 'temporal-polyfill';
 
 const PERMISOS = {
@@ -40,6 +44,9 @@ export function createCambiarEstadoUseCase (usuario, authorize) {
       if (!verificarCambioEstado(ordenServicio.estado, data.nuevoEstado)) {
         throw new BusinessRuleException(`No puede realizar esta operacion (${ordenServicio.estado}) -> (${data.nuevoEstado})`);
       }
+      if (['PENDIENTE', 'CANCELADO', 'RESUELTO'].includes(data.nuevoEstado) && data.observacion == null) {
+        throw new BusinessRuleException('En pendiente, cancelado o resuelto, la observación es obligatoria');
+      }
       const dataUpdate = {
         estado: data.nuevoEstado
       };
@@ -51,6 +58,15 @@ export function createCambiarEstadoUseCase (usuario, authorize) {
         dataUpdate.cerradoPorId = usuario.id;
       }
       await pathOrdenServicio(data.ordenServicioId, dataUpdate, tx);
+      if (data.observacion != null) {
+        await registrarObservacion({
+          ordenServicioId: ordenServicio.id,
+          tipo: fromEstadoOrdenATipoObservacion(data.nuevoEstado),
+          observacion: data.observacion,
+          creadoEn: new Date(Temporal.Now.instant().epochMilliseconds),
+          creadorId: usuario.id
+        }, tx);
+      }
     });
   };
 }

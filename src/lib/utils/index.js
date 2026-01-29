@@ -85,7 +85,7 @@ const ESTADOS = {
   'NUEVO': ['PROCESO', 'CANCELADO'],
   'PROCESO': ['PENDIENTE', 'RESUELTO', 'CANCELADO'],
   'PENDIENTE': ['PROCESO', 'CANCELADO'],
-  'RESUELTO': ['PROCESO', 'CERRADO']
+  'RESUELTO': ['PROCESO', 'PENDIENTE', 'CERRADO']
 };
 
 /**
@@ -98,4 +98,22 @@ export function verificarCambioEstado (estado, estadoNuevo) {
     return false;;
   }
   return ESTADOS[estado].includes(estadoNuevo);
+}
+
+/**
+ * @param {'PROCESO' | 'PENDIENTE' | 'RESUELTO' | 'CERRADO' | 'CANCELADO'} estado
+ * @return {'SEGUIMIENTO' | 'PENDIENTE' | 'SOLUCION' | 'CIERRE' | 'CANCELACION'}
+ */
+export function fromEstadoOrdenATipoObservacion (estado) {
+  if (estado === 'PROCESO') {
+    return 'SEGUIMIENTO';
+  } else if (estado === 'PENDIENTE') {
+    return 'PENDIENTE';
+  } else if (estado === 'RESUELTO') {
+    return 'SOLUCION';
+  } else if (estado === 'CERRADO') {
+    return 'CIERRE';
+  } else {
+    return 'CANCELACION';
+  }
 }

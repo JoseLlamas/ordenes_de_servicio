@@ -145,7 +145,7 @@ export const observaciones = mysqlTable('observaciones', {
   ordenServicioId: int('orden_servicio_id', { unsigned: true }).notNull().references(() => ordenesServicio.id, { onDelete: 'restrict' }),
   tipo: mysqlEnum('tipo', ['SEGUIMIENTO', 'PENDIENTE', 'SOLUCION', 'CIERRE', 'CANCELACION']).notNull(),
   observacion: text('observacion').notNull(),
-  creadoEn: timestamp('creado_en'),
+  creadoEn: timestamp('creado_en').notNull(),
   creadorId: int('creador_id', { unsigned: true }).notNull().references(() => usuarios.id, { onDelete: 'restrict' })
 });
 
@@ -193,6 +193,17 @@ export const activosRelations = relations(activos, ({ one }) => ({
   })
 }));
 
+export const observacionesRelations = relations(observaciones, ({ one }) => ({
+  ordenServicio: one(ordenesServicio, {
+    fields: [observaciones.ordenServicioId],
+    references: [ordenesServicio.id]
+  }),
+  creadoPor: one(usuarios, {
+    fields: [observaciones.creadorId],
+    references: [usuarios.id]
+  })
+}));
+
 export const ordenesServicioRelations = relations(ordenesServicio, ({ one, many }) => ({
   categoriaOrden: one(categoriasOrden, {
     fields: [ordenesServicio.categoriaOrdenId],
@@ -227,7 +238,8 @@ export const ordenesServicioRelations = relations(ordenesServicio, ({ one, many 
     references: [usuarios.id]
   }),
   activos: many(activos),
-  asignaciones: many(asignaciones)
+  asignaciones: many(asignaciones),
+  observaciones: many(observaciones)
 }));
 
 export const usuariosRelations = relations(usuarios, ({ one }) => ({

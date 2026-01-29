@@ -91,7 +91,7 @@ export const actions = {
     try {
       await cambiarEstado(resultValidation.values);
       return {
-        messageCambiarEstado: 'Cambio OK'
+        messageCambiarEstado: 'El estado de la orden ha sido actualizado.'
       };
     } catch (exc) {
       if (exc instanceof ForbiddenException) {

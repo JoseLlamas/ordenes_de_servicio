@@ -11,7 +11,8 @@
   import { confirmBeforeEnhance } from '$lib/actions/confirm_before_enhance.js';
   import ConfirmModal from '$lib/components/ConfirmModal.svelte';
   import Modal from '$lib/components/Modal.svelte';
-    import ErrorCard from '$lib/components/ErrorCard.svelte';
+  import Observacion from '$lib/components/Observacion.svelte';
+    import Paginador from '$lib/components/Paginador.svelte';
 
   let { data, form } = $props();
 
@@ -26,7 +27,8 @@
 
   const tabs = $derived([
     { id: 'detalles', nombre: 'Detalles', icono: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
-    { id: 'activos', nombre: 'Activos', icono: 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4', badge: ordenServicio.activos.length || 0 }
+    { id: 'activos', nombre: 'Activos', icono: 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4', badge: ordenServicio.activos.length || 0 },
+    { id: 'observaciones', nombre: 'Observaciones', icono: 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4', badge: ordenServicio.observaciones.length || 0 }
   ]);
 
 
@@ -102,6 +104,16 @@
 <svelte:head>
   <title>Orden #{ordenServicio.id}</title>
 </svelte:head>
+
+{#snippet imprimirObservaciones(observaciones)}
+  <div class="space-y-3">
+    {#each observaciones as obs (obs.id)}
+      <Observacion
+        observacion={obs}
+      />
+    {/each}
+  </div>
+{/snippet}
 
 <LoadingScreen hidden={!submittingNuevoEstado} />
 <LoadingScreen hidden={!submittingAsignacion} />
@@ -183,7 +195,7 @@
         {ordenServicio.categoriaOrden.descripcion}
       </p>
       <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">
-        Creado el {formatearFecha(ordenServicio.creadoEn)}
+        Creado {formatearFechaRelativa(ordenServicio.creadoEn)}
       </p>
     </div>
 
@@ -342,6 +354,14 @@
                     </span>
                   {/if}
                 </div>
+
+                {#if form?.errorsDesasignacionAgente?.agenteId}
+                  <ErrorMessage>{form.errorsDesasignacionAgente.agenteId}</ErrorMessage>
+                {/if}
+
+                {#if form?.errorDesasignacionAgente}
+                  <ErrorMessage>{form.errorDesasignacionAgente}</ErrorMessage>
+                {/if}
 
                 {#if ordenServicio.agentes.length === 0}
                   <div class="text-center py-6">
@@ -519,7 +539,7 @@
                     Creado
                   </p>
                   <p class="text-sm text-gray-900 dark:text-white">
-                    {formatearFechaRelativa(ordenServicio.creadoEn)}
+                    {formatearFecha(ordenServicio.creadoEn)}
                   </p>
                 </div>
 
@@ -559,6 +579,15 @@
 
           </div>
         </div>
+
+        {#if ordenServicio.observaciones.length > 0}
+          <div>
+            <Observacion
+              observacion={ordenServicio.observaciones[ordenServicio.observaciones.length - 1]}
+            />
+          </div>
+        {/if}
+
       </div>
 
     {:else if tabActual === 'activos'}
@@ -676,6 +705,37 @@
           </div>
         {/if}
       </div>
+    {:else if tabActual === 'observaciones'}
+      <div class="space-y-4">
+        <!-- Header -->
+        <div class="flex items-center justify-between">
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
+            Observaciones
+          </h3>
+          <span class="text-sm text-gray-500 dark:text-gray-400">
+            {ordenServicio.observaciones.length} {ordenServicio.observaciones.length === 1 ? 'observación' : 'observaciones'}
+          </span>
+        </div>
+
+        <!-- Lista -->
+        {#if ordenServicio.observaciones.length > 0}
+          <Paginador
+            records={[...ordenServicio.observaciones].toReversed()}
+            render={imprimirObservaciones}
+            perPagina={5}
+          />
+        {:else}
+          <!-- Empty State -->
+          <div class="flex flex-col items-center justify-center py-12 bg-gray-50 dark:bg-gray-800/50 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-700">
+            <svg class="w-12 h-12 text-gray-400 dark:text-gray-600 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <p class="text-sm text-gray-500 dark:text-gray-400">
+              No hay observaciones registradas
+            </p>
+          </div>
+        {/if}
+      </div>
     {/if}
   </div>
 </div>
@@ -719,6 +779,22 @@
     </button>
   </div>
   {#if nuevoEstado != null}
+    <form
+      action="?/cambiarEstado"
+      method="POST"
+      class="flex flex-col gap-3 pt-5"
+      use:confirmBeforeEnhance={{ confirm: () => confirmModal?.confirm() ?? Promise.resolve(false) }}
+      use:enhance={({ formData }) => {
+        submittingNuevoEstado = true;
+        formData.set('ordenServicioId', ordenServicio.id.toString());
+        formData.set('nuevoEstado', String(nuevoEstado ?? ''));
+        return async ({ update }) => {
+          await update();
+          submittingNuevoEstado = false;
+        };
+      }}
+    >
+
     {#if form?.errorCambiarEstado}
       <ErrorMessage>{form.errorCambiarEstado}</ErrorMessage>
     {/if}
@@ -731,18 +807,6 @@
     {#if form?.errorsCambiarEstado?.observacion}
       <ErrorMessage>{form.errorsCambiarEstado.observacion}</ErrorMessage>
     {/if}
-    <form
-      action="?/cambiarEstado"
-      method="POST"
-      class="flex flex-col gap-3 pt-5"
-      use:enhance={({ formData }) => {
-        formData.set('ordenServicioId', ordenServicio.id.toString());
-        formData.set('nuevoEstado', String(nuevoEstado ?? ''));
-        return async ({ update }) => {
-          await update();
-        };
-      }}
-    >
       <div class="flex flex-col gap-3 items-stretch w-full">
         <TextArea
           name="observacion"

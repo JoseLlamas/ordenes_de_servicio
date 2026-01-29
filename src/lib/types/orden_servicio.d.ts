@@ -81,5 +81,18 @@ export interface OrdenServicioDetalleDTO {
     nombreUsuario: string;
     avatar: string | null,
     empleado: Omit<EmpleadoDTO, 'activo'>
+  }[],
+  observaciones: {
+    id: number;
+    tipo: 'SEGUIMIENTO' | 'PENDIENTE' | 'SOLUCION' | 'CIERRE' | 'CANCELACION',
+    observacion: string,
+    creadoEn: Date,
+    creadoPor: {
+      id: number;
+      nombreUsuario: string;
+      avatar: string | null;
+      rol: Omit<RolDTO, 'descripcion'>;
+      empleado: Omit<EmpleadoDTO, 'activo'>;
+    }
   }[]
 }

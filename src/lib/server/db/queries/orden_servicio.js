@@ -1,4 +1,4 @@
-import { and, count, desc, eq, exists, gte, inArray, lte, sql } from 'drizzle-orm';
+import { and, asc, count, desc, eq, exists, gte, inArray, lte, sql } from 'drizzle-orm';
 import { db } from '..';
 import * as schemas from '../schema';
 import { alias } from 'drizzle-orm/mysql-core';
@@ -407,6 +407,41 @@ export async function obtenerOrdenServicioDetallePorId (id, dbOrTx = db) {
               avatar: true
             },
             with: {
+              empleado: {
+                columns: {
+                  id: true,
+                  nombre: true,
+                  primerApellido: true,
+                  segundoApellido: true,
+                  cargo: true
+                }
+              }
+            }
+          }
+        }
+      },
+      observaciones: {
+        orderBy: asc(schemas.observaciones.creadoEn),
+        columns: {
+          id: true,
+          tipo: true,
+          observacion: true,
+          creadoEn: true
+        },
+        with: {
+          creadoPor: {
+            columns: {
+              id: true,
+              nombreUsuario: true,
+              avatar: true
+            },
+            with: {
+              rol: {
+                columns: {
+                  id: true,
+                  nombre: true
+                }
+              },
               empleado: {
                 columns: {
                   id: true,

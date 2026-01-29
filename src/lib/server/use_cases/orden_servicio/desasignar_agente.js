@@ -31,9 +31,9 @@ export function createDesasignarAgenteUseCase (usuario, authorize) {
         );
       }
       const cantidadAgentes = await obtenerCantidadAgentes(ordenServicio.id, tx);
-      if (cantidadAgentes === 1 && ['PROCESO', 'PENDIENTE'].includes(ordenServicio.estado)) {
+      if (cantidadAgentes === 1 && ordenServicio.estado === 'PROCESO') {
         throw new BusinessRuleException(
-          'Mientas este en proceso o pendiente, no puede quitar a todos los agentes',
+          'Mientas este en proceso, no puede quitar a todos los agentes',
           BusinessRules.SIN_AGENTES_EN_ORDEN_SERVICIO
         );
       }
