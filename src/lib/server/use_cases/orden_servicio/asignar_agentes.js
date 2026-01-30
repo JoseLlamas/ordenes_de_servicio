@@ -1,6 +1,8 @@
 import { obtenerOrdenServicioResumenPorId, asignarAgentes, obtenerUsuariosResumenPorId } from '$lib/server/db/queries';
+import * as schemas from '$lib/server/db/schema';
 import { db } from '$lib/server/db';
 import { BusinessRuleException, ForbiddenException, BusinessRules } from '$lib/server/exceptions';
+import { eq } from 'drizzle-orm';
 
 /**
  *
@@ -15,6 +17,21 @@ export function createAsignarAgentesUseCase (usuario, authorize) {
   return async (ordenServicioId, agentesId) => {
     return db.transaction(async (tx) => {
       const ordenServicio = await obtenerOrdenServicioResumenPorId(ordenServicioId, tx);
+      const o = await tx.query.ordenesServicio.findFirst({
+        where: eq(),
+        columns: {
+          areaAsignadaId: true,
+          id: true,
+          estado: true
+        },
+        with: {
+          asignaciones: {
+            columns: {
+              agenteId: true
+            }
+          }
+        }
+      });
       if (ordenServicio == null) {
         throw new BusinessRuleException(
           'Orden no encontrada',
