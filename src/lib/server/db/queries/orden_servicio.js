@@ -195,60 +195,6 @@ export async function paginarOrdenesServicioResumen ({
 }
 
 /**
- *
- * @param {number} ordenServicioId
- * @param {DbOrTx} [dbOrTx = db]
- * @return {Promise<OrdenServicioResumenDTO | null>}
- */
-export async function obtenerOrdenServicioResumenPorId (ordenServicioId, dbOrTx = db) {
-  return await dbOrTx.query.ordenesServicio.findFirst({
-    where: eq(schemas.ordenesServicio.id, ordenServicioId),
-    columns: {
-      id: true,
-      descripcion: true,
-      estado: true,
-      prioridad: true,
-      tipoEntrada: true,
-      numeroOficio: true,
-      otroCategoriaOrden: true,
-      telefonoSolicitante: true,
-      creadoEn: true,
-      cerradoEn: true,
-      canceladoEn: true
-    },
-    with: {
-      categoriaOrden: {
-        columns: {
-          id: true,
-          descripcion: true
-        }
-      },
-      areaSolicitante: {
-        columns: {
-          id: true,
-          nombre: true
-        }
-      },
-      empleadoSolicitante: {
-        columns: {
-          id: true,
-          nombre: true,
-          primerApellido: true,
-          segundoApellido: true,
-          cargo: true
-        }
-      },
-      areaAsignada: {
-        columns: {
-          id: true,
-          nombre: true
-        }
-      }
-    }
-  }) ?? null;
-}
-
-/**
  * @param {number} id
  * @param {DbOrTx} [dbOrTx = db]
  * @return {Promise<OrdenServicioDetalleDTO | null>}

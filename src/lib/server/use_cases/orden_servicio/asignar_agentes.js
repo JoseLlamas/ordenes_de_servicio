@@ -1,8 +1,8 @@
-import { obtenerOrdenServicioResumenPorId, asignarAgentes, obtenerUsuariosResumenPorId } from '$lib/server/db/queries';
+import { asignarAgentes } from '$lib/server/db/queries';
 import * as schemas from '$lib/server/db/schema';
 import { db } from '$lib/server/db';
 import { BusinessRuleException, ForbiddenException, BusinessRules } from '$lib/server/exceptions';
-import { eq } from 'drizzle-orm';
+import { eq, inArray } from 'drizzle-orm';
 
 /**
  *
@@ -16,9 +16,8 @@ export function createAsignarAgentesUseCase (usuario, authorize) {
    */
   return async (ordenServicioId, agentesId) => {
     return db.transaction(async (tx) => {
-      const ordenServicio = await obtenerOrdenServicioResumenPorId(ordenServicioId, tx);
-      const o = await tx.query.ordenesServicio.findFirst({
-        where: eq(),
+      const ordenServicio = await tx.query.ordenesServicio.findFirst({
+        where: eq(schemas.ordenesServicio.id, ordenServicioId),
         columns: {
           areaAsignadaId: true,
           id: true,
@@ -38,7 +37,7 @@ export function createAsignarAgentesUseCase (usuario, authorize) {
           BusinessRules.ORDEN_DE_SERVICIO_NO_ENCONTRADA
         );
       }
-      if (authorize.cannot('assign', 'Orden', { areaId: ordenServicio.areaAsignada.id })) {
+      if (authorize.cannot('assign', 'Orden', { areaId: ordenServicio.areaAsignadaId })) {
         throw new ForbiddenException('No puede asignar agentes a esta orden de servicio');
       }
       if (!['NUEVO', 'PROCESO', 'PENDIENTE'].includes(ordenServicio.estado)) {
@@ -47,10 +46,24 @@ export function createAsignarAgentesUseCase (usuario, authorize) {
           BusinessRules.ASIGNACION_FUERA_DE_ESTADO
         );
       }
-      const usuarios = await obtenerUsuariosResumenPorId(agentesId, tx);
+      const usuarios = await tx.query.usuarios.findMany({
+        where: inArray(schemas.usuarios.id, agentesId),
+        columns: {
+          id: true,
+          areasAccesoId: true,
+          activo: true
+        },
+        with: {
+          rol: {
+            columns: {
+              nombre: true
+            }
+          }
+        }
+      });
       const hayUsuarioSinPermiso = usuarios.some(usuario => {
-        return usuario.rol.nombre !== 'Agente'
-          || !usuario.areasAccesoId?.some(areaId => areaId === ordenServicio.areaAsignada.id);
+        const areasAccesoId = usuario.areasAccesoId ? JSON.parse(usuario.areasAccesoId) : [];
+        return !usuario.activo || usuario.rol.nombre !== 'Agente' || !areasAccesoId.some(areaId => areaId === ordenServicio.areaAsignadaId);
       });
       if (hayUsuarioSinPermiso) {
         throw new BusinessRuleException(

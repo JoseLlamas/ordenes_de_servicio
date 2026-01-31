@@ -381,35 +381,3 @@ export async function obtenerAgentes (areaId, filters = {}, dbOrTx = db) {
     }
   }));
 }
-
-/**
- * @param {number | number[]} id
- * @param {DbOrTx} [dbOrTx = db]
- * @return {Promise<UsuarioResumenDTO[]>}
- */
-export async function obtenerUsuariosResumenPorId (id, dbOrTx = db) {
-  const rows = await (createQueryParaUsuarioResumen(dbOrTx)
-    .where(typeof id === 'number' ? eq(usuarios.id, id) : inArray(usuarios.id, id)));
-  return rows.map(row => ({
-    id: row.id,
-    nombreUsuario: row.nombreUsuario,
-    activo: row.activo,
-    avatar: row.avatar,
-    areasAccesoId: row.areasAccesoId != null ? JSON.parse(row.areasAccesoId) : null,
-    empleado: {
-      id: row['empleado.id'],
-      nombre: row['empleado.nombre'],
-      primerApellido: row['empleado.primerApellido'],
-      segundoApellido: row['empleado.segundoApellido'],
-      cargo: row['empleado.cargo'],
-      area: {
-        id: row['empleado.area.id'],
-        nombre: row['empleado.area.nombre']
-      }
-    },
-    rol: {
-      id: row['rol.id'],
-      nombre: row['rol.nombre']
-    }
-  }));
-}
