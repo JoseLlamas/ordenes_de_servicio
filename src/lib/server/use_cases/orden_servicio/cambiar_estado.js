@@ -1,8 +1,8 @@
 import { db } from '$lib/server/db';
 import {
-  obtenerOrdenServicioResumenPorId,
   pathOrdenServicio,
-  registrarObservacion
+  registrarObservacion,
+  obtenerOrdenServicioParaCambiarEstado
 } from '$lib/server/db/queries';
 import { BusinessRuleException, BusinessRules, ForbiddenException } from '$lib/server/exceptions';
 import { verificarCambioEstado, fromEstadoOrdenATipoObservacion } from '$lib/utils';
@@ -31,14 +31,14 @@ export function createCambiarEstadoUseCase (usuario, authorize) {
    */
   return async (data) => {
     return db.transaction(async (tx) => {
-      const ordenServicio = await obtenerOrdenServicioResumenPorId(data.ordenServicioId, tx);
+      const ordenServicio = await obtenerOrdenServicioParaCambiarEstado(data.ordenServicioId, tx);
       if (ordenServicio == null) {
         throw new BusinessRuleException(
           'Orden de servicio no encontrada',
           BusinessRules.ORDEN_DE_SERVICIO_NO_ENCONTRADA
         );
       }
-      if (authorize.cannot(PERMISOS[data.nuevoEstado], 'Orden', { areaId: ordenServicio.areaAsignada.id })) {
+      if (authorize.cannot(PERMISOS[data.nuevoEstado], 'Orden', { areaId: ordenServicio.areaAsignadaId })) {
         throw new ForbiddenException('No puede realizar esta operación');
       }
       if (!verificarCambioEstado(ordenServicio.estado, data.nuevoEstado)) {
@@ -46,6 +46,9 @@ export function createCambiarEstadoUseCase (usuario, authorize) {
       }
       if (['PENDIENTE', 'CANCELADO', 'RESUELTO'].includes(data.nuevoEstado) && data.observacion == null) {
         throw new BusinessRuleException('En pendiente, cancelado o resuelto, la observación es obligatoria');
+      }
+      if (data.nuevoEstado === 'PROCESO' && ordenServicio.agentes.some(agente => agente.estaOcupado)) {
+        throw new BusinessRuleException('No puede iniciar debido a que hay agente asignados a esta orden ocupados en otra orden');
       }
       const dataUpdate = {
         estado: data.nuevoEstado

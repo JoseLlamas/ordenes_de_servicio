@@ -23,6 +23,12 @@ import { alias } from 'drizzle-orm/mysql-core';
  *  areasAsignadasId: number[]
  * } & Filtros} FiltrosEncargadoYCapturista
  *
+ * @typedef {{
+ *  id: number,
+ *  nombreUsuario: string,
+ *  estaOcupado: boolean
+ * }} AgenteParaCambiarEstado
+ *
  */
 
 /**
@@ -454,16 +460,6 @@ export async function desasignarAgente (ordenServicioId, agenteId, dbOrTx = db) 
 }
 
 /**
- *
- * @param {number} ordenServicioId
- * @param {DbOrTx} [dbOrTx = db]
- * @return {Promise<number>}
- */
-export async function obtenerCantidadAgentes (ordenServicioId, dbOrTx = db) {
-  return dbOrTx.$count(schemas.asignaciones, eq(schemas.asignaciones.ordenServicioId, ordenServicioId));
-}
-
-/**
  * @param {number} ordenServicioId
  * @param {{
  *  estado?: 'PROCESO' | 'PENDIENTE' | 'RESUELTO' | 'CERRADO' | 'CANCELADO',
@@ -482,3 +478,84 @@ export async function pathOrdenServicio (ordenServicioId, data, dbOrTx = db) {
     .where(eq(schemas.ordenesServicio.id, ordenServicioId));
 }
 
+/**
+ *
+ * @param {number} ordenServicioId
+ * @param {DbOrTx} [dbOrTx = db]
+ */
+export async function obtenerOrdenServicioParaCambiarEstado (ordenServicioId, dbOrTx = db) {
+  const subquery = dbOrTx
+    .select({
+      agentes: sql`COALESCE(
+        JSON_ARRAYAGG(
+          JSON_OBJECT(
+            'id', ${schemas.asignaciones.agenteId},
+            'nombreUsuario', ${schemas.usuarios.nombreUsuario},
+            'estaOcupado', EXISTS(
+              SELECT 1
+              FROM ${schemas.asignaciones} a
+              INNER JOIN ${schemas.ordenesServicio} o ON a.orden_servicio_id = o.id
+              WHERE a.agente_id = ${schemas.usuarios.id}
+              AND o.estado = 'PROCESO'
+              AND o.id != ${schemas.ordenesServicio.id}
+            )
+          )
+        )
+      , JSON_ARRAY())`.as('agentes')
+    })
+    .from(schemas.usuarios)
+    .innerJoin(schemas.asignaciones, eq(schemas.usuarios.id, schemas.asignaciones.agenteId))
+    .where(eq(schemas.asignaciones.ordenServicioId, schemas.ordenesServicio.id))
+    .as('agentes');
+  const [orden] = await dbOrTx
+    .select({
+      id: schemas.ordenesServicio.id,
+      estado: schemas.ordenesServicio.estado,
+      areaAsignadaId: schemas.ordenesServicio.areaAsignadaId,
+      agentes: subquery.agentes
+    })
+    .from(schemas.ordenesServicio)
+    .innerJoinLateral(subquery, sql`true`)
+    .where(eq(schemas.ordenesServicio.id, ordenServicioId));
+  if (orden != null) {
+    return {
+      id: orden.id,
+      estado: orden.estado,
+      areaAsignadaId: orden.areaAsignadaId,
+      agentes: /** @type {AgenteParaCambiarEstado[]} */ (orden.agentes)
+    };
+  }
+  return null;
+}
+
+/**
+ *
+ * @param {number} ordenServicioId
+ * @param {DbOrTx} [dbOrTx = db]
+ */
+export async function obtenerOrdenServicioParaDesasignacion (ordenServicioId, dbOrTx = db) {
+  const orden = await dbOrTx.query.ordenesServicio.findFirst({
+    where: eq(schemas.ordenesServicio.id, ordenServicioId),
+    columns: {
+      id: true,
+      estado: true,
+      areaAsignadaId: true
+    },
+    with: {
+      asignaciones: {
+        columns: {
+          agenteId: true
+        }
+      }
+    }
+  });
+  if (orden) {
+    return {
+      id: orden.id,
+      estado: orden.estado,
+      areaAsignacionId: orden.areaAsignadaId,
+      agentesId: orden.asignaciones.map(agente => agente.agenteId)
+    };
+  }
+  return null;
+}

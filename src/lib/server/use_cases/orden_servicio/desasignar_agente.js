@@ -1,4 +1,4 @@
-import { obtenerOrdenServicioResumenPorId, desasignarAgente, obtenerCantidadAgentes } from '$lib/server/db/queries';
+import { desasignarAgente, obtenerOrdenServicioParaDesasignacion } from '$lib/server/db/queries';
 import { db } from '$lib/server/db';
 import { BusinessRuleException, ForbiddenException, BusinessRules } from '$lib/server/exceptions';
 
@@ -14,14 +14,14 @@ export function createDesasignarAgenteUseCase (usuario, authorize) {
    */
   return async (ordenServicioId, agenteId) => {
     return db.transaction(async (tx) => {
-      const ordenServicio = await obtenerOrdenServicioResumenPorId(ordenServicioId, tx);
+      const ordenServicio = await obtenerOrdenServicioParaDesasignacion(ordenServicioId, tx);
       if (ordenServicio == null) {
         throw new BusinessRuleException(
           'Orden no encontrada',
           BusinessRules.ORDEN_DE_SERVICIO_NO_ENCONTRADA
         );
       }
-      if (authorize.cannot('assign', 'Orden', { areaId: ordenServicio.areaAsignada.id })) {
+      if (authorize.cannot('assign', 'Orden', { areaId: ordenServicio.areaAsignadaId })) {
         throw new ForbiddenException('No puede desasignar agentes');
       }
       if (!['NUEVO', 'PROCESO', 'PENDIENTE'].includes(ordenServicio.estado)) {
@@ -30,8 +30,7 @@ export function createDesasignarAgenteUseCase (usuario, authorize) {
           BusinessRules.DESASIGNACION_FUERA_DE_ESTADO
         );
       }
-      const cantidadAgentes = await obtenerCantidadAgentes(ordenServicio.id, tx);
-      if (cantidadAgentes === 1 && ordenServicio.estado === 'PROCESO') {
+      if (ordenServicio.estado === 'PROCESO' && ordenServicio.agentesId.length === 1) {
         throw new BusinessRuleException(
           'Mientas este en proceso, no puede quitar a todos los agentes',
           BusinessRules.SIN_AGENTES_EN_ORDEN_SERVICIO
