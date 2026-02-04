@@ -43,7 +43,7 @@
 <div class="flex h-screen bg-gray-50 dark:bg-gray-900 overflow-hidden">
   <!-- Sidebar Desktop -->
   <aside
-    class="hidden lg:flex lg:flex-col lg:w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700"
+    class="print:hidden hidden lg:flex lg:flex-col lg:w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700"
   >
     <!-- Logo -->
     <div class="flex items-center justify-center h-16 px-4 border-b border-gray-200 dark:border-gray-700">
@@ -91,7 +91,7 @@
 
   <!-- Mobile Sidebar -->
   <aside
-    class={`fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-gray-800 transform transition-transform duration-300 ease-in-out lg:hidden ${
+    class={`print:hidden fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-gray-800 transform transition-transform duration-300 ease-in-out lg:hidden ${
       isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
     }`}
   >
@@ -141,7 +141,7 @@
   <!-- Main Content -->
   <div class="flex-1 flex flex-col overflow-hidden">
     <!-- Top Header -->
-    <header class="h-16 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between px-4 lg:px-6">
+    <header class="print:hidden h-16 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between px-4 lg:px-6">
       <!-- Mobile Menu Button -->
       <button
         onclick={toggleSidebar}
@@ -183,7 +183,7 @@
     </header>
 
     <!-- Main Content Area -->
-    <main class="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-900 p-4 lg:p-6">
+    <main class="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-900 p-4 lg:p-6 print:overflow-hidden">
       <div class="max-w-7xl mx-auto">
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
           <div class="text-gray-700 dark:text-gray-100">
@@ -194,7 +194,7 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 py-4 px-4 lg:px-6">
+    <footer class="bg-white print:hidden dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 py-4 px-4 lg:px-6">
       <div class="max-w-7xl mx-auto">
         <div class="flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
           <div class="flex flex-wrap justify-center gap-4">

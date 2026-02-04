@@ -1,8 +1,6 @@
-import { asignarAgentes } from '$lib/server/db/queries';
-import * as schemas from '$lib/server/db/schema';
+import { asignarAgentes, obtenerOrdenServicioParaAsignarAgente, obtenerUsuariosParaAsignarAgentes } from '$lib/server/db/queries';
 import { db } from '$lib/server/db';
 import { BusinessRuleException, ForbiddenException, BusinessRules } from '$lib/server/exceptions';
-import { eq, inArray } from 'drizzle-orm';
 
 /**
  *
@@ -16,21 +14,7 @@ export function createAsignarAgentesUseCase (usuario, authorize) {
    */
   return async (ordenServicioId, agentesId) => {
     return db.transaction(async (tx) => {
-      const ordenServicio = await tx.query.ordenesServicio.findFirst({
-        where: eq(schemas.ordenesServicio.id, ordenServicioId),
-        columns: {
-          areaAsignadaId: true,
-          id: true,
-          estado: true
-        },
-        with: {
-          asignaciones: {
-            columns: {
-              agenteId: true
-            }
-          }
-        }
-      });
+      const ordenServicio = await obtenerOrdenServicioParaAsignarAgente(ordenServicioId, tx);
       if (ordenServicio == null) {
         throw new BusinessRuleException(
           'Orden no encontrada',
@@ -46,29 +30,21 @@ export function createAsignarAgentesUseCase (usuario, authorize) {
           BusinessRules.ASIGNACION_FUERA_DE_ESTADO
         );
       }
-      const usuarios = await tx.query.usuarios.findMany({
-        where: inArray(schemas.usuarios.id, agentesId),
-        columns: {
-          id: true,
-          areasAccesoId: true,
-          activo: true
-        },
-        with: {
-          rol: {
-            columns: {
-              nombre: true
-            }
-          }
-        }
-      });
+      const usuarios = await obtenerUsuariosParaAsignarAgentes(ordenServicio.id, agentesId, tx);
       const hayUsuarioSinPermiso = usuarios.some(usuario => {
-        const areasAccesoId = usuario.areasAccesoId ? JSON.parse(usuario.areasAccesoId) : [];
-        return !usuario.activo || usuario.rol.nombre !== 'Agente' || !areasAccesoId.some(areaId => areaId === ordenServicio.areaAsignadaId);
+        const areasAccesoId = usuario.areasAccesoId != null ? usuario.areasAccesoId : [];
+        return !usuario.activo || usuario.rol !== 'Agente' || !areasAccesoId.some(areaId => areaId === ordenServicio.areaAsignadaId);
       });
       if (hayUsuarioSinPermiso) {
         throw new BusinessRuleException(
           'Hay un usuario que no es agente o no puede ser asignado a esta OS',
           BusinessRules.NO_SE_PUEDE_ASIGNAR_USUARIO_COMO_AGENTE
+        );
+      }
+      if (ordenServicio.estado === 'PROCESO' && usuarios.some(usuario => usuario.estadoOcupado)) {
+        throw new BusinessRuleException(
+          'Mientras la OS esté en PROCESO, no se le puede agregar un agente que está asignado a otro OS en PROCESO',
+          BusinessRules.AGENTE_OCUPADO_EN_OTRO_OS_EN_PROCESO
         );
       }
       await asignarAgentes(ordenServicio.id, agentesId, tx);

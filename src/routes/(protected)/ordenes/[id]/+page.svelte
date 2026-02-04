@@ -1,6 +1,6 @@
 <script>
   import Avatar from '$lib/components/Avatar.svelte';
-  import { formatearFecha, formatearFechaRelativa, getEstadoColor, escribirNombreCompleto, getPrioridadColor } from '$lib/utils';
+  import { formatearFecha, formatearFechaRelativa, getEstadoColor, escribirNombreCompleto, getPrioridadColor, recortarTexto } from '$lib/utils';
   import SelectorAgentesMultiple from '$lib/components/SelectorAgentesMultiple.svelte';
   import { enhance } from '$app/forms';
   import ButtonAccept from '$lib/components/ButtonAccept.svelte';
@@ -12,7 +12,7 @@
   import ConfirmModal from '$lib/components/ConfirmModal.svelte';
   import Modal from '$lib/components/Modal.svelte';
   import Observacion from '$lib/components/Observacion.svelte';
-    import Paginador from '$lib/components/Paginador.svelte';
+  import Paginador from '$lib/components/Paginador.svelte';
 
   let { data, form } = $props();
 
@@ -168,7 +168,7 @@
 </Modal>
 
 <!-- Header -->
-<div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 mb-6">
+<div class="print:hidden bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 mb-6">
   <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
     <div class="flex-1">
       <div class="flex items-center gap-3 mb-2">
@@ -211,7 +211,10 @@
         Asignar
       </button>
 
-      <button class="px-4 py-2 rounded-lg text-sm font-medium border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors flex items-center gap-2">
+      <button
+        onclick={() => window.print()}
+        class="px-4 py-2 rounded-lg text-sm font-medium border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors flex items-center gap-2"
+      >
         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
         </svg>
@@ -224,7 +227,7 @@
 </div>
 
 <!-- Tabs -->
-<div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden mb-6">
+<div class="bg-white print:hidden dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden mb-6">
   <div class="border-b border-gray-200 dark:border-gray-700">
     <nav class="flex -mb-px overflow-x-auto">
       {#each tabs as tab, index (index)}
@@ -740,7 +743,7 @@
   </div>
 </div>
 
-<div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 mb-6">
+<div class="block print:hidden bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 mb-6">
   <div class="flex flex-col gap-6 lg:flex-row lg:justify-around lg:gap-0">
 
     <button
@@ -822,4 +825,142 @@
       </div>
     </form>
   {/if}
+</div>
+
+<!-- Contenedor principal - fondo gris en pantalla, blanco en impresión -->
+<div class="hidden print:block bg-gray-100 print:bg-white py-8 print:py-0">
+  <!-- Contenido imprimible - márgenes automáticos en impresión -->
+  <div class="bg-white print:bg-white p-8 print:p-0 shadow-lg print:shadow-none">
+
+    <!-- Header -->
+    <header class="mb-6 pb-4 border-b border-gray-800">
+      <div class="flex justify-between items-start">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">ORDEN DE SERVICIO</h1>
+          <p class="text-sm text-gray-600 mt-1">Sistema de Gestión de Servicios</p>
+        </div>
+        <div class="text-right">
+          <div class="text-2xl font-bold text-gray-900">{ordenServicio.id}</div>
+          <div class="text-sm text-gray-600 mt-1">
+            Creado {formatearFecha(ordenServicio.creadoEn)}
+          </div>
+          {#if ordenServicio.cerradoEn != null}
+            <div class="text-sm text-gray-600 mt-1">
+              Cerrado {formatearFecha(ordenServicio.cerradoEn)}
+            </div>
+          {/if}
+          {#if ordenServicio.canceladoEn != null}
+            <div class="text-sm text-gray-600 mt-1">
+              Cancelado {formatearFecha(ordenServicio.canceladoEn)}
+            </div>
+          {/if}
+        </div>
+      </div>
+    </header>
+
+    <!-- Información General -->
+    <section class="mb-4">
+      <h2 class="text-lg font-semibold text-gray-900 border-b border-gray-300 pb-2 mb-4">
+        Información General
+      </h2>
+
+      <div class="grid grid-cols-2 gap-x-8 gap-y-4">
+        <div>
+          <dt class="text-sm font-medium text-gray-600">Estado</dt>
+          <dd class="mt-1">
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold text-gray-900">
+              {ordenServicio.estado}
+            </span>
+          </dd>
+        </div>
+
+        <div>
+          <dt class="text-sm font-medium text-gray-600">Prioridad</dt>
+          <dd class="mt-1 text-base text-gray-900 font-medium">{ordenServicio.prioridad}</dd>
+        </div>
+
+        <div>
+          <dt class="text-sm font-medium text-gray-600">Área Asignada</dt>
+          <dd class="mt-1 text-base text-gray-900">{ordenServicio.areaAsignada.nombre}</dd>
+        </div>
+
+        <div>
+          <dt class="text-sm font-medium text-gray-600">Solicitante</dt>
+          <dd class="mt-1 text-base text-gray-900">
+            {escribirNombreCompleto(ordenServicio.empleadoSolicitante)}
+            ({ordenServicio.areaSolicitante.nombre})
+          </dd>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Descripción -->
+    <section class="mb-6 print:break-inside-avoid">
+      <h2 class="text-lg font-semibold text-gray-900 border-b border-gray-300 pb-2 mb-4">
+        Descripción del Servicio
+      </h2>
+      <p class="text-gray-900 whitespace-pre-wrap leading-relaxed">
+        {recortarTexto(ordenServicio.descripcion, 150)}
+      </p>
+    </section>
+
+    <!-- Agentes Asignados -->
+    {#if ordenServicio.agentes.length > 0}
+      <section class="mb-2 print:break-inside-avoid">
+        <h2 class="text-lg font-semibold text-gray-900 border-b border-gray-300 pb-2 mb-4">
+          Personal Asignado ({ordenServicio.agentes.length})
+        </h2>
+
+        <div class="overflow-x-auto">
+          <table class="w-full border-collapse border border-gray-300">
+            <thead>
+              <tr class="bg-gray-100">
+                <th class="border border-gray-300 px-4 py-2 text-left text-sm font-semibold text-gray-900">
+                  Nombre Completo
+                </th>
+                <th class="border border-gray-300 px-4 py-2 text-left text-sm font-semibold text-gray-900">
+                  Firma
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {#each ordenServicio.agentes as agente(agente.id)}
+                <tr class="hover:bg-gray-50 print:hover:bg-white">
+                  <td class="border border-gray-300 px-4 py-2 text-sm text-gray-900">
+                    {escribirNombreCompleto(agente.empleado)}
+                  </td>
+                  <td class="border border-gray-300 px-4 py-2 text-sm text-gray-900">
+                  </td>
+                </tr>
+              {/each}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    {/if}
+
+    <!-- Espacio para firmas -->
+    <section class="mt-10 pt-4 border-t border-gray-300 print:break-inside-avoid">
+      <div class="grid grid-cols-2 gap-8">
+        <div class="text-center">
+          <div class="h-20 mb-2"></div>
+          <div class="border-t-2 border-gray-900 pt-2">
+            <p class="text-sm text-gray-900 font-medium">Firma Solicitante</p>
+            <p class="text-xs text-gray-600 mt-1">{escribirNombreCompleto(ordenServicio.empleadoSolicitante)}</p>
+          </div>
+        </div>
+
+        <div class="text-center">
+          <div class="h-20 mb-2"></div>
+          <div class="border-t-2 border-gray-900 pt-2">
+            <p class="text-sm text-gray-900 font-medium">Firma Responsable</p>
+            <p class="text-xs text-gray-600 mt-1">Área: {ordenServicio.areaAsignada.nombre}</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </div>
 </div>

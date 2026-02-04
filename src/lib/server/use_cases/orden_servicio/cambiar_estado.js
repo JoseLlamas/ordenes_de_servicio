@@ -42,13 +42,30 @@ export function createCambiarEstadoUseCase (usuario, authorize) {
         throw new ForbiddenException('No puede realizar esta operación');
       }
       if (!verificarCambioEstado(ordenServicio.estado, data.nuevoEstado)) {
-        throw new BusinessRuleException(`No puede realizar esta operacion (${ordenServicio.estado}) -> (${data.nuevoEstado})`);
+        throw new BusinessRuleException(
+          `No puede realizar esta operacion (${ordenServicio.estado}) -> (${data.nuevoEstado})`,
+          BusinessRules.FLUJO_CAMBIO_ESTADO_OS_INCORRECTO
+        );
       }
       if (['PENDIENTE', 'CANCELADO', 'RESUELTO'].includes(data.nuevoEstado) && data.observacion == null) {
-        throw new BusinessRuleException('En pendiente, cancelado o resuelto, la observación es obligatoria');
+        throw new BusinessRuleException(
+          'En pendiente, cancelado o resuelto, la observación es obligatoria',
+          BusinessRules.CAMBIO_ESTADO_OS_OBSERVACION_OBLIGATORIA
+        );
       }
-      if (data.nuevoEstado === 'PROCESO' && ordenServicio.agentes.some(agente => agente.estaOcupado)) {
-        throw new BusinessRuleException('No puede iniciar debido a que hay agente asignados a esta orden ocupados en otra orden');
+      if (data.nuevoEstado === 'PROCESO') {
+        if (ordenServicio.agentes.length === 0) {
+          throw new BusinessRuleException(
+            'No puede pasar a proceso si no tiene ningún agente asignado a esta orden',
+            BusinessRules.SIN_AGENTES_EN_ORDEN_SERVICIO
+          );
+        }
+        if (ordenServicio.agentes.some(agente => agente.estaOcupado)) {
+          throw new BusinessRuleException(
+            'No puede pasar a proceso debido a que hay agente asignados a esta OS ocupados en otra OS',
+            BusinessRules.AGENTE_OCUPADO_EN_OTRO_OS_EN_PROCESO
+          );
+        }
       }
       const dataUpdate = {
         estado: data.nuevoEstado

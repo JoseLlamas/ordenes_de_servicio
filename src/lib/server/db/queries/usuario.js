@@ -1,10 +1,12 @@
-import { eq, and, inArray, isNotNull, like } from 'drizzle-orm';
+import { eq, and, inArray, isNotNull, like, not, exists } from 'drizzle-orm';
 import { db } from '../index';
 import {
   usuarios,
   empleados,
   areas,
   invitaciones,
+  asignaciones,
+  ordenesServicio,
   roles
 } from '../schema';
 import { sql, asc } from 'drizzle-orm';
@@ -379,5 +381,44 @@ export async function obtenerAgentes (areaId, filters = {}, dbOrTx = db) {
       id: row['rol.id'],
       nombre: row['rol.nombre']
     }
+  }));
+}
+
+/**
+ * @param {number} ordenServicioId
+ * @param {number[]} usuariosId
+ * @param {DbOrTx} [dbOrTx = db]
+ */
+export async function obtenerUsuariosParaAsignarAgentes (ordenServicioId, usuariosId, dbOrTx = db) {
+  const subquery = dbOrTx
+    .select({
+      a: sql`1`
+    })
+    .from(asignaciones)
+    .innerJoin(ordenesServicio, eq(ordenesServicio.id, asignaciones.ordenServicioId))
+    .where(
+      and(
+        eq(asignaciones.agenteId, usuarios.id),
+        eq(ordenesServicio.estado, 'PROCESO'),
+        not(eq(ordenesServicio.id, ordenServicioId))
+      )
+    );
+  const users = await dbOrTx
+    .select({
+      id: usuarios.id,
+      areasAccesoId: usuarios.areasAccesoId,
+      activo: usuarios.activo,
+      rol: roles.nombre,
+      estadoOcupado: exists(subquery)
+    })
+    .from(usuarios)
+    .innerJoin(roles, eq(usuarios.rolId, roles.id))
+    .where(inArray(usuarios.id, usuariosId));
+  return users.map(user => ({
+    id: user.id,
+    activo: user.activo,
+    areasAccesoId: /** @type {number[] | null} */ (user.areasAccesoId != null ? JSON.parse(user.areasAccesoId) : null),
+    rol: user.rol,
+    estadoOcupado: Boolean(/** @type {boolean} */ (user.estadoOcupado))
   }));
 }

@@ -117,3 +117,15 @@ export function fromEstadoOrdenATipoObservacion (estado) {
     return 'CANCELACION';
   }
 }
+
+/**
+ *
+ * @param {string} texto
+ * @param {number} [longitudMaxima = 300]
+ */
+export function recortarTexto (texto, longitudMaxima = 300) {
+  if (texto.length <= longitudMaxima) {
+    return texto;
+  }
+  return texto.slice(0, longitudMaxima) + '...';
+}

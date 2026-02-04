@@ -559,3 +559,19 @@ export async function obtenerOrdenServicioParaDesasignacion (ordenServicioId, db
   }
   return null;
 }
+
+/**
+ *
+ * @param {number} ordenServicioId
+ * @param {DbOrTx} [dbOrTx = db]
+ */
+export async function obtenerOrdenServicioParaAsignarAgente (ordenServicioId, dbOrTx = db) {
+  return dbOrTx.query.ordenesServicio.findFirst({
+    where: eq(schemas.ordenesServicio.id, ordenServicioId),
+    columns: {
+      areaAsignadaId: true,
+      id: true,
+      estado: true
+    }
+  });
+}

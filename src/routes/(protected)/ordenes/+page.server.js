@@ -38,11 +38,13 @@ export async function load ({ locals, url }) {
   const rolNombre = locals.usuario.rol.nombre;
   if (rolNombre === 'Agente') {
     parameters.filtros = {
+      ...parameters.filtros,
       agenteId: locals.usuario.id
     };
   } else if (rolNombre === 'Encargado' || rolNombre === 'Capturista') {
     if (locals.usuario.areasAcceso != null) {
       parameters.filtros = {
+        ...parameters.filtros,
         areasAsignadasId: locals.usuario.areasAcceso.map(area => area.id)
       };
     }
