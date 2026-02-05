@@ -553,7 +553,7 @@ export async function obtenerOrdenServicioParaDesasignacion (ordenServicioId, db
     return {
       id: orden.id,
       estado: orden.estado,
-      areaAsignacionId: orden.areaAsignadaId,
+      areaAsignadaId: orden.areaAsignadaId,
       agentesId: orden.asignaciones.map(agente => agente.agenteId)
     };
   }

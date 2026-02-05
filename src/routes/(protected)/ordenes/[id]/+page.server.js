@@ -131,7 +131,7 @@ export const actions = {
       }
       if (exc instanceof ForbiddenException) {
         return fail(403, {
-          errorAsignacionAgentes: exc.message
+          errorDesasignacionAgente: exc.message
         });
       }
       throw exc;

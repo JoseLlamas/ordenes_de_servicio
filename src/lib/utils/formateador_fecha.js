@@ -18,6 +18,20 @@ export function formatearFecha (fecha) {
     }).toUpperCase();
 }
 
+/**
+ * @param {Date} fecha
+ * @returns {string}
+ */
+export function formatearFechaShort (fecha) {
+  return Temporal.Instant.fromEpochMilliseconds(fecha.getTime())
+    .toZonedDateTimeISO('America/Mexico_City')
+    .toLocaleString('es-MX', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    }).toUpperCase();
+}
+
 
 /**
  * Formatear fecha relativa

@@ -1,6 +1,14 @@
 <script>
   import Avatar from '$lib/components/Avatar.svelte';
-  import { formatearFecha, formatearFechaRelativa, getEstadoColor, escribirNombreCompleto, getPrioridadColor, recortarTexto } from '$lib/utils';
+  import {
+    formatearFecha,
+    formatearFechaRelativa,
+    getEstadoColor,
+    escribirNombreCompleto,
+    getPrioridadColor,
+    recortarTexto,
+    formatearFechaShort
+  } from '$lib/utils';
   import SelectorAgentesMultiple from '$lib/components/SelectorAgentesMultiple.svelte';
   import { enhance } from '$app/forms';
   import ButtonAccept from '$lib/components/ButtonAccept.svelte';
@@ -13,10 +21,20 @@
   import Modal from '$lib/components/Modal.svelte';
   import Observacion from '$lib/components/Observacion.svelte';
   import Paginador from '$lib/components/Paginador.svelte';
+  import logo from '$lib/assets/logo.png';
 
   let { data, form } = $props();
 
   let ordenServicio = $derived(data.ordenServicio);
+
+  let observaciones = $derived([...data.ordenServicio.observaciones].toReversed());
+
+  let observacionParaMostrar = $derived.by(() => {
+    if (ordenServicio.estado === 'CANCELADO') {
+      return observaciones.find(observacion => observacion.tipo === 'CANCELACION') ?? null;
+    }
+    return observaciones.find(observacion => observacion.tipo === 'SOLUCION') ?? null;
+  });
 
   /**
    * @type {ConfirmModal | undefined}
@@ -583,10 +601,10 @@
           </div>
         </div>
 
-        {#if ordenServicio.observaciones.length > 0}
+        {#if observacionParaMostrar != null}
           <div>
             <Observacion
-              observacion={ordenServicio.observaciones[ordenServicio.observaciones.length - 1]}
+              observacion={observacionParaMostrar}
             />
           </div>
         {/if}
@@ -721,9 +739,9 @@
         </div>
 
         <!-- Lista -->
-        {#if ordenServicio.observaciones.length > 0}
+        {#if observaciones.length > 0}
           <Paginador
-            records={[...ordenServicio.observaciones].toReversed()}
+            records={observaciones}
             render={imprimirObservaciones}
             perPagina={5}
           />
@@ -828,55 +846,43 @@
 </div>
 
 <!-- Contenedor principal - fondo gris en pantalla, blanco en impresión -->
-<div class="hidden print:block bg-gray-100 print:bg-white py-8 print:py-0">
+<div class="hidden print:block  bg-gray-100 print:bg-white py-8 print:py-0">
   <!-- Contenido imprimible - márgenes automáticos en impresión -->
   <div class="bg-white print:bg-white p-8 print:p-0 shadow-lg print:shadow-none">
-
     <!-- Header -->
-    <header class="mb-6 pb-4 border-b border-gray-800">
+    <header class="mb-4 pb-4 border-b border-gray-800">
       <div class="flex justify-between items-start">
         <div>
-          <h1 class="text-3xl font-bold text-gray-900">ORDEN DE SERVICIO</h1>
-          <p class="text-sm text-gray-600 mt-1">Sistema de Gestión de Servicios</p>
+          <img src={logo} alt="logo" width="90%"/>
+        </div>
+        <div>
+          <h1 class="text-2xl font-bold text-gray-900">ORDEN DE SERVICIO</h1>
         </div>
         <div class="text-right">
-          <div class="text-2xl font-bold text-gray-900">{ordenServicio.id}</div>
-          <div class="text-sm text-gray-600 mt-1">
-            Creado {formatearFecha(ordenServicio.creadoEn)}
+          <div class="text-2xl font-bold text-gray-900">#{ordenServicio.id}</div>
+          <div class="text-sm text-gray-600">
+            {formatearFechaShort(ordenServicio.creadoEn)}
           </div>
-          {#if ordenServicio.cerradoEn != null}
-            <div class="text-sm text-gray-600 mt-1">
-              Cerrado {formatearFecha(ordenServicio.cerradoEn)}
-            </div>
-          {/if}
-          {#if ordenServicio.canceladoEn != null}
-            <div class="text-sm text-gray-600 mt-1">
-              Cancelado {formatearFecha(ordenServicio.canceladoEn)}
-            </div>
-          {/if}
         </div>
       </div>
     </header>
 
     <!-- Información General -->
     <section class="mb-4">
-      <h2 class="text-lg font-semibold text-gray-900 border-b border-gray-300 pb-2 mb-4">
-        Información General
-      </h2>
 
       <div class="grid grid-cols-2 gap-x-8 gap-y-4">
         <div>
-          <dt class="text-sm font-medium text-gray-600">Estado</dt>
-          <dd class="mt-1">
-            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold text-gray-900">
-              {ordenServicio.estado}
-            </span>
+          <dt class="text-sm font-medium text-gray-600">Area</dt>
+          <dd class="mt-1 text-base text-gray-900">
+            {ordenServicio.areaSolicitante.nombre}
           </dd>
         </div>
 
         <div>
-          <dt class="text-sm font-medium text-gray-600">Prioridad</dt>
-          <dd class="mt-1 text-base text-gray-900 font-medium">{ordenServicio.prioridad}</dd>
+          <dt class="text-sm font-medium text-gray-600">Solicitante</dt>
+          <dd class="mt-1 text-base text-gray-900">
+            {escribirNombreCompleto(ordenServicio.empleadoSolicitante)}
+          </dd>
         </div>
 
         <div>
@@ -885,10 +891,13 @@
         </div>
 
         <div>
-          <dt class="text-sm font-medium text-gray-600">Solicitante</dt>
-          <dd class="mt-1 text-base text-gray-900">
-            {escribirNombreCompleto(ordenServicio.empleadoSolicitante)}
-            ({ordenServicio.areaSolicitante.nombre})
+          <dt class="text-sm font-medium text-gray-600">Categoría</dt>
+          <dd class="mt-1">
+            <span class="inline-flex items-center rounded-full text-sm  text-gray-900">
+              {ordenServicio.categoriaOrden.descripcion === 'OTRO'
+                ? ordenServicio.otroCategoriaOrden
+                : ordenServicio.categoriaOrden.descripcion}
+            </span>
           </dd>
         </div>
 
@@ -896,55 +905,51 @@
     </section>
 
     <!-- Descripción -->
-    <section class="mb-6 print:break-inside-avoid">
-      <h2 class="text-lg font-semibold text-gray-900 border-b border-gray-300 pb-2 mb-4">
+    <section class="mb-2 print:break-inside-avoid h-38 overflow-hidden">
+      <h2 class="text-lg font-semibold text-gray-900 border-b border-gray-300 pb-1 mb-2">
         Descripción del Servicio
       </h2>
-      <p class="text-gray-900 whitespace-pre-wrap leading-relaxed">
-        {recortarTexto(ordenServicio.descripcion, 150)}
+      <p class="text-gray-900 whitespace-pre-wrap leading-relaxed text-justify">
+        {recortarTexto(ordenServicio.descripcion, 300)}
       </p>
     </section>
 
-    <!-- Agentes Asignados -->
-    {#if ordenServicio.agentes.length > 0}
-      <section class="mb-2 print:break-inside-avoid">
-        <h2 class="text-lg font-semibold text-gray-900 border-b border-gray-300 pb-2 mb-4">
-          Personal Asignado ({ordenServicio.agentes.length})
-        </h2>
+    {#if ordenServicio.estado === 'CANCELADO' || ordenServicio.estado === 'CERRADO'}
+      <div class="overflow-y-hidden h-44">
+        <section class="text-right my-4">
+          {#if ordenServicio.cerradoEn != null}
+            <div class="text-sm text-gray-600">
+              Cerrado {formatearFecha(ordenServicio.cerradoEn)}
+            </div>
+          {/if}
+          {#if ordenServicio.canceladoEn != null}
+            <div class="text-sm text-gray-600">
+              Cancelado {formatearFecha(ordenServicio.canceladoEn)}
+            </div>
+          {/if}
+        </section>
 
-        <div class="overflow-x-auto">
-          <table class="w-full border-collapse border border-gray-300">
-            <thead>
-              <tr class="bg-gray-100">
-                <th class="border border-gray-300 px-4 py-2 text-left text-sm font-semibold text-gray-900">
-                  Nombre Completo
-                </th>
-                <th class="border border-gray-300 px-4 py-2 text-left text-sm font-semibold text-gray-900">
-                  Firma
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {#each ordenServicio.agentes as agente(agente.id)}
-                <tr class="hover:bg-gray-50 print:hover:bg-white">
-                  <td class="border border-gray-300 px-4 py-2 text-sm text-gray-900">
-                    {escribirNombreCompleto(agente.empleado)}
-                  </td>
-                  <td class="border border-gray-300 px-4 py-2 text-sm text-gray-900">
-                  </td>
-                </tr>
-              {/each}
-            </tbody>
-          </table>
-        </div>
-      </section>
+        {#if observacionParaMostrar != null}
+          <section class="print:break-inside-avoid">
+            <h2 class="text-lg font-semibold text-gray-900 border-b border-gray-300 pb-1 mb-2">
+              {observacionParaMostrar.tipo === 'CANCELACION' ? 'Razón de la cancelación' : 'Procedimiento realizado para atender el reporte'}
+            </h2>
+            <p class="text-gray-900 whitespace-pre-wrap leading-relaxed text-justify">
+              {recortarTexto(observacionParaMostrar.observacion, 200)}
+            </p>
+          </section>
+        {/if}
+      </div>
+    {:else}
+      <div class="h-44"></div>
     {/if}
 
     <!-- Espacio para firmas -->
-    <section class="mt-10 pt-4 border-t border-gray-300 print:break-inside-avoid">
+    <section class="mt-8 pt-2 border-t border-gray-300 print:break-inside-avoid">
+
       <div class="grid grid-cols-2 gap-8">
         <div class="text-center">
-          <div class="h-20 mb-2"></div>
+          <div class="h-18 mb-2"></div>
           <div class="border-t-2 border-gray-900 pt-2">
             <p class="text-sm text-gray-900 font-medium">Firma Solicitante</p>
             <p class="text-xs text-gray-600 mt-1">{escribirNombreCompleto(ordenServicio.empleadoSolicitante)}</p>
@@ -952,13 +957,48 @@
         </div>
 
         <div class="text-center">
-          <div class="h-20 mb-2"></div>
+          <div class="h-18 mb-2"></div>
           <div class="border-t-2 border-gray-900 pt-2">
-            <p class="text-sm text-gray-900 font-medium">Firma Responsable</p>
-            <p class="text-xs text-gray-600 mt-1">Área: {ordenServicio.areaAsignada.nombre}</p>
+            <p class="text-sm text-gray-900 font-medium">Firma Agente</p>
           </div>
         </div>
 
+      </div>
+    </section>
+
+    <section class="border-t-2 mt-2 pt-2 border-dashed border-gray-300 print:break-inside-avoid">
+      <div class="flex justify-between items-start">
+        <div>
+          <img src={logo} alt="logo" width="60%"/>
+        </div>
+        <div>
+          <h1 class="font-bold text-gray-900">ORDEN DE SERVICIO</h1>
+        </div>
+        <div class="text-right">
+          <div class="text-sm font-bold text-gray-900">#{ordenServicio.id}</div>
+          <div class="text-sm text-gray-600">
+            {formatearFechaShort(ordenServicio.creadoEn)}
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-3 gap-x-8 gap-y-4">
+        <div>
+          <dt class="text-sm font-medium text-gray-600">Area</dt>
+          <dd class="mt-1 text-base text-gray-900">
+            {ordenServicio.areaSolicitante.nombre}
+          </dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-600">Solicitante</dt>
+          <dd class="mt-1 text-base text-gray-900">
+            {escribirNombreCompleto(ordenServicio.empleadoSolicitante)}
+          </dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-600">Atendió</dt>
+          <dd class="mt-1 text-base text-gray-900">{escribirNombreCompleto(ordenServicio.creadoPor.empleado)}</dd>
+        </div>
       </div>
     </section>
 

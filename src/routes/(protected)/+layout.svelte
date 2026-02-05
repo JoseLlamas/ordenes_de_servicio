@@ -185,7 +185,7 @@
     <!-- Main Content Area -->
     <main class="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-900 p-4 lg:p-6 print:overflow-hidden">
       <div class="max-w-7xl mx-auto">
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 print:border-0 print:p-0 print:shadow-none">
           <div class="text-gray-700 dark:text-gray-100">
             {@render children?.()}
           </div>
