@@ -6,7 +6,6 @@
     getEstadoColor,
     escribirNombreCompleto,
     getPrioridadColor,
-    recortarTexto,
     formatearFechaShort
   } from '$lib/utils';
   import SelectorAgentesMultiple from '$lib/components/SelectorAgentesMultiple.svelte';
@@ -22,6 +21,7 @@
   import Observacion from '$lib/components/Observacion.svelte';
   import Paginador from '$lib/components/Paginador.svelte';
   import logo from '$lib/assets/logo.png';
+    import VerMas from '$lib/components/VerMas.svelte';
 
   let { data, form } = $props();
 
@@ -288,9 +288,9 @@
             Descripción
           </h3>
           <div class="bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-            <p class="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
-              {ordenServicio.descripcion}
-            </p>
+            <VerMas
+              texto={ordenServicio.descripcion}
+            />
           </div>
         </div>
 
@@ -498,16 +498,14 @@
 
               <div class="bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
                 <dl class="space-y-3">
-                  {#if ordenServicio.tipoEntrada}
-                    <div>
-                      <dt class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
-                        Tipo de Entrada
-                      </dt>
-                      <dd class="text-sm text-gray-900 dark:text-white mt-1">
-                        {ordenServicio.tipoEntrada}
-                      </dd>
-                    </div>
-                  {/if}
+                  <div>
+                    <dt class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                      Tipo de Entrada
+                    </dt>
+                    <dd class="text-sm text-gray-900 dark:text-white mt-1">
+                      {ordenServicio.tipoEntrada}
+                    </dd>
+                  </div>
 
                   {#if ordenServicio.numeroOficio}
                     <div>
@@ -520,16 +518,14 @@
                     </div>
                   {/if}
 
-                  {#if ordenServicio.telefonoSolicitante}
-                    <div>
-                      <dt class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
-                        Teléfono Solicitante
-                      </dt>
-                      <dd class="text-sm text-gray-900 dark:text-white mt-1">
-                        {ordenServicio.telefonoSolicitante}
-                      </dd>
-                    </div>
-                  {/if}
+                  <div>
+                    <dt class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                      Teléfono Solicitante
+                    </dt>
+                    <dd class="text-sm text-gray-900 dark:text-white mt-1">
+                      {ordenServicio.telefonoSolicitante}
+                    </dd>
+                  </div>
 
                   {#if ordenServicio.otroCategoriaOrden}
                     <div>
@@ -894,7 +890,7 @@
           <dt class="text-sm font-medium text-gray-600">Categoría</dt>
           <dd class="mt-1">
             <span class="inline-flex items-center rounded-full text-sm  text-gray-900">
-              {ordenServicio.categoriaOrden.descripcion === 'OTRO'
+              {ordenServicio.otroCategoriaOrden != null
                 ? ordenServicio.otroCategoriaOrden
                 : ordenServicio.categoriaOrden.descripcion}
             </span>
@@ -909,14 +905,14 @@
       <h2 class="text-lg font-semibold text-gray-900 border-b border-gray-300 pb-1 mb-2">
         Descripción del Servicio
       </h2>
-      <p class="text-gray-900 whitespace-pre-wrap leading-relaxed text-justify">
-        {recortarTexto(ordenServicio.descripcion, 300)}
+      <p class="text-gray-900 whitespace-pre-wrap leading-relaxed text-justify line-clamp-4">
+        {ordenServicio.descripcion}
       </p>
     </section>
 
     {#if ordenServicio.estado === 'CANCELADO' || ordenServicio.estado === 'CERRADO'}
-      <div class="overflow-y-hidden h-44">
-        <section class="text-right my-4">
+      <div class="overflow-y-hidden h-42">
+        <section class="text-right my-2">
           {#if ordenServicio.cerradoEn != null}
             <div class="text-sm text-gray-600">
               Cerrado {formatearFecha(ordenServicio.cerradoEn)}
@@ -934,8 +930,8 @@
             <h2 class="text-lg font-semibold text-gray-900 border-b border-gray-300 pb-1 mb-2">
               {observacionParaMostrar.tipo === 'CANCELACION' ? 'Razón de la cancelación' : 'Procedimiento realizado para atender el reporte'}
             </h2>
-            <p class="text-gray-900 whitespace-pre-wrap leading-relaxed text-justify">
-              {recortarTexto(observacionParaMostrar.observacion, 200)}
+            <p class="text-gray-900 whitespace-pre-wrap leading-relaxed text-justify line-clamp-3">
+              {observacionParaMostrar.observacion}
             </p>
           </section>
         {/if}

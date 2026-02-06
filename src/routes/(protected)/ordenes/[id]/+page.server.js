@@ -6,7 +6,7 @@ import {
   createDesasignarAgenteUseCase,
   createObtenerDetalleOrdenServicioUseCase
 } from '$lib/server/use_cases/orden_servicio';
-import { error, fail, redirect } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 import {
   validateAsignacionAgentes,
   validateDesasignacionAgente,
@@ -22,9 +22,9 @@ export async function load ({ params, locals }) {
   if (!locals.authorize.has('read', 'Orden')) {
     redirect(303, '/sin-acceso');
   }
-  const ordenServicioId = Number(params.id);
+  const ordenServicioId = parseInt(params.id);
   if (Number.isNaN(ordenServicioId)) {
-    error(404, 'Recurso no encontrado');
+    redirect(303, '/no-encontrado');
   }
   try {
     const obtenerOrdenServicioDetalle = createObtenerDetalleOrdenServicioUseCase(locals.usuario, locals.authorize);
@@ -34,7 +34,7 @@ export async function load ({ params, locals }) {
     };
   } catch (exc) {
     if (exc instanceof BusinessRuleException) {
-      error(404, 'Orden de servicio no encontrada');
+      redirect(303, '/no-encontrado');
     }
     if (exc instanceof ForbiddenException) {
       redirect(303, '/sin-acceso');

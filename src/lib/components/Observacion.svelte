@@ -1,7 +1,8 @@
 <!-- lib/components/Observacion.svelte -->
 <script>
-    import { escribirNombreCompleto, formatearFecha, formatearFechaRelativa } from '$lib/utils';
+  import { escribirNombreCompleto, formatearFecha, formatearFechaRelativa } from '$lib/utils';
   import Avatar from './Avatar.svelte';
+  import VerMas from './VerMas.svelte';
 
   /**
    * @type {{
@@ -87,9 +88,10 @@
   </div>
 
   <!-- Contenido de la observación -->
-  <div class="pl-0 sm:pl-13">
-    <p class="text-sm sm:text-base text-gray-700 dark:text-gray-300 whitespace-pre-wrap leading-relaxed">
-      {observacion.observacion}
-    </p>
+
+  <div class="bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+    <VerMas
+      texto={observacion.observacion}
+    />
   </div>
 </article>

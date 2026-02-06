@@ -3,7 +3,9 @@
   import LogoutButton from '$lib/components/LogoutButton.svelte';
   import logo from '$lib/assets/logo.png';
   import Avatar from '$lib/components/Avatar.svelte';
-  import { normalizePalabras } from '$lib/utils';
+  import { escribirNombreCompleto } from '$lib/utils';
+  import InputBusqueda from '$lib/components/InputBusqueda.svelte';
+  import { goto } from '$app/navigation';
 
   let { children, data } = $props();
 
@@ -31,11 +33,18 @@
     { href: '/perfil', icon: '👤', label: 'Mi perfil' }
   ];
 
-  let usuarioNombreCompleto = $derived(normalizePalabras(
-    data.usuario.empleado.nombre,
-    data.usuario.empleado.primerApellido,
-    data.usuario.empleado.segundoApellido ?? ''
-  ));
+  /**
+   *
+   * @param {string} value
+   */
+  function onSearchOS (value) {
+    const v = value.trim();
+    if (!(/^[0-9]{6,}$/.test(v))) {
+      return;
+    }
+    goto(`/ordenes/${value}`);
+  }
+
 </script>
 
 <Mode bind:theme />
@@ -67,6 +76,9 @@
 
     <!-- Sidebar Footer -->
     <div class="p-4 border-t border-gray-200 dark:border-gray-700 space-y-2">
+      <InputBusqueda onsearch={onSearchOS}
+      placeholder="Folio"
+      />
       <button
         onclick={toggleDarkMode}
         class="flex items-center justify-center gap-2 w-full px-4 py-2 text-sm font-medium rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
@@ -127,6 +139,10 @@
 
     <!-- Mobile Sidebar Footer -->
     <div class="p-4 border-t border-gray-200 dark:border-gray-700 space-y-2">
+      <InputBusqueda
+        onsearch={onSearchOS}
+        placeholder="Folio"
+      />
       <button
         onclick={toggleDarkMode}
         class="flex items-center justify-center gap-2 w-full px-4 py-2 text-sm font-medium rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
@@ -174,7 +190,7 @@
         <div class="relative">
           <Avatar
             size="small"
-            {usuarioNombreCompleto}
+            usuarioNombreCompleto={escribirNombreCompleto(data.usuario.empleado)}
             avatar={data.usuario.avatar}
             rolNombre={data.usuario.rol.nombre}
           />

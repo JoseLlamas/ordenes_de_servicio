@@ -4,7 +4,9 @@
   import { page } from '$app/state';
   import ButtonAccept from '$lib/components/ButtonAccept.svelte';
   import Input from '$lib/components/Input.svelte';
+    import InputBusqueda from '$lib/components/InputBusqueda.svelte';
   import Select from '$lib/components/Select.svelte';
+  import SinResultados from '$lib/components/SinResultados.svelte';
   import {
     formatearFechaRelativa,
     getEstadoColor,
@@ -160,7 +162,7 @@
               {orden.prioridad}
             </span>
 
-            {#if orden.tipoEntrada === 'OFICIO' && orden.numeroOficio}
+            {#if orden.numeroOficio}
               <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800 border border-purple-200 dark:bg-purple-900/30 dark:text-purple-400 dark:border-purple-800">
                 Oficio: {orden.numeroOficio}
               </span>
@@ -168,22 +170,20 @@
           </div>
 
           <!-- Descripción -->
-          <p class="text-sm text-gray-600 dark:text-gray-300 line-clamp-2 mb-3">
+          <p class="text-sm text-gray-600 dark:text-gray-300 line-clamp-3 mb-3 text-justify">
             {orden.descripcion}
           </p>
 
           <!-- Categoría -->
-          {#if orden.categoriaOrden && orden.categoriaOrden.descripcion}
-            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-gray-100 dark:bg-gray-800 rounded-lg text-xs text-gray-700 dark:text-gray-300">
-              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-              </svg>
-              {orden.categoriaOrden.descripcion}
-              {#if orden.otroCategoriaOrden != null}
-                - {orden.otroCategoriaOrden}
-              {/if}
-            </span>
-          {/if}
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-gray-100 dark:bg-gray-800 rounded-lg text-xs text-gray-700 dark:text-gray-300">
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+            </svg>
+            {orden.categoriaOrden.descripcion}
+            {#if orden.otroCategoriaOrden != null}
+              - {orden.otroCategoriaOrden}
+            {/if}
+          </span>
         </div>
 
         <!-- Fecha -->
@@ -232,57 +232,12 @@
           </div>
         </div>
 
-        <!-- Estado -->
-        <div class="flex items-start gap-3">
-          <div class="flex-shrink-0 w-10 h-10 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
-            <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-            </svg>
-          </div>
-          <div class="flex-1 min-w-0">
-            <p class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-0.5">
-              Proceso
-            </p>
-            {#if orden.estado === 'NUEVO'}
-              <p class="text-sm font-medium text-green-600 dark:text-green-400">
-                Ingresado
-              </p>
-            {:else if orden.estado === 'PROCESO'}
-              <p class="text-sm font-medium text-green-600 dark:text-green-400">
-                En proceso
-              </p>
-            {:else if orden.estado === 'PENDIENTE'}
-              <p class="text-sm font-medium text-green-600 dark:text-green-400">
-                En espera
-              </p>
-            {:else if orden.estado === 'RESUELTO'}
-              <p class="text-sm font-medium text-green-600 dark:text-green-400">
-                Resuelto
-              </p>
-            {:else if orden.estado === 'CERRADO'}
-              <p class="text-sm font-medium text-green-600 dark:text-green-400">
-                Cerrado
-              </p>
-            {:else}
-              <p class="text-sm font-medium text-green-600 dark:text-green-400">
-                Cancelado
-              </p>
-            {/if}
-          </div>
-        </div>
       </div>
     </a>
   {/each}
 
   {#if data.ordenesServicio.length === 0}
-    <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-12 text-center">
-      <svg class="mx-auto h-16 w-16 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-      </svg>
-      <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">
-        No se encontraron órdenes
-      </h3>
-    </div>
+    <SinResultados />
   {/if}
 </div>
 
