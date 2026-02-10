@@ -4,7 +4,6 @@
   import { page } from '$app/state';
   import ButtonAccept from '$lib/components/ButtonAccept.svelte';
   import Input from '$lib/components/Input.svelte';
-    import InputBusqueda from '$lib/components/InputBusqueda.svelte';
   import Select from '$lib/components/Select.svelte';
   import SinResultados from '$lib/components/SinResultados.svelte';
   import {

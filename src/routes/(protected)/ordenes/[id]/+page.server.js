@@ -136,6 +136,10 @@ export const actions = {
       }
       throw exc;
     }
+  },
+
+  async agregarActivo ({ request, locals }) {
+    assertAuthenticated(locals);
   }
 
 };

@@ -21,7 +21,8 @@
   import Observacion from '$lib/components/Observacion.svelte';
   import Paginador from '$lib/components/Paginador.svelte';
   import logo from '$lib/assets/logo.png';
-    import VerMas from '$lib/components/VerMas.svelte';
+  import VerMas from '$lib/components/VerMas.svelte';
+  import FormAgregarActivo2 from '$lib/components/FormAgregarActivo2.svelte';
 
   let { data, form } = $props();
 
@@ -117,6 +118,42 @@
 
   /*------------------ cambio estado --------------*/
 
+  /*--------------- agregar activo ----------------*/
+
+  /**
+  * @type {FormAgregarActivo2 | undefined}
+  */
+  let formAgregarActivo = $state();
+
+  /**
+   * @type {HTMLFormElement | undefined}
+   */
+  let htmlFormAgregarActivo = $state();
+
+  /**
+   * @type {Modal | undefined}
+   */
+  let modalAgregarActivo = $state();
+
+  /**
+   * @type {{
+   *  categoriaActivoId: number | null,
+   *  numeroInventario: string,
+   *  numeroSerie: string,
+   *  marca: string,
+   *  modelo: string,
+   *  observaciones: string
+   * } | null}
+  */
+  let activoParaAgregar = $state(null);
+
+  function handleAgregarActivo (activo) {
+    activoParaAgregar = activo;
+    htmlFormAgregarActivo?.requestSubmit();
+  }
+
+  /*---------------agregar activo------------------*/
+
 </script>
 
 <svelte:head>
@@ -180,6 +217,32 @@
           agentesParaAsignar = [];
           selectorAgentesMultiple?.limpiar();
         }
+      };
+    }}
+  ></form>
+</Modal>
+
+<Modal
+  title="Agregar nuevo activo"
+  bind:this={modalAgregarActivo}
+>
+  <FormAgregarActivo2
+    areaId={ordenServicio.areaAsignada.id}
+    onCancel={() => {
+      modalAgregarActivo?.close();
+      formAgregarActivo?.limpiarCampos();
+    }}
+    onAgregar={handleAgregarActivo}
+    bind:this={formAgregarActivo}
+  />
+  <form
+    action="?/agregarActivo"
+    method="POST"
+    bind:this={htmlFormAgregarActivo}
+    use:enhance={({ formData }) => {
+
+      return async ({ update, result }) => {
+        await update();
       };
     }}
   ></form>
@@ -615,7 +678,10 @@
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
               Total: {ordenServicio.activos.length} {ordenServicio.activos.length === 1 ? 'activo' : 'activos'}
             </h3>
-            <button class="px-4 py-2 text-sm font-medium text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/30 rounded-lg transition-colors">
+            <button
+              onclick={() => modalAgregarActivo?.open()}
+              class="px-4 py-2 text-sm font-medium text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/30 rounded-lg transition-colors"
+            >
               Agregar activo
             </button>
           </div>
@@ -712,7 +778,10 @@
               Esta orden no tiene activos asociados
             </p>
             <div class="mt-6">
-              <button class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
+              <button
+                onclick={() => modalAgregarActivo?.open()}
+                class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+              >
                 <svg class="-ml-1 mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                 </svg>
