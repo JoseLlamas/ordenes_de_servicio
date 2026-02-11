@@ -5,6 +5,8 @@
   import ButtonAccept from './ButtonAccept.svelte';
   import ButtonCancel from './ButtonCancel.svelte';
   import ButtonSubmitting from './ButtonSubmitting.svelte';
+    import ErrorMessage from './ErrorMessage.svelte';
+    import InfoMessage from './InfoMessage.svelte';
   import Input from './Input.svelte';
   import Paginador from './Paginador.svelte';
 
@@ -15,14 +17,22 @@
   /**
    * @type {{
    *  areaId: number,
-   *  onAsignar?: (agentes: Agente[]) => void,
-   *  oncancel?: () => void
+   *  onAsignar?: (agentesId: number[]) => void,
+   *  oncancel?: () => void,
+   *  errors?: {
+   *    ordenServicioId?: string,
+   *    agentesId?: string,
+   *    errorAsignacionAgentes?: string
+   *  },
+   *  message?: string
    * }}
    */
   let {
     areaId,
     onAsignar,
-    oncancel
+    oncancel,
+    errors,
+    message
   } = $props();
 
   /**
@@ -92,7 +102,7 @@
     if (agentesSeleccionados.length === 0) {
       return;
     }
-    onAsignar?.(agentesSeleccionados);
+    onAsignar?.(agentesSeleccionados.map(agenteSeleccionado => agenteSeleccionado.id));
   }
 
   export function limpiar () {
@@ -182,6 +192,23 @@
         </button>
       {/if}
     </div>
+
+
+    {#if message}
+      <InfoMessage>
+        {message}
+      </InfoMessage>
+    {/if}
+    {#if errors?.agentesId}
+      <ErrorMessage>
+        {errors.agentesId}
+      </ErrorMessage>
+    {/if}
+    {#if errors?.errorAsignacionAgentes}
+      <ErrorMessage>
+        {errors.errorAsignacionAgentes}
+      </ErrorMessage>
+    {/if}
 
     <div class="grid grid-cols-1 lg:grid-cols-4 gap-x-4 gap-y-2">
       <div class="lg:col-span-3">

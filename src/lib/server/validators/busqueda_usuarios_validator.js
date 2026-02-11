@@ -1,9 +1,9 @@
 /**
- * @import { Validator } from '../../validators/validator';
+ * @import { Validator } from './validator';
  */
 
 import Joi from 'joi';
-import { createValidator } from '../../validators/validator';
+import { createValidator } from './validator';
 
 const schema = Joi.object({
   areaId: Joi.number().integer().empty(['', null]).required().messages({

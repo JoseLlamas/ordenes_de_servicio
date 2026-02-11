@@ -1,8 +1,8 @@
 import Joi from 'joi';
-import { createValidator } from '$lib/validators/validator';
+import { createValidator } from '$lib/server/validators/validator';
 
 /**
- * @import { Validator } from '$lib/validators/validator';
+ * @import { Validator } from '$lib/server/validators/validator';
  */
 
 const schema = Joi.object({

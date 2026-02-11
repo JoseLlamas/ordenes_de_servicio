@@ -8,11 +8,12 @@
   import TextArea from './TextArea.svelte';
   import ErrorMessage from './ErrorMessage.svelte';
   import ErrorCard from './ErrorCard.svelte';
+    import InfoMessage from './InfoMessage.svelte';
 
   /**
   * @import { CategoriaActivoDTO } from '$lib/types';
   *
-  * @typedef {{ [K in keyof ActivoParam]?: string } | { errorRegistroActivo: string }} Errors
+  * @typedef {{ [K in keyof ActivoParam]?: string } & { errorAgregarActivo?: string }} Errors
   *
   * @typedef {{
   *   categoriaActivoId: number | null,
@@ -29,13 +30,17 @@
    *  @type {{
    *    areaId: number,
    *    onAgregar: (activo: ActivoParam) => void,
-   *    onCancel?: () => void
+   *    onCancel?: () => void,
+   *    errors?: Errors,
+   *    message?: string
    * }}
   */
   let {
     areaId,
     onAgregar,
-    onCancel
+    onCancel,
+    errors,
+    message
   } = $props();
 
   /**
@@ -60,11 +65,6 @@
    */
   let categoriasActivo = $state([]);
 
-  /**
-   * @type {Errors | undefined}
-   */
-  let errors = $state();
-
   export function limpiarCampos () {
     numeroInventario = '';
     numeroSerie = '';
@@ -72,15 +72,6 @@
     marca = '';
     modelo = '';
     observaciones = '';
-    errors = undefined;
-  }
-
-  /**
-   *
-   * @param {Errors} errors2
-   */
-  export function setErrors (errors2) {
-    errors = errors2;
   }
 
   function clicInAceptar () {
@@ -106,10 +97,16 @@
   });
 </script>
 
-{#if errors && 'errorRegistroActivo' in errors}
+{#if errors?.errorAgregarActivo}
   <ErrorCard>
-    {errors.errorRegistroActivo}
+    {errors.errorAgregarActivo}
   </ErrorCard>
+{/if}
+
+{#if message}
+  <InfoMessage>
+    {message}
+  </InfoMessage>
 {/if}
 
 <div class="mt-5 grid grid-cols-1 gap-x-6 gap-y-4 lg:grid-cols-4 mb-5">
@@ -124,7 +121,7 @@
       label="Número de inventario"
       id="numeroInventario"
     />
-    {#if errors && 'numeroInventario' in errors && errors.numeroInventario}
+    {#if errors?.numeroInventario}
       <ErrorMessage>
         {errors.numeroInventario}
       </ErrorMessage>
@@ -136,7 +133,7 @@
       label="Número de serie"
       id="numeroSerie"
     />
-    {#if errors && 'numeroSerie' in errors && errors.numeroSerie}
+    {#if errors?.numeroSerie}
       <ErrorMessage>
         {errors.numeroSerie}
       </ErrorMessage>
@@ -153,7 +150,7 @@
         <option value={categoriaActivo}>{categoriaActivo.descripcion}</option>
       {/each}
     </Select>
-    {#if errors && 'categoriaActivoId' in errors && errors.categoriaActivoId}
+    {#if errors?.categoriaActivoId}
       <ErrorMessage>
         {errors.categoriaActivoId}
       </ErrorMessage>
@@ -165,7 +162,7 @@
       label="marca"
       id="marca"
     />
-    {#if errors && 'marca' in errors && errors.marca}
+    {#if errors?.marca}
       <ErrorMessage>
         {errors.marca}
       </ErrorMessage>
@@ -177,7 +174,7 @@
       label="modelo"
       id="modelo"
     />
-    {#if errors && 'modelo' in errors && errors.modelo}
+    {#if errors?.modelo}
       <ErrorMessage>
         {errors.modelo}
       </ErrorMessage>
@@ -190,7 +187,7 @@
       id="observaciones"
       class="uppercase"
     />
-    {#if errors && 'observaciones' in errors && errors.observaciones}
+    {#if errors?.observaciones}
       <ErrorMessage>
         {errors.observaciones}
       </ErrorMessage>

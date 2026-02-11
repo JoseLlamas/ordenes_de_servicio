@@ -575,3 +575,19 @@ export async function obtenerOrdenServicioParaAsignarAgente (ordenServicioId, db
     }
   });
 }
+
+/**
+ *
+ * @param {number} ordenServicioId
+ * @param {DbOrTx} [dbOrTx = db]
+ */
+export async function obtenerOrdenServicioParaAgregarActivo (ordenServicioId, dbOrTx = db) {
+  return dbOrTx.query.ordenesServicio.findFirst({
+    where: eq(schemas.ordenesServicio.id, ordenServicioId),
+    columns: {
+      areaAsignadaId: true,
+      id: true,
+      estado: true
+    }
+  });
+}

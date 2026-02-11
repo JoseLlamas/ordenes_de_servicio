@@ -71,12 +71,16 @@
   let formAsignacion = $state();
 
   /**
-   * @type {import('$lib/types').UsuarioResumenDTO[]}
+   * @type {number[]}
    */
-  let agentesParaAsignar = $state([]);
+  let agentesParaAsignarId = $state([]);
 
-  function handleAsignarAgentes (agentes) {
-    agentesParaAsignar = agentes;
+  /**
+   *
+   * @param {number[]} agentesId
+   */
+  function handleAsignarAgentes (agentesId) {
+    agentesParaAsignarId = agentesId;
     formAsignacion?.requestSubmit();
   }
 
@@ -178,26 +182,13 @@
   bind:this={modalAsignacion}
   title="Asignar agentes"
 >
-  {#if form?.messageAsignacionAgentes}
-    <InfoMessage>
-      {form.messageAsignacionAgentes}
-    </InfoMessage>
-  {/if}
-  {#if form?.errorsAsignacionAgentes?.agentesId}
-    <ErrorMessage>
-      {form.errorsAsignacionAgentes.agentesId}
-    </ErrorMessage>
-  {/if}
-  {#if form?.errorAsignacionAgentes}
-    <ErrorMessage>
-      {form.errorAsignacionAgentes}
-    </ErrorMessage>
-  {/if}
   <SelectorAgentesMultiple
     areaId={ordenServicio.areaAsignada.id}
     bind:this={selectorAgentesMultiple}
     onAsignar={handleAsignarAgentes}
     oncancel={() => modalAsignacion?.close()}
+    errors={{ ...form?.errorsAsignacionAgentes, errorAsignacionAgentes: form?.errorAsignacionAgentes }}
+    message={form?.messageAsignacionAgentes}
   />
   <form
     bind:this={formAsignacion}
@@ -207,14 +198,14 @@
     use:enhance={({ formData }) => {
       formData.set('data', JSON.stringify({
         ordenServicioId: ordenServicio.id,
-        agentesId: agentesParaAsignar.map(u => u.id)
+        agentesId: [...agentesParaAsignarId]
       }));
       submittingAsignacion = true;
       return async ({ update, result }) => {
         await update();
         submittingAsignacion = false;
-        if (result.type === 'success') {
-          agentesParaAsignar = [];
+        if (result.status === 200) {
+          agentesParaAsignarId = [];
           selectorAgentesMultiple?.limpiar();
         }
       };
@@ -230,18 +221,22 @@
     areaId={ordenServicio.areaAsignada.id}
     onCancel={() => {
       modalAgregarActivo?.close();
-      formAgregarActivo?.limpiarCampos();
     }}
     onAgregar={handleAgregarActivo}
     bind:this={formAgregarActivo}
+    errors={{ ...form?.errorsAgregarActivo, errorAgregarActivo: form?.errorAgregarActivo }}
+    message={form?.messageAgregarActivo}
   />
   <form
     action="?/agregarActivo"
     method="POST"
     bind:this={htmlFormAgregarActivo}
     use:enhance={({ formData }) => {
-
-      return async ({ update, result }) => {
+      formData.set('data', JSON.stringify({
+        orderServicioId: ordenServicio.id,
+        ...activoParaAgregar
+      }));
+      return async ({ update }) => {
         await update();
       };
     }}

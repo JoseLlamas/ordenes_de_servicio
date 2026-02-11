@@ -12,6 +12,8 @@ import {
   validateDesasignacionAgente,
   validateCambioEstado
 } from '$lib/server/validators';
+import { validateRegistroActivo } from '$lib/server/validators';
+import { createAgregarActivoUseCase } from '$lib/server/use_cases/orden_servicio';
 
 /**
  *
@@ -140,6 +142,31 @@ export const actions = {
 
   async agregarActivo ({ request, locals }) {
     assertAuthenticated(locals);
+    const form = await request.formData();
+    const resultValidation = await validateRegistroActivo(JSON.parse(/** @type {string} */ (form.get('data'))));
+    if ('errors' in resultValidation) {
+      return fail(422, {
+        errorsAgregarActivo: resultValidation.errors
+      });
+    }
+    const agregarActivo = createAgregarActivoUseCase(locals.usuario, locals.authorize);
+    try {
+      const { ordenServicioId, ...values } = resultValidation.values;
+      await agregarActivo(ordenServicioId, values);
+      return { messageAgregarActivo: 'Activo agregado' };
+    } catch (exc) {
+      if (exc instanceof BusinessRuleException) {
+        return fail(422, {
+          errorAgregarActivo: exc.message
+        });
+      }
+      if (exc instanceof ForbiddenException) {
+        return fail(403, {
+          errorAgregarActivo: exc.message
+        });
+      }
+      throw exc;
+    }
   }
 
 };

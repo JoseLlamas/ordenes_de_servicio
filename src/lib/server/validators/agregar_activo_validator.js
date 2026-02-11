@@ -6,6 +6,11 @@ import { createValidator } from './validator';
  */
 
 const schema = Joi.object({
+  orderServicioId: Joi
+    .number()
+    .integer()
+    .empty(['', null])
+    .required(),
   numeroInventario: Joi
     .string()
     .empty(['', null])
@@ -29,9 +34,10 @@ const schema = Joi.object({
       'any.required': 'El número de serie es requerido si no se ingresa el número de inventario',
       'string.max': 'El número de inventario no puede tener más de 50 carácteres'
     }),
-  categoriaActivo: Joi
-    .object()
-    .empty(null)
+  categoriaActivoId: Joi
+    .number()
+    .integer()
+    .empty(['', null])
     .required()
     .messages({
       'any.required': 'La categoria es requerida'
@@ -66,12 +72,10 @@ const schema = Joi.object({
 
 /**
  * @type {Validator<{
+ *  ordenServicioId: number,
  *  numeroSerie: string | null,
  *  numeroInventario: string | null,
- *  categoriaActivo: {
- *    id: number,
- *    descripcion: string
- *  },
+ *  categoriaActivoId: number,
  *  marca: string | null,
  *  modelo: string | null,
  *  observaciones: string | null
