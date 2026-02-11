@@ -129,6 +129,8 @@
   */
   let formAgregarActivo = $state();
 
+  let submittingAgregarActivo = $state(false);
+
   /**
    * @type {HTMLFormElement | undefined}
    */
@@ -158,6 +160,8 @@
 
   /*---------------agregar activo------------------*/
 
+  let showLoadingScreen = $derived(submittingNuevoEstado || submittingAgregarActivo || submittingAsignacion);
+
 </script>
 
 <svelte:head>
@@ -174,8 +178,7 @@
   </div>
 {/snippet}
 
-<LoadingScreen hidden={!submittingNuevoEstado} />
-<LoadingScreen hidden={!submittingAsignacion} />
+<LoadingScreen hidden={!showLoadingScreen} />
 <ConfirmModal bind:this={confirmModal} />
 
 <Modal
@@ -231,13 +234,20 @@
     action="?/agregarActivo"
     method="POST"
     bind:this={htmlFormAgregarActivo}
+    class="hidden"
     use:enhance={({ formData }) => {
+      submittingAgregarActivo = true;
       formData.set('data', JSON.stringify({
-        orderServicioId: ordenServicio.id,
+        ordenServicioId: ordenServicio.id,
         ...activoParaAgregar
       }));
-      return async ({ update }) => {
+      return async ({ update, result }) => {
         await update();
+        if (result.status === 200) {
+          formAgregarActivo?.limpiarCampos();
+          activoParaAgregar = null;
+        }
+        submittingAgregarActivo = true;
       };
     }}
   ></form>
@@ -681,7 +691,7 @@
             </button>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {#each ordenServicio.activos as activo(activo.id)}
               <div class="group bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 p-4 hover:shadow-lg transition-all relative">
 
@@ -739,21 +749,17 @@
                   </div>
 
                   <!-- Categoría -->
-                  {#if activo.categoriaActivo}
-                    <div class="pt-2 border-t border-gray-200 dark:border-gray-700">
-                      <span class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 border border-purple-200 dark:border-purple-800">
-                        {activo.categoriaActivo.descripcion}
-                      </span>
-                    </div>
-                  {/if}
+                  <div class="pt-2 border-t border-gray-200 dark:border-gray-700">
+                    <span class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 border border-purple-200 dark:border-purple-800">
+                      {activo.categoriaActivo.descripcion}
+                    </span>
+                  </div>
 
                   <!-- Observaciones -->
                   {#if activo.observaciones}
                     <div class="pt-2 border-t border-gray-200 dark:border-gray-700">
                       <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Observaciones</p>
-                      <p class="text-sm text-gray-700 dark:text-gray-300 line-clamp-2">
-                        {activo.observaciones}
-                      </p>
+                      <VerMas texto={activo.observaciones} />
                     </div>
                   {/if}
                 </div>

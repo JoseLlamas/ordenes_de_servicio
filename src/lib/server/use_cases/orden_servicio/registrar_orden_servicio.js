@@ -59,26 +59,6 @@ export function createRegistrarOrdenServicioUseCase (usuario, authorize) {
         ordenServicioRelacionadoId: data.orderServicioRelacionadoId,
         creadoEn: creadoEn
       }, tx);
-      if (data.activos.length > 0) {
-        await registrarActivos(data.activos.map(activo => ({ ordenServicioId: folio, ...activo })), tx);
-      }
-      await registrarHistorialOrden({
-        ordenServicioId: folio,
-        tipo: 'CREACION',
-        descripcion: 'SE CREA UNA NUEVA ORDEN DE SERVICIO',
-        creadoEn: creadoEn,
-        datosAdicionales: {
-          creadoPor: {
-            id: usuario.id,
-            nombreUsuario: usuario.nombreUsuario,
-            empleado: {
-              nombre: usuario.empleado.nombre,
-              primerApellido: usuario.empleado.primerApellido,
-              segundoApellido: usuario.empleado.segundoApellido
-            }
-          }
-        }
-      }, tx);
       return folio;
     });
   };

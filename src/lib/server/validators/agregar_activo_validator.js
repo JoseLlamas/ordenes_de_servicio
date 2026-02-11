@@ -6,7 +6,7 @@ import { createValidator } from './validator';
  */
 
 const schema = Joi.object({
-  orderServicioId: Joi
+  ordenServicioId: Joi
     .number()
     .integer()
     .empty(['', null])

@@ -10,9 +10,9 @@ import { BusinessRuleException, BusinessRules, ForbiddenException } from '$lib/s
 export function createAgregarActivoUseCase (usuario, authorize) {
   /**
    * @param {number} ordenServicioId
-   * @param {Extract<Awaited<ReturnType<import('$lib/validators/registro_activo_validator')['validateRegistroActivo']>>, { values: any }>['values']} data
+   * @param {Omit<Extract<Awaited<ReturnType<import('$lib/server/validators')['validateRegistroActivo']>>, { values: any }>['values'], 'ordenServicioId'>} data
    */
-  return async (ordenServicioId, data) => {
+  return (ordenServicioId, data) => {
     return db.transaction(async tx => {
       const ordenServicio = await obtenerOrdenServicioParaAgregarActivo(ordenServicioId, tx);
       if (ordenServicio == null) {
@@ -31,7 +31,7 @@ export function createAgregarActivoUseCase (usuario, authorize) {
         );
       }
       await registrarActivos([{
-        ordenServicioId,
+        ordenServicioId: ordenServicio.id,
         ...data
       }], tx);
     });

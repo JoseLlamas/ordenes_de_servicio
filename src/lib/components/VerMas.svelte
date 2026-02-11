@@ -61,7 +61,7 @@
     bind:this={contenedorRef}
     class="
       text-gray-700 dark:text-gray-300 whitespace-pre-wrap leading-relaxed
-      overflow-hidden transition-all duration-300 ease-in-out
+      overflow-hidden transition-all duration-300 ease-in-out text-justify
       {expandido ? 'max-h-none' : ''}
     "
     style={!expandido && !maxCaracteres ? `

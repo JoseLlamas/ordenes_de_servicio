@@ -81,10 +81,6 @@ const schema = Joi.object({
       'any.required': 'La descripción es requerida',
       'string.max': 'La descripción no puede tener más de 2000 carácteres'
     }),
-  activos: Joi
-    .array()
-    .items(Joi.object())
-    .required(),
   ordenServicioRelacionadoId: Joi
     .number()
     .integer()
@@ -125,14 +121,6 @@ const schema = Joi.object({
  *  otroCategoriaOrden: string | null,
  *  prioridad: 'BAJA' | 'MEDIA' | 'ALTA' | 'CRITICA',
  *  descripcion: string,
- *  activos: {
- *    numeroInventario: string | null,
- *    numeroSerie: string | null,
- *    categoriaActivoId: number,
- *    marca: string | null,
- *    modelo: string | null,
- *    observaciones: string | null
- *  }[],
  *  orderServicioRelacionadoId: number | null,
  *  tipoEntrada: 'PRESENCIAL' | 'LLAMADA_TELEFONICA' | 'OFICIO' | 'INDICACION_SUPERIOR',
  *  numeroOficio: string | null
