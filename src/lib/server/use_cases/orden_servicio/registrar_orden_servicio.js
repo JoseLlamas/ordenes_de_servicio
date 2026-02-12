@@ -3,9 +3,7 @@ import {
   registrarOrdenServicio,
   obtenerFolioSiguiente,
   obtenerEmpleadoPorId,
-  obtenerEncargadoArea,
-  registrarActivos,
-  registrarHistorialOrden
+  obtenerEncargadoArea
 } from '$lib/server/db/queries';
 import { BusinessRuleException, BusinessRules, ForbiddenException } from '$lib/server/exceptions';
 import { Temporal } from 'temporal-polyfill/impl';
@@ -26,11 +24,11 @@ export function createRegistrarOrdenServicioUseCase (usuario, authorize) {
    * @throws {BusinessRuleException}
    * @throws {ForbiddenException}
    */
-  return async (data) => {
+  return (data) => {
     if (authorize.cannot('create', 'Orden', { areaId: data.areaParaAsignarId })) {
       throw new ForbiddenException('No tiene permiso o alcance para crear una orden de servicio');
     }
-    return await db.transaction(async tx => {
+    return db.transaction(async tx => {
       const anioActual = Temporal.Now.zonedDateTimeISO('America/Mexico_City').year;
       const folio = await obtenerFolioSiguiente(anioActual, data.areaParaAsignarId, tx);
       const empleadoSolicitante = await obtenerEmpleadoPorId(data.empleadoSolicitanteId, tx);

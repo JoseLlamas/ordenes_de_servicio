@@ -1,4 +1,4 @@
-import { asignarAgentes, obtenerOrdenServicioParaAsignarAgente, obtenerUsuariosParaAsignarAgentes } from '$lib/server/db/queries';
+import { asignarAgentes, obtenerOrdenServicioSimple, obtenerUsuariosParaAsignarAgentes } from '$lib/server/db/queries';
 import { db } from '$lib/server/db';
 import { BusinessRuleException, ForbiddenException, BusinessRules } from '$lib/server/exceptions';
 
@@ -12,9 +12,9 @@ export function createAsignarAgentesUseCase (usuario, authorize) {
    * @param {number} ordenServicioId
    * @param {number[]} agentesId
    */
-  return async (ordenServicioId, agentesId) => {
+  return (ordenServicioId, agentesId) => {
     return db.transaction(async (tx) => {
-      const ordenServicio = await obtenerOrdenServicioParaAsignarAgente(ordenServicioId, tx);
+      const ordenServicio = await obtenerOrdenServicioSimple(ordenServicioId, tx);
       if (ordenServicio == null) {
         throw new BusinessRuleException(
           'Orden no encontrada',

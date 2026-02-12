@@ -10,10 +10,12 @@ import { fail, redirect } from '@sveltejs/kit';
 import {
   validateAsignacionAgentes,
   validateDesasignacionAgente,
-  validateCambioEstado
+  validateCambioEstado,
+  validateRegistroActivo,
+  validateEliminacionActivo
 } from '$lib/server/validators';
-import { validateRegistroActivo } from '$lib/server/validators';
 import { createAgregarActivoUseCase } from '$lib/server/use_cases/orden_servicio';
+import { createEliminarActivoUseCase } from '$lib/server/use_cases/orden_servicio/eliminar_activo';
 
 /**
  *
@@ -163,6 +165,36 @@ export const actions = {
       if (exc instanceof ForbiddenException) {
         return fail(403, {
           errorAgregarActivo: exc.message
+        });
+      }
+      throw exc;
+    }
+  },
+
+  eliminarActivo: async ({ request, locals }) => {
+    assertAuthenticated(locals);
+    const data = Object.fromEntries(await request.formData());
+    const resultValidation = await validateEliminacionActivo(data);
+    if ('errors' in resultValidation) {
+      return fail(422, {
+        errorsEliminarActivo: resultValidation.errors
+      });
+    }
+    const eliminarActivo = createEliminarActivoUseCase(locals.usuario, locals.authorize);
+    try {
+      await eliminarActivo(resultValidation.values);
+      return {
+        messageEliminarActivo: 'Activo eliminado'
+      };
+    } catch (exc) {
+      if (exc instanceof BusinessRuleException) {
+        return fail(422, {
+          errorEliminarActivo: exc.message
+        });
+      }
+      if (exc instanceof ForbiddenException) {
+        return fail(403, {
+          errorEliminarActivo: exc.message
         });
       }
       throw exc;

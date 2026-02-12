@@ -12,7 +12,7 @@ export function createDesasignarAgenteUseCase (usuario, authorize) {
    * @param {number} ordenServicioId
    * @param {number} agenteId
    */
-  return async (ordenServicioId, agenteId) => {
+  return (ordenServicioId, agenteId) => {
     return db.transaction(async (tx) => {
       const ordenServicio = await obtenerOrdenServicioParaDesasignacion(ordenServicioId, tx);
       if (ordenServicio == null) {

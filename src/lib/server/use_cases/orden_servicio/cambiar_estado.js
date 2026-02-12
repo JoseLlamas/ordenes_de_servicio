@@ -29,7 +29,7 @@ export function createCambiarEstadoUseCase (usuario, authorize) {
    *  observacion: string | null
    * }} data
    */
-  return async (data) => {
+  return (data) => {
     return db.transaction(async (tx) => {
       const ordenServicio = await obtenerOrdenServicioParaCambiarEstado(data.ordenServicioId, tx);
       if (ordenServicio == null) {

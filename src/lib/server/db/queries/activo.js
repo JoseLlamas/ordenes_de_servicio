@@ -1,5 +1,6 @@
 import { activos } from './../schema';
 import { db } from '..';
+import { and, eq } from 'drizzle-orm';
 
 /**
  * @import { DbOrTx } from './types';
@@ -22,4 +23,20 @@ export async function registrarActivos (data, dbOrTx = db) {
     .values(data)
     .$returningId();
   return ids;
+}
+
+/**
+ *
+ * @param {{ ordenServicioId: number, activoId: number }} data
+ * @param {DbOrTx} [dbOrTx = db]
+ */
+export async function eliminarActivo (data, dbOrTx = db) {
+  await dbOrTx
+    .delete(activos)
+    .where(
+      and(
+        eq(activos.id, data.activoId),
+        eq(activos.ordenServicioId, data.ordenServicioId)
+      )
+    );
 }

@@ -12,3 +12,4 @@ export * from './desasignacion_agente_validator';
 export * from './filtros_paginador_ordenes_servicio_validator';
 export * from './cambio_estado_validator';
 export * from './agregar_activo_validator';
+export * from './eliminar_activo_validator';

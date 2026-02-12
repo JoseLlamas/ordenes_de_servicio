@@ -1,4 +1,4 @@
-import { obtenerOrdenServicioParaAgregarActivo, registrarActivos } from '$lib/server/db/queries';
+import { obtenerOrdenServicioSimple, registrarActivos } from '$lib/server/db/queries';
 import { db } from '$lib/server/db';
 import { BusinessRuleException, BusinessRules, ForbiddenException } from '$lib/server/exceptions';
 
@@ -14,7 +14,7 @@ export function createAgregarActivoUseCase (usuario, authorize) {
    */
   return (ordenServicioId, data) => {
     return db.transaction(async tx => {
-      const ordenServicio = await obtenerOrdenServicioParaAgregarActivo(ordenServicioId, tx);
+      const ordenServicio = await obtenerOrdenServicioSimple(ordenServicioId, tx);
       if (ordenServicio == null) {
         throw new BusinessRuleException(
           'Orden no encontrada',

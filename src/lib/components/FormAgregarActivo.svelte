@@ -2,37 +2,46 @@
   import { obtenerCategoriasActivoPorArea } from '$lib/api';
   import Input from './Input.svelte';
   import Select from './Select.svelte';
-  import Modal from './Modal.svelte';
   import ButtonAccept from './ButtonAccept.svelte';
   import ButtonCancel from './ButtonCancel.svelte';
-  import { validateRegistroActivo } from '$lib/validators';
   import LoaderLine from './LoaderLine.svelte';
-  import ErrorMessage from './ErrorMessage.svelte';
   import TextArea from './TextArea.svelte';
+  import ErrorMessage from './ErrorMessage.svelte';
+  import ErrorCard from './ErrorCard.svelte';
+    import InfoMessage from './InfoMessage.svelte';
 
   /**
-   * @import { CategoriaActivoDTO } from '$lib/types';
-   *
-   * @typedef {Extract<Awaited<ReturnType<typeof validateRegistroActivo>>, { errors: any}>['errors']} Errors
-   * @typedef {Extract<Awaited<ReturnType<typeof validateRegistroActivo>>, { values: any}>['values']} Activo
-   *
+  * @import { CategoriaActivoDTO } from '$lib/types';
+  *
+  * @typedef {{ [K in keyof ActivoParam]?: string } & { errorAgregarActivo?: string }} Errors
+  *
+  * @typedef {{
+  *   categoriaActivoId: number | null,
+  *   numeroInventario: string,
+  *   numeroSerie: string,
+  *   marca: string,
+  *   modelo: string,
+  *   observaciones: string
+  * }} ActivoParam
+  *
   */
 
   /**
    *  @type {{
-   *    areaId?: number,
-   *    clicInAdd: (activo: Activo) => void
+   *    areaId: number,
+   *    onAgregar: (activo: ActivoParam) => void,
+   *    onCancel?: () => void,
+   *    errors?: Errors,
+   *    message?: string
    * }}
-   */
+  */
   let {
     areaId,
-    clicInAdd
+    onAgregar,
+    onCancel,
+    errors,
+    message
   } = $props();
-
-  /**
-   * @type {Errors | null}
-   */
-  let errors = $state(null);
 
   /**
    * @type {CategoriaActivoDTO | null}
@@ -49,157 +58,159 @@
 
   let observaciones = $state('');
 
-  /**
-   * @type {Modal | undefined}
-   */
-  let modal = $state();
-
-  let working = $state(false);
+  let fetching = $state(false);
 
   /**
    * @type {Awaited<ReturnType<typeof obtenerCategoriasActivoPorArea>>}
    */
   let categoriasActivo = $state([]);
 
-  export async function open () {
-    modal?.open();
-    working = true;
-    if (typeof areaId !== 'undefined') {
-      categoriasActivo = await obtenerCategoriasActivoPorArea(areaId);
-    } else {
-      categoriasActivo = [];
-    }
-    working = false;
-  }
-
-  function limpiarCampos () {
+  export function limpiarCampos () {
     numeroInventario = '';
     numeroSerie = '';
     categoriaActivo = null;
     marca = '';
     modelo = '';
     observaciones = '';
-    errors = null;
   }
 
-  async function addActivo () {
-    working = true;
-    const validationResult = await validateRegistroActivo({
-      numeroInventario,
-      numeroSerie,
-      categoriaActivo: categoriaActivo !== null
-        ? { id: categoriaActivo.id, descripcion: categoriaActivo.descripcion }
-        : null,
-      marca,
-      modelo,
-      observaciones
+  function clicInAceptar () {
+    onAgregar?.({
+      categoriaActivoId: categoriaActivo != null ? categoriaActivo.id : null,
+      numeroInventario: numeroInventario,
+      numeroSerie: numeroSerie,
+      modelo: modelo,
+      marca: marca,
+      observaciones: observaciones
     });
-    if ('errors' in validationResult) {
-      errors = validationResult.errors;
-      working = false;
-      return;
-    }
-    clicInAdd(validationResult.values);
-    limpiarCampos();
-    working = false;
   }
+
+  $effect(() => {
+    fetching = true;
+    obtenerCategoriasActivoPorArea(areaId)
+      .then((data) => {
+        categoriasActivo = data;
+      })
+      .finally(() => {
+        fetching = false;
+      });
+  });
 </script>
 
-<Modal
-  {working}
-  bind:this={modal}
-  title="Agregar Activo"
-  onclose={() => limpiarCampos()}
->
-  <div class="mt-5 grid grid-cols-1 gap-x-6 gap-y-4 lg:grid-cols-4 mb-5">
-    {#if working}
-      <div class="lg:col-span-4">
-        <LoaderLine />
-      </div>
+{#if errors?.errorAgregarActivo}
+  <ErrorCard>
+    {errors.errorAgregarActivo}
+  </ErrorCard>
+{/if}
+
+{#if message}
+  <InfoMessage>
+    {message}
+  </InfoMessage>
+{/if}
+
+<div class="mt-5 grid grid-cols-1 gap-x-6 gap-y-4 lg:grid-cols-4 mb-5">
+  {#if fetching}
+    <div class="lg:col-span-4">
+      <LoaderLine />
+    </div>
+  {/if}
+  <div class="lg:col-span-2">
+    <Input
+      bind:value={numeroInventario}
+      label="Número de inventario"
+      id="numeroInventario"
+    />
+    {#if errors?.numeroInventario}
+      <ErrorMessage>
+        {errors.numeroInventario}
+      </ErrorMessage>
     {/if}
-    <div class="lg:col-span-2">
-      <Input
-        bind:value={numeroInventario}
-        label="Número de inventario"
-        id="numeroInventario"
-      />
-      {#if errors?.numeroInventario}
-        <ErrorMessage>{errors.numeroInventario}</ErrorMessage>
-      {/if}
-    </div>
-    <div class="lg:col-span-2">
-      <Input
-        bind:value={numeroSerie}
-        label="Número de serie"
-        id="numeroSerie"
-      />
-      {#if errors?.numeroSerie}
-        <ErrorMessage>{errors.numeroSerie}</ErrorMessage>
-      {/if}
-    </div>
-    <div class="lg:col-span-2">
-      <Select
-        id="categoriaActivo"
-        label="Categoria"
-        bind:value={categoriaActivo}
-        required
-      >
-        {#each categoriasActivo as categoriaActivo(categoriaActivo.id)}
-          <option value={categoriaActivo}>{categoriaActivo.descripcion}</option>
-        {/each}
-      </Select>
-      {#if errors?.categoriaActivo}
-        <ErrorMessage>{errors.categoriaActivo}</ErrorMessage>
-      {/if}
-    </div>
-    <div class="lg:col-span-2">
-      <Input
-        bind:value={marca}
-        label="marca"
-        id="marca"
-      />
-      {#if errors?.marca}
-        <ErrorMessage>{errors.marca}</ErrorMessage>
-      {/if}
-    </div>
-    <div class="lg:col-span-4">
-      <Input
-        bind:value={modelo}
-        label="modelo"
-        id="modelo"
-      />
-      {#if errors?.modelo}
-        <ErrorMessage>{errors.modelo}</ErrorMessage>
-      {/if}
-    </div>
-    <div class="lg:col-span-4">
-      <TextArea
-        bind:value={observaciones}
-        label="observaciones"
-        id="observaciones"
-        class="uppercase"
-      />
-      {#if errors?.observaciones}
-        <ErrorMessage>{errors.observaciones}</ErrorMessage>
-      {/if}
-    </div>
   </div>
-  <hr />
-  <div class="flex justify-end gap-2 mt-5">
-    <ButtonCancel
-      disabled={working}
-      onclick={() => {
-        modal?.close();
-      }}
-    >
-      Cerrar
-    </ButtonCancel>
-    <ButtonAccept
-      onclick={() => void addActivo()}
-      type="button"
-      disabled={working}
-    >
-      Agregar Activo
-    </ButtonAccept>
+  <div class="lg:col-span-2">
+    <Input
+      bind:value={numeroSerie}
+      label="Número de serie"
+      id="numeroSerie"
+    />
+    {#if errors?.numeroSerie}
+      <ErrorMessage>
+        {errors.numeroSerie}
+      </ErrorMessage>
+    {/if}
   </div>
-</Modal>
+  <div class="lg:col-span-2">
+    <Select
+      id="categoriaActivo"
+      label="Categoria"
+      bind:value={categoriaActivo}
+      required
+    >
+      {#each categoriasActivo as categoriaActivo(categoriaActivo.id)}
+        <option value={categoriaActivo}>{categoriaActivo.descripcion}</option>
+      {/each}
+    </Select>
+    {#if errors?.categoriaActivoId}
+      <ErrorMessage>
+        {errors.categoriaActivoId}
+      </ErrorMessage>
+    {/if}
+  </div>
+  <div class="lg:col-span-2">
+    <Input
+      bind:value={marca}
+      label="marca"
+      id="marca"
+    />
+    {#if errors?.marca}
+      <ErrorMessage>
+        {errors.marca}
+      </ErrorMessage>
+    {/if}
+  </div>
+  <div class="lg:col-span-4">
+    <Input
+      bind:value={modelo}
+      label="modelo"
+      id="modelo"
+    />
+    {#if errors?.modelo}
+      <ErrorMessage>
+        {errors.modelo}
+      </ErrorMessage>
+    {/if}
+  </div>
+  <div class="lg:col-span-4">
+    <TextArea
+      bind:value={observaciones}
+      label="observaciones"
+      id="observaciones"
+      class="uppercase"
+    />
+    {#if errors?.observaciones}
+      <ErrorMessage>
+        {errors.observaciones}
+      </ErrorMessage>
+    {/if}
+  </div>
+</div>
+<hr />
+<div class="flex justify-end gap-2 mt-5">
+  <ButtonCancel
+    disabled={fetching}
+    onclick={() => {
+      onCancel?.();
+    }}
+  >
+    Cerrar
+  </ButtonCancel>
+  <ButtonAccept
+    type="button"
+    disabled={fetching}
+    onclick={() => {
+      clicInAceptar();
+    }}
+  >
+    Agregar Activo
+  </ButtonAccept>
+</div>

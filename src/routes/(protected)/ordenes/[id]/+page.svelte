@@ -22,7 +22,9 @@
   import Paginador from '$lib/components/Paginador.svelte';
   import logo from '$lib/assets/logo.png';
   import VerMas from '$lib/components/VerMas.svelte';
-  import FormAgregarActivo2 from '$lib/components/FormAgregarActivo2.svelte';
+  import FormAgregarActivo from '$lib/components/FormAgregarActivo.svelte';
+    import Input from '$lib/components/Input.svelte';
+    import Select from '$lib/components/Select.svelte';
 
   let { data, form } = $props();
 
@@ -125,7 +127,7 @@
   /*--------------- agregar activo ----------------*/
 
   /**
-  * @type {FormAgregarActivo2 | undefined}
+  * @type {FormAgregarActivo | undefined}
   */
   let formAgregarActivo = $state();
 
@@ -160,7 +162,29 @@
 
   /*---------------agregar activo------------------*/
 
-  let showLoadingScreen = $derived(submittingNuevoEstado || submittingAgregarActivo || submittingAsignacion);
+  /* --------------Eliminando activo ------------ */
+
+  /**
+   * @type {number | null}
+  */
+  let activoEliminandoId = $state(null);
+
+  /*----------------eliminando activo ----------- */
+
+  /*---------------modificar------------------------*/
+
+  /**
+   * @type {Modal | undefined}
+  */
+  let modalModificarOrden = $state();
+
+  /*--------------modificar-----------------------*/
+
+  let showLoadingScreen = $derived(submittingNuevoEstado
+    || submittingAgregarActivo
+    || submittingAsignacion
+    || activoEliminandoId != null
+    || agenteRemoviendoId != null);
 
 </script>
 
@@ -220,7 +244,7 @@
   title="Agregar nuevo activo"
   bind:this={modalAgregarActivo}
 >
-  <FormAgregarActivo2
+  <FormAgregarActivo
     areaId={ordenServicio.areaAsignada.id}
     onCancel={() => {
       modalAgregarActivo?.close();
@@ -247,10 +271,89 @@
           formAgregarActivo?.limpiarCampos();
           activoParaAgregar = null;
         }
-        submittingAgregarActivo = true;
+        submittingAgregarActivo = false;
       };
     }}
   ></form>
+</Modal>
+
+<Modal
+  bind:this={modalModificarOrden}
+  title="Modificar orden"
+>
+  <div class="mt-2 grid grid-cols-1 gap-x-4 gap-y-2 lg:grid-cols-8">
+    <div class="lg:col-span-4">
+      <Input
+        label="Teléfono"
+        name="telefonoSolicitante"
+        id="telefono"
+        value={ordenServicio.telefonoSolicitante}
+        required
+      />
+    </div>
+    <div class="lg:col-span-4">
+      <Select
+        name="tipoEntrada"
+        value={ordenServicio.tipoEntrada}
+        label="Entrada"
+        id="entrada"
+        required
+      >
+        <option value="PRESENCIAL">Presencial</option>
+        <option value="LLAMADA_TELEFONICA">Llamada telefónica</option>
+        <option value="OFICIO">Oficio</option>
+        <option value="INDICACION_SUPERIOR">Indicación superior</option>
+      </Select>
+    </div>
+    <div class="lg:col-span-4">
+      <Input
+        label="Número oficio"
+        name="numeroOficio"
+        class="uppercase"
+        id="numeroOficio"
+        value={ordenServicio.numeroOficio ?? ''}
+      />
+    </div>
+    <div class="lg:col-span-4">
+      <Select
+        label="Categoría"
+        id="categoria"
+        required
+      >
+      </Select>
+    </div>
+    <div class="lg:col-span-4">
+      <Input
+        label="Otro"
+        id="otroCategoriaOrden"
+        class="uppercase"
+        value={ordenServicio.otroCategoriaOrden ?? ''}
+      />
+    </div>
+    <div class="lg:col-span-4">
+      <Select
+        label="Prioridad"
+        id="prioridad"
+        value={ordenServicio.prioridad}
+        required
+      >
+        <option value="BAJA">Baja</option>
+        <option value="MEDIA">Media</option>
+        <option value="ALTA">Alta</option>
+        <option value="CRITICA">Crítica</option>
+      </Select>
+    </div>
+    <div class="lg:col-span-8">
+      <TextArea
+        name="descripcion"
+        id="descripcion"
+        label="Descripción del reporte"
+        class="uppercase"
+        value={ordenServicio.descripcion}
+        required
+      />
+    </div>
+  </div>
 </Modal>
 
 <!-- Header -->
@@ -287,7 +390,9 @@
 
     <div class="flex flex-wrap gap-2">
 
-      <button class="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors flex items-center gap-2">
+      <button
+        onclick={() => modalModificarOrden?.open()}
+        class="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors flex items-center gap-2">
         Editar
       </button>
 
@@ -485,6 +590,7 @@
                         <form
                           method="POST"
                           action="?/desasignarAgente"
+                          use:confirmBeforeEnhance={{ confirm: () => confirmModal?.confirm({ texto: '¿Desea desasignar a este agente?' }) ?? Promise.resolve(false) }}
                           use:enhance={() => {
                             agenteRemoviendoId = agente.id;
                             return async ({ update }) => {
@@ -678,6 +784,16 @@
     {:else if tabActual === 'activos'}
       <!-- ==================== TAB ACTIVOS ==================== -->
       <div>
+        {#if form?.errorEliminarActivo}
+          <ErrorMessage>
+            {form.errorEliminarActivo}
+          </ErrorMessage>
+        {/if}
+        {#if form?.messageEliminarActivo}
+          <InfoMessage>
+            {form.messageEliminarActivo}
+          </InfoMessage>
+        {/if}
         {#if ordenServicio.activos && ordenServicio.activos.length > 0}
           <div class="mb-4 flex items-center justify-between">
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
@@ -695,25 +811,43 @@
             {#each ordenServicio.activos as activo(activo.id)}
               <div class="group bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 p-4 hover:shadow-lg transition-all relative">
 
-                <!-- Botón eliminar (solo aparece en hover) -->
-                <button
-                  type="button"
-                  aria-label="Eliminar activo {activo.numeroInventario}"
-                  class="
-                    absolute top-3 right-3 p-1.5 rounded-lg transition-all opacity-0 group-hover:opacity-100
-                    text-gray-400 dark:text-gray-500
-                    hover:text-red-600 dark:hover:text-red-400
-                    hover:bg-red-50 dark:hover:bg-red-950/30
-                  "
+                <form
+                  method="POST"
+                  action="?/eliminarActivo"
+                  use:confirmBeforeEnhance={{ confirm: () => confirmModal?.confirm({ texto: '¿Desea eliminar el activo?' }) ?? Promise.resolve(false) }}
+                  use:enhance={() => {
+                    activoEliminandoId = activo.id;
+                    return async ({ update }) => {
+                      await update();
+                      activoEliminandoId = null;
+                    };
+                  }}
                 >
-                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="3 6 5 6 21 6"></polyline>
-                    <path d="M19 6l-2 14H7L5 6"></path>
-                    <path d="M10 11v6"></path>
-                    <path d="M14 11v6"></path>
-                    <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path>
-                  </svg>
-                </button>
+                  <input type="hidden" name="activoId" value={activo.id} />
+                  <input type="hidden" name="ordenServicioId" value={ordenServicio.id} />
+                  <button
+                    type="submit"
+                    aria-label="Eliminar activo {activo.numeroInventario}"
+                    disabled={activoEliminandoId === activo.id}
+                    class="
+                      absolute top-3 right-3 p-1.5 rounded-lg transition-all opacity-0 group-hover:opacity-100
+                      text-gray-400 dark:text-gray-500
+                      hover:text-red-600 dark:hover:text-red-400
+                      hover:bg-red-50 dark:hover:bg-red-950/30
+                    "
+                  >
+                    {#if activoEliminandoId === activo.id}
+                      <svg class="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                    {:else}
+                      <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                      </svg>
+                    {/if}
+                  </button>
+                </form>
 
                 <div class="space-y-3 pr-6">
                   <!-- Inventario -->
