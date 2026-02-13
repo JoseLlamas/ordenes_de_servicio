@@ -6,21 +6,13 @@ import { createValidator } from '$lib/server/validators/validator';
  */
 
 const schema = Joi.object({
-  areaParaAsignarId: Joi
+  ordenServicioId: Joi
     .number()
     .integer()
     .empty(['', null])
     .required()
     .messages({
-      'any.required': 'El area para asignar es requerido'
-    }),
-  empleadoSolicitanteId: Joi
-    .number()
-    .integer()
-    .empty([null, ''])
-    .required()
-    .messages({
-      'any.required': 'El empleado que solicita es requerido'
+      'any.required': 'El orden de servicio es requerido'
     }),
   telefonoSolicitante: Joi
     .string()
@@ -82,12 +74,6 @@ const schema = Joi.object({
       'any.required': 'La descripción es requerida',
       'string.max': 'La descripción no puede tener más de 2000 carácteres'
     }),
-  ordenServicioRelacionadoId: Joi
-    .number()
-    .integer()
-    .empty(['', null])
-    .default(null)
-    .optional(),
   tipoEntrada: Joi
     .string()
     .empty(['', null])
@@ -116,16 +102,14 @@ const schema = Joi.object({
 
 /**
  * @type {Validator<{
- *  areaParaAsignarId: number
- *  empleadoSolicitanteId: number,
+ *  ordenServicioId: number,
  *  telefonoSolicitante: string,
  *  categoriaOrdenId: number,
  *  otroCategoriaOrden: string | null,
  *  prioridad: 'BAJA' | 'MEDIA' | 'ALTA' | 'CRITICA',
  *  descripcion: string,
- *  orderServicioRelacionadoId: number | null,
  *  tipoEntrada: 'PRESENCIAL' | 'LLAMADA_TELEFONICA' | 'OFICIO' | 'INDICACION_SUPERIOR',
  *  numeroOficio: string | null
  * }>}
  */
-export const validateRegistroOrdenServicio = createValidator(schema);
+export const validateModificacionOrdenServicio = createValidator(schema);

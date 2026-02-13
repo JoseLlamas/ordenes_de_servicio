@@ -4,6 +4,7 @@ import {
   createAsignarAgentesUseCase,
   createCambiarEstadoUseCase,
   createDesasignarAgenteUseCase,
+  createModificarOrdenServicioUseCase,
   createObtenerDetalleOrdenServicioUseCase
 } from '$lib/server/use_cases/orden_servicio';
 import { fail, redirect } from '@sveltejs/kit';
@@ -12,10 +13,12 @@ import {
   validateDesasignacionAgente,
   validateCambioEstado,
   validateRegistroActivo,
-  validateEliminacionActivo
+  validateEliminacionActivo,
+  validateModificacionOrdenServicio
 } from '$lib/server/validators';
 import { createAgregarActivoUseCase } from '$lib/server/use_cases/orden_servicio';
 import { createEliminarActivoUseCase } from '$lib/server/use_cases/orden_servicio/eliminar_activo';
+import { obtenerCategoriasOrdenPorArea } from '$lib/server/db/queries';
 
 /**
  *
@@ -33,8 +36,10 @@ export async function load ({ params, locals }) {
   try {
     const obtenerOrdenServicioDetalle = createObtenerDetalleOrdenServicioUseCase(locals.usuario, locals.authorize);
     const ordenServicio = await obtenerOrdenServicioDetalle(ordenServicioId);
+    const categoriasOrden = await obtenerCategoriasOrdenPorArea(ordenServicio.areaAsignada.id);
     return {
-      ordenServicio
+      ordenServicio,
+      categoriasOrden
     };
   } catch (exc) {
     if (exc instanceof BusinessRuleException) {
@@ -195,6 +200,37 @@ export const actions = {
       if (exc instanceof ForbiddenException) {
         return fail(403, {
           errorEliminarActivo: exc.message
+        });
+      }
+      throw exc;
+    }
+  },
+
+  modificarOrden: async ({ request, locals }) => {
+    assertAuthenticated(locals);
+    const form = await request.formData();
+    const resultValidation = await validateModificacionOrdenServicio(JSON.parse(/** @type {string} */(form.get('data'))));
+    if ('errors' in resultValidation) {
+      return fail(422, {
+        errorsModificacionOrden: resultValidation.errors
+      });
+    }
+    const modificarOrdenServicio = createModificarOrdenServicioUseCase(locals.usuario, locals.authorize);
+    try {
+      const { ordenServicioId, ...values } = resultValidation.values;
+      await modificarOrdenServicio(ordenServicioId, values);
+      return {
+        messageModificacionOrden: 'Orden de servicio modificada con exito'
+      };
+    } catch (exc) {
+      if (exc instanceof BusinessRuleException) {
+        return fail(422, {
+          errorModificacionOrden: exc.message
+        });
+      }
+      if (exc instanceof ForbiddenException) {
+        return fail(403, {
+          errorModificacionOrden: exc.message
         });
       }
       throw exc;

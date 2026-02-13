@@ -467,7 +467,14 @@ export async function desasignarAgente (ordenServicioId, agenteId, dbOrTx = db) 
  *  cerradoPorId?: number,
  *  canceladoEn?: Date,
  *  canceladoPorId?: number,
- *  ordenServicioRelacionadoId?: number
+ *  ordenServicioRelacionadoId?: number,
+ *  telefonoSolicitante?: string,
+ *  categoriaOrdenId?: number,
+ *  otroCategoriaOrden?: string | null,
+ *  descripcion?: string,
+ *  numeroOficio?: string | null,
+ *  prioridad?: 'BAJA' | 'MEDIA' | 'ALTA' | 'CRITICA',
+ *  tipoEntrada?: 'PRESENCIAL' | 'LLAMADA_TELEFONICA' | 'OFICIO' | 'INDICACION_SUPERIOR'
  * }} data
  * @param {DbOrTx} [dbOrTx = db]
  */

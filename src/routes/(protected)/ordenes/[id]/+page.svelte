@@ -23,8 +23,8 @@
   import logo from '$lib/assets/logo.png';
   import VerMas from '$lib/components/VerMas.svelte';
   import FormAgregarActivo from '$lib/components/FormAgregarActivo.svelte';
-    import Input from '$lib/components/Input.svelte';
-    import Select from '$lib/components/Select.svelte';
+  import Input from '$lib/components/Input.svelte';
+  import Select from '$lib/components/Select.svelte';
 
   let { data, form } = $props();
 
@@ -178,11 +178,39 @@
   */
   let modalModificarOrden = $state();
 
+  let submittingModificacion = $state(false);
+
+  let datosNuevosModificacion = $state(inicializarFormulacionModificacion());
+
+  /**
+   * @return {{
+   *  telefonoSolicitante: string,
+   *  tipoEntrada: string | null,
+   *  numeroOficio: string,
+   *  categoriaOrdenId: number | null,
+   *  otroCategoriaOrden: string,
+   *  prioridad: string | null,
+   *  descripcion: string
+   * }}
+  */
+  function inicializarFormulacionModificacion () {
+    return {
+      telefonoSolicitante: ordenServicio.telefonoSolicitante,
+      tipoEntrada: ordenServicio.tipoEntrada,
+      numeroOficio: ordenServicio.numeroOficio ?? '',
+      categoriaOrdenId: ordenServicio.categoriaOrden.id,
+      otroCategoriaOrden: ordenServicio.otroCategoriaOrden ?? '',
+      prioridad: ordenServicio.prioridad,
+      descripcion: ordenServicio.descripcion
+    };
+  }
+
   /*--------------modificar-----------------------*/
 
   let showLoadingScreen = $derived(submittingNuevoEstado
     || submittingAgregarActivo
     || submittingAsignacion
+    || submittingModificacion
     || activoEliminandoId != null
     || agenteRemoviendoId != null);
 
@@ -281,22 +309,27 @@
   bind:this={modalModificarOrden}
   title="Modificar orden"
 >
-  <div class="mt-2 grid grid-cols-1 gap-x-4 gap-y-2 lg:grid-cols-8">
-    <div class="lg:col-span-4">
+  {#if form?.messageModificacionOrden}
+    <InfoMessage>{form.messageModificacionOrden}</InfoMessage>
+  {/if}
+  <div class="mt-2 grid grid-cols-1 gap-x-4 gap-y-2 lg:grid-cols-2">
+    <div>
       <Input
         label="Teléfono"
-        name="telefonoSolicitante"
-        id="telefono"
-        value={ordenServicio.telefonoSolicitante}
+        id="telefonoSolicitante"
+        bind:value={datosNuevosModificacion.telefonoSolicitante}
         required
       />
+      {#if form?.errorsModificacionOrden?.telefonoSolicitante}
+        <ErrorMessage>{form.errorsModificacionOrden.telefonoSolicitante}</ErrorMessage>
+      {/if}
     </div>
-    <div class="lg:col-span-4">
+
+    <div>
       <Select
-        name="tipoEntrada"
-        value={ordenServicio.tipoEntrada}
-        label="Entrada"
-        id="entrada"
+        bind:value={datosNuevosModificacion.tipoEntrada}
+        label="Tipo Entrada"
+        id="tipoEntrada"
         required
       >
         <option value="PRESENCIAL">Presencial</option>
@@ -304,37 +337,52 @@
         <option value="OFICIO">Oficio</option>
         <option value="INDICACION_SUPERIOR">Indicación superior</option>
       </Select>
+      {#if form?.errorsModificacionOrden?.tipoEntrada}
+        <ErrorMessage>{form.errorsModificacionOrden.tipoEntrada}</ErrorMessage>
+      {/if}
     </div>
-    <div class="lg:col-span-4">
+    <div>
       <Input
         label="Número oficio"
-        name="numeroOficio"
         class="uppercase"
         id="numeroOficio"
-        value={ordenServicio.numeroOficio ?? ''}
+        bind:value={datosNuevosModificacion.numeroOficio}
       />
+      {#if form?.errorsModificacionOrden?.numeroOficio}
+        <ErrorMessage>{form.errorsModificacionOrden.numeroOficio}</ErrorMessage>
+      {/if}
     </div>
-    <div class="lg:col-span-4">
+    <div>
       <Select
         label="Categoría"
-        id="categoria"
+        id="categoriaOrdenId"
+        bind:value={datosNuevosModificacion.categoriaOrdenId}
         required
       >
+        {#each data.categoriasOrden as categoriaOrden(categoriaOrden.id)}
+          <option value={categoriaOrden.id}>{categoriaOrden.descripcion}</option>
+        {/each}
       </Select>
+      {#if form?.errorsModificacionOrden?.categoriaOrdenId}
+        <ErrorMessage>{form.errorsModificacionOrden.categoriaOrdenId}</ErrorMessage>
+      {/if}
     </div>
-    <div class="lg:col-span-4">
+    <div>
       <Input
         label="Otro"
         id="otroCategoriaOrden"
         class="uppercase"
-        value={ordenServicio.otroCategoriaOrden ?? ''}
+        bind:value={datosNuevosModificacion.otroCategoriaOrden}
       />
+      {#if form?.errorsModificacionOrden?.otroCategoriaOrden}
+        <ErrorMessage>{form.errorsModificacionOrden.otroCategoriaOrden}</ErrorMessage>
+      {/if}
     </div>
-    <div class="lg:col-span-4">
+    <div>
       <Select
         label="Prioridad"
         id="prioridad"
-        value={ordenServicio.prioridad}
+        bind:value={datosNuevosModificacion.prioridad}
         required
       >
         <option value="BAJA">Baja</option>
@@ -342,18 +390,63 @@
         <option value="ALTA">Alta</option>
         <option value="CRITICA">Crítica</option>
       </Select>
+      {#if form?.errorsModificacionOrden?.prioridad}
+        <ErrorMessage>{form.errorsModificacionOrden.prioridad}</ErrorMessage>
+      {/if}
     </div>
-    <div class="lg:col-span-8">
+    <div class="lg:col-span-2">
       <TextArea
         name="descripcion"
         id="descripcion"
         label="Descripción del reporte"
         class="uppercase"
-        value={ordenServicio.descripcion}
+        bind:value={datosNuevosModificacion.descripcion}
         required
       />
+      {#if form?.errorsModificacionOrden?.descripcion}
+        <ErrorMessage>{form.errorsModificacionOrden.descripcion}</ErrorMessage>
+      {/if}
+    </div>
+    <div class="lg:col-span-2">
+      <form
+        method="POST"
+        action="?/modificarOrden"
+        use:confirmBeforeEnhance={{ confirm: () => confirmModal?.confirm({ texto: '¿Desea modificar esta orden de servicio?' }) ?? Promise.resolve(true) }}
+        use:enhance={({ formData }) => {
+          submittingModificacion = true;
+          const categoriaOrden = data.categoriasOrden.find(categoriaOrden => categoriaOrden.id === datosNuevosModificacion.categoriaOrdenId);
+          formData.set('data', JSON.stringify({
+            ordenServicioId: ordenServicio.id,
+            telefonoSolicitante: datosNuevosModificacion.telefonoSolicitante,
+            tipoEntrada: datosNuevosModificacion.tipoEntrada,
+            numeroOficio: datosNuevosModificacion.numeroOficio,
+            categoriaOrdenId: datosNuevosModificacion.categoriaOrdenId,
+            otroCategoriaOrden: datosNuevosModificacion.otroCategoriaOrden,
+            prioridad: datosNuevosModificacion.prioridad,
+            descripcion: datosNuevosModificacion.descripcion,
+            categoriaOrdenText: categoriaOrden?.descripcion ?? ''
+          }));
+          return async ({ update, result }) => {
+            await update();
+            console.log(result.status);
+            if (result.status === 200) {
+              console.log(inicializarFormulacionModificacion());
+              datosNuevosModificacion = inicializarFormulacionModificacion();
+            }
+            submittingModificacion = false;
+          };
+        }}
+      >
+        <ButtonAccept
+          type="submit"
+          class="w-full"
+        >
+          Modificar OS
+        </ButtonAccept>
+      </form>
     </div>
   </div>
+
 </Modal>
 
 <!-- Header -->
