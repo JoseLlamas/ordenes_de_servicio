@@ -5,8 +5,8 @@
   import ButtonAccept from './ButtonAccept.svelte';
   import ButtonCancel from './ButtonCancel.svelte';
   import ButtonSubmitting from './ButtonSubmitting.svelte';
-    import ErrorMessage from './ErrorMessage.svelte';
-    import InfoMessage from './InfoMessage.svelte';
+  import ErrorMessage from './ErrorMessage.svelte';
+  import InfoMessage from './InfoMessage.svelte';
   import Input from './Input.svelte';
   import Paginador from './Paginador.svelte';
 

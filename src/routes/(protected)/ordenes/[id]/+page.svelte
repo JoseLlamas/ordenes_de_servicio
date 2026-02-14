@@ -312,6 +312,9 @@
   {#if form?.messageModificacionOrden}
     <InfoMessage>{form.messageModificacionOrden}</InfoMessage>
   {/if}
+  {#if form?.errorModificacionOrden}
+    <ErrorMessage>{form.errorModificacionOrden}</ErrorMessage>
+  {/if}
   <div class="mt-2 grid grid-cols-1 gap-x-4 gap-y-2 lg:grid-cols-2">
     <div>
       <Input
@@ -428,9 +431,7 @@
           }));
           return async ({ update, result }) => {
             await update();
-            console.log(result.status);
             if (result.status === 200) {
-              console.log(inicializarFormulacionModificacion());
               datosNuevosModificacion = inicializarFormulacionModificacion();
             }
             submittingModificacion = false;
@@ -770,7 +771,7 @@
                       Tipo de Entrada
                     </dt>
                     <dd class="text-sm text-gray-900 dark:text-white mt-1">
-                      {ordenServicio.tipoEntrada}
+                      {ordenServicio.tipoEntrada.replace('_', ' ')}
                     </dd>
                   </div>
 
@@ -794,7 +795,7 @@
                     </dd>
                   </div>
 
-                  {#if ordenServicio.otroCategoriaOrden}
+                  {#if ordenServicio.otroCategoriaOrden != null}
                     <div>
                       <dt class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
                         Otra Categoría

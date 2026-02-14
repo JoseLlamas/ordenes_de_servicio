@@ -280,7 +280,7 @@ export async function obtenerInvitacion (token, dbOrTx = db) {
   if (invitacion) {
     return {
       ...invitacion,
-      areasAccesoId: invitacion.areasAccesoId !== null ? JSON.parse(invitacion.areasAccesoId) : null
+      areasAccesoId: invitacion.areasAccesoId != null ? JSON.parse(invitacion.areasAccesoId) : null
     };
   }
   return null;
@@ -330,36 +330,46 @@ export async function existeNombreUsuario (nombreUsuario, dbOrTx = db) {
 }
 
 /**
- * @param {number} areaId
- * @param {{ nombre?: string }} [filters = {}]
+ * @param {{ nombre?: string, areasId?: number[] }} [filters = {}]
  * @param {DbOrTx} [dbOrTx = db]
  * @return {Promise<UsuarioResumenDTO[]>}
  */
-export async function obtenerAgentes (areaId, filters = {}, dbOrTx = db) {
-  const subquery = dbOrTx
+export async function obtenerAgentes (filters = {}, dbOrTx = db) {
+  const params = [
+    eq(roles.nombre, 'Agente'),
+    eq(usuarios.activo, true),
+    isNotNull(usuarios.areasAccesoId)
+  ];
+  if (filters.nombre != null) {
+    params.push(like(empleados.nombre, `%${filters.nombre}%`));
+  }
+  if (filters.areasId != null && filters.areasId.length > 0) {
+    params.push(sql`JSON_CONTAINS(${usuarios.areasAccesoId}, ${JSON.stringify(filters.areasId)}, '$')`);
+  }
+  const query = dbOrTx
     .select({
-      id: usuarios.id
+      id: usuarios.id,
+      nombreUsuario: usuarios.nombreUsuario,
+      activo: usuarios.activo,
+      avatar: usuarios.avatar,
+      areasAccesoId: usuarios.areasAccesoId,
+      'empleado.id': empleados.id,
+      'empleado.nombre': empleados.nombre,
+      'empleado.primerApellido': empleados.primerApellido,
+      'empleado.segundoApellido': empleados.segundoApellido,
+      'empleado.cargo': empleados.cargo,
+      'empleado.area.id': areas.id,
+      'empleado.area.nombre': areas.nombre,
+      'rol.id': roles.id,
+      'rol.nombre': roles.nombre
     })
     .from(usuarios)
+    .innerJoin(empleados, eq(usuarios.empleadoId, empleados.id))
+    .innerJoin(areas, eq(empleados.areaId, areas.id))
     .innerJoin(roles, eq(usuarios.rolId, roles.id))
-    .where(
-      and(
-        eq(roles.nombre, 'Agente'),
-        eq(usuarios.activo, true),
-        isNotNull(usuarios.areasAccesoId),
-        sql`JSON_CONTAINS(${usuarios.areasAccesoId}, ${JSON.stringify(areaId)}, '$')`
-      )
-    )
-    .orderBy(usuarios.id)
-    .as('usuarios_con_permisos');
-  const rows = await createQueryParaUsuarioResumen(dbOrTx)
-    .where(
-      and(
-        sql`${usuarios.id} in (select id from ${subquery})`,
-        typeof filters.nombre !== 'undefined' ? like(empleados.nombre, `%${filters.nombre}%`) : undefined
-      )
-    )
+    .where(and(...params))
     .orderBy(asc(empleados.nombre), asc(empleados.primerApellido));
+  const rows = await query;
   return rows.map(row => ({
     id: row.id,
     nombreUsuario: row.nombreUsuario,

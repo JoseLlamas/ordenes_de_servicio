@@ -386,8 +386,7 @@
 
 <form
   method="POST"
-  class="hidden"
-  use:confirmBeforeEnhance={{ confirm: () => confirmModal?.confirm({}) ?? Promise.resolve(false) }}
+  use:confirmBeforeEnhance={{ confirm: () => confirmModal?.confirm({ texto: '¿Desea registrar una nueva orden de servicio?' }) ?? Promise.resolve(false) }}
   use:enhance={async ({ formData }) => {
     submitting = true;
     const data = {

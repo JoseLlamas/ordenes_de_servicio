@@ -573,7 +573,7 @@ export async function obtenerOrdenServicioParaDesasignacion (ordenServicioId, db
  * @param {DbOrTx} [dbOrTx = db]
  */
 export async function obtenerOrdenServicioSimple (ordenServicioId, dbOrTx = db) {
-  return dbOrTx.query.ordenesServicio.findFirst({
+  const row = await dbOrTx.query.ordenesServicio.findFirst({
     where: eq(schemas.ordenesServicio.id, ordenServicioId),
     columns: {
       areaAsignadaId: true,
@@ -581,4 +581,5 @@ export async function obtenerOrdenServicioSimple (ordenServicioId, dbOrTx = db) 
       estado: true
     }
   });
+  return row ?? null;
 }

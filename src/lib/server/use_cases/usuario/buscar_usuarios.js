@@ -17,7 +17,7 @@ export function createBuscarUsuariosUseCase (authorize) {
   * @return {Promise<UsuarioResumenDTO[]>}
   * @throws {ForbiddenException}
   */
-  return async (filters) => {
+  return (filters) => {
     if (authorize.cannot('read', 'Usuario', { areaId: filters.areaId })) {
       throw new ForbiddenException('No puede buscar usuarios del area que está consultando');
     }
@@ -27,6 +27,6 @@ export function createBuscarUsuariosUseCase (authorize) {
     if (typeof filters.soloActivos !== 'undefined') {
       params.activo = filters.soloActivos;
     }
-    return await obtenerUsuariosResumenes(params);
+    return obtenerUsuariosResumenes(params);
   };
 }

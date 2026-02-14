@@ -14,12 +14,14 @@ export async function GET ({ params, locals, url }) {
     if (!areaId || areaId < 1) {
       return json({ message: 'areaId requerido' }, { status: 400 });
     }
-    const filters = {};
+    const filters = {
+      areasId: [areaId]
+    };
     let nombre = url.searchParams.get('nombre')?.trim() ?? '';
     if (nombre.length >= 1) {
       filters.nombre = nombre.toUpperCase();
     }
-    const usuarios = await obtenerAgentes(areaId, filters);
+    const usuarios = await obtenerAgentes(filters);
     return json(usuarios);
   } catch (err) {
     if (err instanceof Error) {
