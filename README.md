@@ -27,4 +27,9 @@ docker compose -f compose.dev.yaml down -v db
 ###################
 
 $ cat env.production.example > .env
+
+Algo importante, en el .env, en MYSQL_HOST se debe poner "db" y en MYSQL_PORT se debe poner "3306", esto es para la compilación, además de poner ORIGIN, con la ip del servidor
+
 $ docker compose -f compose.yaml up -d --build ordenes_servicio
+
+después de esto, en el .env, para poner correr la migración y el seed, hay que poner en MYSQL_HOST=127.0.0.1 y en MYSQL_PORT=3311, después de correr las migraciones, se regresa a como estaba, pero antes, hay que configurar el usuario como está arriba
