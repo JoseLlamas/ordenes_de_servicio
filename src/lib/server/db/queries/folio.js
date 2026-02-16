@@ -26,7 +26,7 @@ export async function obtenerFolioSiguiente (anio, areaId, dbOrTx = db) {
       orderBy: desc(folios.anio)
     }) ?? {};
     let identificador;
-    if (typeof identificadorArea === 'undefined') {
+    if (identificadorArea == null) {
       const a = await dbOrTx.$count(dbOrTx.selectDistinct({ areaId: folios.areaId }).from(folios).as('a'));
       identificador = a + 1;
     } else {

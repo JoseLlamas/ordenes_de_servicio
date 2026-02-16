@@ -1,0 +1,41 @@
+services:
+  ordenes_servicio:
+    build:
+      context: .
+      target: prod
+      dockerfile: Dockerfile
+    ports:
+      - "10002:3000"
+    hostname: "ordenes_servicio.local"
+    container_name: ordenes_servicio
+    image: ordenes_servicio
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      ORIGIN: ${ORIGIN}
+      TZ: ${TIME_ZONE:-UTC}
+      NODE_ENV: production
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_PORT: ${MYSQL_PORT}
+
+  db:
+    image: "mysql:9.5"
+    ports:
+      - "${MYSQL_PORT_FORWARD}:3306"
+    hostname: "ordenes_de_servicio-mysql.local"
+    container_name: "ordenes_de_servicio-mysql.local"
+    environment:
+      TZ: ${TIME_ZONE:-UTC}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_PASSWORD}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - mysqldata:/var/lib/mysql
+
+volumes:
+  mysqldata:

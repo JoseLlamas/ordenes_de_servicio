@@ -28,7 +28,7 @@ export async function obtenerCategoriasActivoPorArea (areaId, signal) {
  * @param {number} areaId
  * @param {string} [nombre]
  * @param {AbortSignal} [signal]
- * @returns {Promise<import('$lib/types').UsuarioResumenDTO[]>}
+ * @returns {Promise<import('$lib/types').AgenteDTO[]>}
  */
 export async function obtenerAgentes (areaId, nombre, signal) {
   const queryString = new URLSearchParams;

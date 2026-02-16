@@ -162,9 +162,11 @@
           <p class="text-xs text-gray-500 truncate dark:text-gray-400">
             {agente.nombreUsuario}
           </p>
-          <span class="inline-block mt-1.5 px-2 py-0.5 bg-gray-100 text-gray-700 rounded text-xs font-medium dark:bg-gray-700 dark:text-gray-300">
-            {agente.rol.nombre}
-          </span>
+          {#if agente.ordenServicioId != null}
+            <span class="inline-block mt-1.5 px-2 py-0.5 bg-gray-100 text-gray-700 rounded text-xs font-medium dark:bg-gray-700 dark:text-gray-300">
+              Trabajando en {agente.ordenServicioId}
+            </span>
+          {/if}
         </div>
       </button>
     {/each}

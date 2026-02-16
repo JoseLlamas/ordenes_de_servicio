@@ -13,36 +13,8 @@ import { sql, asc } from 'drizzle-orm';
 
 /**
  * @import { DbOrTx} from './types';
- * @import { UsuarioLoginDTO, UsuarioDetalleDTO, UsuarioResumenDTO, InvitacionDTO } from '$lib/types';
+ * @import { UsuarioLoginDTO, UsuarioDetalleDTO, UsuarioResumenDTO, InvitacionDTO, AgenteDTO } from '$lib/types';
  */
-
-/**
- * @param {DbOrTx} dbOrTx
- */
-function createQueryParaUsuarioResumen (dbOrTx) {
-  const query = dbOrTx
-    .select({
-      id: usuarios.id,
-      nombreUsuario: usuarios.nombreUsuario,
-      activo: usuarios.activo,
-      avatar: usuarios.avatar,
-      areasAccesoId: usuarios.areasAccesoId,
-      'empleado.id': empleados.id,
-      'empleado.nombre': empleados.nombre,
-      'empleado.primerApellido': empleados.primerApellido,
-      'empleado.segundoApellido': empleados.segundoApellido,
-      'empleado.cargo': empleados.cargo,
-      'empleado.area.id': areas.id,
-      'empleado.area.nombre': areas.nombre,
-      'rol.id': roles.id,
-      'rol.nombre': roles.nombre
-    })
-    .from(usuarios)
-    .innerJoin(empleados, eq(usuarios.empleadoId, empleados.id))
-    .innerJoin(areas, eq(empleados.areaId, areas.id))
-    .innerJoin(roles, eq(usuarios.rolId, roles.id));
-  return query;
-}
 
 /**
  *
@@ -77,10 +49,30 @@ export async function registrarUsuario (data, dbOrTx = db) {
  */
 export async function obtenerUsuariosResumenes (filters = {}, dbOrTx = db) {
   const conditions = [
-    typeof filters.areaId !== 'undefined' ? eq(empleados.areaId, filters.areaId) : undefined,
-    typeof filters.activo !== 'undefined' ? eq(usuarios.activo, filters.activo) : undefined
+    filters.areaId != null ? eq(empleados.areaId, filters.areaId) : undefined,
+    filters.activo != null ? eq(usuarios.activo, filters.activo) : undefined
   ].filter(Boolean);
-  const query = createQueryParaUsuarioResumen(dbOrTx);
+  const query = dbOrTx
+    .select({
+      id: usuarios.id,
+      nombreUsuario: usuarios.nombreUsuario,
+      activo: usuarios.activo,
+      avatar: usuarios.avatar,
+      areasAccesoId: usuarios.areasAccesoId,
+      'empleado.id': empleados.id,
+      'empleado.nombre': empleados.nombre,
+      'empleado.primerApellido': empleados.primerApellido,
+      'empleado.segundoApellido': empleados.segundoApellido,
+      'empleado.cargo': empleados.cargo,
+      'empleado.area.id': areas.id,
+      'empleado.area.nombre': areas.nombre,
+      'rol.id': roles.id,
+      'rol.nombre': roles.nombre
+    })
+    .from(usuarios)
+    .innerJoin(empleados, eq(usuarios.empleadoId, empleados.id))
+    .innerJoin(areas, eq(empleados.areaId, areas.id))
+    .innerJoin(roles, eq(usuarios.rolId, roles.id));
   if (conditions.length > 0) {
     query.where(and(...conditions));
   }
@@ -332,9 +324,23 @@ export async function existeNombreUsuario (nombreUsuario, dbOrTx = db) {
 /**
  * @param {{ nombre?: string, areasId?: number[] }} [filters = {}]
  * @param {DbOrTx} [dbOrTx = db]
- * @return {Promise<UsuarioResumenDTO[]>}
+ * @return {Promise<AgenteDTO[]>}
  */
 export async function obtenerAgentes (filters = {}, dbOrTx = db) {
+  const subquery = dbOrTx
+    .select({
+      ordenServicioId: ordenesServicio.id
+    })
+    .from(asignaciones)
+    .innerJoin(ordenesServicio, eq(asignaciones.ordenServicioId, ordenesServicio.id))
+    .where(
+      and(
+        eq(asignaciones.agenteId, usuarios.id),
+        eq(ordenesServicio.estado, 'PROCESO')
+      )
+    )
+    .limit(1)
+    .as('a');
   const params = [
     eq(roles.nombre, 'Agente'),
     eq(usuarios.activo, true),
@@ -361,7 +367,8 @@ export async function obtenerAgentes (filters = {}, dbOrTx = db) {
       'empleado.area.id': areas.id,
       'empleado.area.nombre': areas.nombre,
       'rol.id': roles.id,
-      'rol.nombre': roles.nombre
+      'rol.nombre': roles.nombre,
+      'ordenServicioId': sql`${subquery}`
     })
     .from(usuarios)
     .innerJoin(empleados, eq(usuarios.empleadoId, empleados.id))
@@ -376,6 +383,7 @@ export async function obtenerAgentes (filters = {}, dbOrTx = db) {
     activo: row.activo,
     avatar: row.avatar,
     areasAccesoId: row.areasAccesoId != null ? JSON.parse(row.areasAccesoId) : null,
+    ordenServicioId: /** @type {number | null} */ (row.ordenServicioId),
     empleado: {
       id: row['empleado.id'],
       nombre: row['empleado.nombre'],

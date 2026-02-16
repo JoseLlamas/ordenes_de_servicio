@@ -235,7 +235,7 @@
 
 <Modal
   bind:this={modalAsignacion}
-  title="Asignar agentes"
+  title={`Asignar agentes ${ordenServicio.id}`}
 >
   <SelectorAgentesMultiple
     areaId={ordenServicio.areaAsignada.id}

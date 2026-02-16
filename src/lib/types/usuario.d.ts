@@ -40,3 +40,5 @@ export interface UsuarioResumenDTO {
   areasAccesoId: number[] | null;
 
 }
+
+export type AgenteDTO = UsuarioResumenDTO & { ordenServicioId: number | null};

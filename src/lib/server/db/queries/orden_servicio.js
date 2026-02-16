@@ -130,7 +130,7 @@ export async function paginarOrdenesServicioResumen ({
   if ('areasAsignadasId' in filtros) {
     params.push(inArray(schemas.ordenesServicio.areaAsignadaId, filtros.areasAsignadasId));
   }
-  if (typeof filtros.rangoFechas !== 'undefined') {
+  if (filtros.rangoFechas != null) {
     params.push(
       and(
         gte(schemas.ordenesServicio.creadoEn, filtros.rangoFechas[0]),
@@ -138,10 +138,10 @@ export async function paginarOrdenesServicioResumen ({
       )
     );
   }
-  if (typeof filtros.estado !== 'undefined') {
+  if (filtros.estado != null) {
     params.push(eq(schemas.ordenesServicio.estado, filtros.estado));
   }
-  if (typeof filtros.prioridad !== 'undefined') {
+  if (filtros.prioridad != null) {
     params.push(eq(schemas.ordenesServicio.prioridad, filtros.prioridad));
   }
   if (params.length > 0) {

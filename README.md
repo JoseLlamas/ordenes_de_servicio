@@ -23,3 +23,8 @@ sustituir los datos que están en el env
 Para bajar el servicio de mysql
 
 docker compose -f compose.dev.yaml down -v db
+
+###################
+
+$ cat env.production.example > .env
+$ docker compose -f compose.yaml up -d --build ordenes_servicio

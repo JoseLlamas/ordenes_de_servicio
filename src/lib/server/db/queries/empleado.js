@@ -17,6 +17,12 @@ import { and, asc } from 'drizzle-orm';
  * @return {Promise<EmpleadoDTO[]>}
  */
 export async function obtenerEmpleadosPorArea (areaId, filters = { activo: true }, dbOrTx = db) {
+  const params = [
+    eq(empleados.areaId, areaId)
+  ];
+  if (filters.activo != null) {
+    params.push(eq(empleados.activo, filters.activo));
+  }
   return dbOrTx.query.empleados.findMany({
     columns: {
       id: true,
@@ -26,10 +32,7 @@ export async function obtenerEmpleadosPorArea (areaId, filters = { activo: true 
       cargo: true,
       activo: true
     },
-    where: and(
-      eq(empleados.areaId, areaId),
-      typeof filters.activo !== 'undefined' ? eq(empleados.activo, filters.activo) : undefined
-    ),
+    where: and(...params),
     orderBy: [asc(empleados.primerApellido), asc(empleados.segundoApellido)]
   });
 }
@@ -95,7 +98,7 @@ export async function obtenerEmpleadoPorNombre (nombre, primerApellido, segundoA
   const conditions = [
     eq(empleados.nombre, nombre),
     eq(empleados.primerApellido, primerApellido),
-    typeof segundoApellido !== 'undefined' ? eq(empleados.segundoApellido, segundoApellido) : undefined
+    segundoApellido != null ? eq(empleados.segundoApellido, segundoApellido) : undefined
   ].filter(Boolean);
   return await dbOrTx.query.empleados.findMany({
     columns: {
@@ -180,7 +183,7 @@ export async function obtenerEncargadoArea (areaId, filters = { activo: true }, 
   const conditions = [
     eq(encargadosAreas.areaId, areaId)
   ];
-  if (typeof filters.activo !== 'undefined') {
+  if (filters.activo != null) {
     conditions.push(eq(empleados.activo, filters.activo));
   }
   const [encargado] = await dbOrTx

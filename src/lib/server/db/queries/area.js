@@ -14,10 +14,10 @@ import { areas, categoriasOrden } from '../schema';
  */
 export async function obtenerAreas (filters = {}, dbOrTx = db) {
   const conditions = [];
-  if (typeof filters.direccionGeneralId !== 'undefined') {
+  if (filters.direccionGeneralId != null) {
     conditions.push(eq(areas.direccionGeneralId, filters.direccionGeneralId));
   }
-  if (typeof filters.ids !== 'undefined' && filters.ids.length > 0) {
+  if (filters.ids != null && filters.ids.length > 0) {
     conditions.push(inArray(areas.id, filters.ids));
   }
   const query = dbOrTx
