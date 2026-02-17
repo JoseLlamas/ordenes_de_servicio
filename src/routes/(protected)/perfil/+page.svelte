@@ -44,14 +44,14 @@
     };
   }}
 >
-  {#if typeof form?.infoCambioPasword !== 'undefined'}
+  {#if form?.infoCambioPasword}
     <div class="lg:col-span-3">
       <InfoMessage>
         {form.infoCambioPasword}
       </InfoMessage>
     </div>
   {/if}
-  {#if typeof form?.errorCambioPassword !== 'undefined'}
+  {#if form?.errorCambioPassword}
     <div class="lg:col-span-3">
       <ErrorCard>
         {form.errorCambioPassword}
@@ -66,7 +66,7 @@
       placeholder="Ingrese su contraseña actual"
       required
     />
-    {#if typeof form?.errorsCambioPassword?.passwordActual !== 'undefined'}
+    {#if form?.errorsCambioPassword?.passwordActual}
       <ErrorMessage>{form.errorsCambioPassword.passwordActual}</ErrorMessage>
     {/if}
   </div>
@@ -78,7 +78,7 @@
       placeholder="Mínimo 8 carácteres"
       required
     />
-    {#if typeof form?.errorsCambioPassword?.passwordNuevo !== 'undefined'}
+    {#if form?.errorsCambioPassword?.passwordNuevo}
       <ErrorMessage>{form.errorsCambioPassword.passwordNuevo}</ErrorMessage>
     {/if}
   </div>
@@ -90,7 +90,7 @@
       placeholder="Ingrese de nuevo su nueva contraseña"
       required
     />
-    {#if typeof form?.errorsCambioPassword?.passwordNuevoConfirmacion !== 'undefined'}
+    {#if form?.errorsCambioPassword?.passwordNuevoConfirmacion}
       <ErrorMessage>{form.errorsCambioPassword.passwordNuevoConfirmacion}</ErrorMessage>
     {/if}
   </div>
@@ -118,24 +118,24 @@
   }}
   class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-auto p-4 space-y-2"
 >
-  {#if typeof form?.infoCambioAvatar !== 'undefined'}
+  {#if form?.infoCambioAvatar != null}
     <InfoMessage>
       {form.infoCambioAvatar}
     </InfoMessage>
   {/if}
-  {#if typeof form?.errorCambioAvatar !== 'undefined'}
+  {#if form?.errorCambioAvatar != null}
     <ErrorCard>
       {form.errorCambioAvatar}
     </ErrorCard>
   {/if}
   <AvatarField text="Seleccione imagen" />
-  {#if typeof form?.errorsCambioAvatar?.name !== 'undefined'}
+  {#if form?.errorsCambioAvatar?.name != null}
     <ErrorMessage>{form.errorsCambioAvatar.name}</ErrorMessage>
   {/if}
-  {#if typeof form?.errorsCambioAvatar?.size !== 'undefined'}
+  {#if form?.errorsCambioAvatar?.size != null}
     <ErrorMessage>{form.errorsCambioAvatar.size}</ErrorMessage>
   {/if}
-  {#if typeof form?.errorsCambioAvatar?.type !== 'undefined'}
+  {#if form?.errorsCambioAvatar?.type != null}
     <ErrorMessage>{form.errorsCambioAvatar.type}</ErrorMessage>
   {/if}
   <ButtonSubmitting text="Cambiar avatar" submitting={submittingCambioAvatar} class="w-full" />
