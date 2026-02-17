@@ -134,8 +134,8 @@ export async function obtenerEmpleadoPorNombre (nombre, primerApellido, segundoA
  */
 export async function obtenerEmpleadosSinUsuario (filters = { activo: true }, dbOrTx = db) {
   const conditions = [
-    typeof filters.areaId !== 'undefined' ? eq(empleados.areaId, filters.areaId) : undefined,
-    typeof filters.activo !== 'undefined' ? eq(empleados.activo, filters.activo) : undefined,
+    filters.areaId != null ? eq(empleados.areaId, filters.areaId) : undefined,
+    filters.activo != null ? eq(empleados.activo, filters.activo) : undefined,
     notExists(dbOrTx.select().from(invitaciones).where(eq(invitaciones.empleadoId, empleados.id))),
     notExists(dbOrTx.select().from(usuarios).where(eq(usuarios.empleadoId, empleados.id)))
   ].filter(Boolean);

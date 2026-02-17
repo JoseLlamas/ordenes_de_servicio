@@ -47,7 +47,7 @@ export function createValidateAuthorization (usuario, ability) {
       if (usuario.areasAcceso == null) {
         return ability.can(accion, sujeto);
       }
-      if (typeof fields?.areaId !== 'undefined') {
+      if (fields?.areaId != null) {
         return ability.can(accion, subject(sujeto, fields));
       }
       return false;

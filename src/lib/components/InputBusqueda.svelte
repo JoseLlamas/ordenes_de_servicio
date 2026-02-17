@@ -57,7 +57,7 @@
 </script>
 
 <div class="text-sm font-medium space-y-2">
-  {#if typeof label !== 'undefined'}
+  {#if label != null}
     <label for={id} class="block text-gray-700 dark:text-gray-300 mb-2">
       {label}
     </label>

@@ -191,7 +191,7 @@ export async function obtenerUsuarioDetalle (id, dbOrTx = db) {
     },
     where: eq(usuarios.id, id)
   });
-  if (typeof row !== 'undefined') {
+  if (row != null) {
     let areasAcceso;
     if (row.areasAccesoId != null) {
       areasAcceso = await dbOrTx.query.areas.findMany({

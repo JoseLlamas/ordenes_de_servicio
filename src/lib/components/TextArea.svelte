@@ -26,7 +26,7 @@
 </script>
 
 <div class="text-sm font-medium space-y-2">
-  {#if typeof label !== 'undefined'}
+  {#if label != null}
     <label
       for={id}
       class={['block', required && 'after:content-["*"] after:text-red-500 after:ml-1']}

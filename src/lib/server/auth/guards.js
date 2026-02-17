@@ -7,7 +7,7 @@ import { redirect } from '@sveltejs/kit';
  * @returns {asserts locals is AuthenticatedLocals}
  */
 export function assertAuthenticated (locals, redirectTo = '/login') {
-  if (typeof locals.usuario === 'undefined' || typeof locals.authorize === 'undefined') {
+  if (locals.usuario == null || locals.authorize == null) {
     redirect(303, redirectTo);
   }
 }
@@ -19,7 +19,7 @@ export function assertAuthenticated (locals, redirectTo = '/login') {
  * @returns {asserts locals is UnauthenticatedLocals}
  */
 export function assertUnauthenticated (locals, redirectTo = '/dashboard') {
-  if (typeof locals.usuario !== 'undefined' || typeof locals.authorize !== 'undefined') {
+  if (locals.usuario != null || locals.authorize != null) {
     redirect(303, redirectTo);
   }
 }

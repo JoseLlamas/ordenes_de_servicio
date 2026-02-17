@@ -35,7 +35,7 @@
     "
     {...props}
   />
-  {#if typeof label !== 'undefined'}
+  {#if label != null}
     <label for={id} class="text-sm text-zinc-800 dark:text-zinc-100">{label}</label>
   {/if}
 </div>

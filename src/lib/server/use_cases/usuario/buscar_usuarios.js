@@ -24,7 +24,7 @@ export function createBuscarUsuariosUseCase (authorize) {
     const params = {
       areaId: filters.areaId
     };
-    if (typeof filters.soloActivos !== 'undefined') {
+    if (filters.soloActivos != null) {
       params.activo = filters.soloActivos;
     }
     return obtenerUsuariosResumenes(params);

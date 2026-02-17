@@ -32,7 +32,7 @@ export async function obtenerCategoriasActivoPorArea (areaId, signal) {
  */
 export async function obtenerAgentes (areaId, nombre, signal) {
   const queryString = new URLSearchParams;
-  if (typeof nombre !== 'undefined') {
+  if (nombre != null) {
     queryString.append('nombre', nombre);
   }
   return api(`/api/areas/${areaId}/agentes?${queryString}`, { signal });
