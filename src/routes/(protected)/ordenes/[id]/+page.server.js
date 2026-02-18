@@ -5,7 +5,9 @@ import {
   createCambiarEstadoUseCase,
   createDesasignarAgenteUseCase,
   createModificarOrdenServicioUseCase,
-  createObtenerDetalleOrdenServicioUseCase
+  createObtenerDetalleOrdenServicioUseCase,
+  createRegistrarActivoUseCase,
+  createEliminarActivoUseCase
 } from '$lib/server/use_cases/orden_servicio';
 import { fail, redirect } from '@sveltejs/kit';
 import {
@@ -16,8 +18,6 @@ import {
   validateEliminacionActivo,
   validateModificacionOrdenServicio
 } from '$lib/server/validators';
-import { createAgregarActivoUseCase } from '$lib/server/use_cases/orden_servicio';
-import { createEliminarActivoUseCase } from '$lib/server/use_cases/orden_servicio/eliminar_activo';
 import { obtenerCategoriasOrdenPorArea } from '$lib/server/db/queries';
 
 /**
@@ -156,10 +156,10 @@ export const actions = {
         errorsAgregarActivo: resultValidation.errors
       });
     }
-    const agregarActivo = createAgregarActivoUseCase(locals.usuario, locals.authorize);
+    const registrarActivo = createRegistrarActivoUseCase(locals.usuario, locals.authorize);
     try {
       const { ordenServicioId, ...values } = resultValidation.values;
-      await agregarActivo(ordenServicioId, values);
+      await registrarActivo(ordenServicioId, values);
       return { messageAgregarActivo: 'Activo agregado' };
     } catch (exc) {
       if (exc instanceof BusinessRuleException) {

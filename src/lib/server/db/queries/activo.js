@@ -14,15 +14,15 @@ import { and, eq } from 'drizzle-orm';
  *  numeroSerie: string | null,
  *  marca: string | null,
  *  modelo: string | null
- * }[]} data
+ * }} data
  * @param {DbOrTx} [dbOrTx = db]
  */
-export async function registrarActivos (data, dbOrTx = db) {
-  const ids = await dbOrTx
+export async function registrarActivo (data, dbOrTx = db) {
+  const [{ id }] = await dbOrTx
     .insert(activos)
     .values(data)
     .$returningId();
-  return ids;
+  return id;
 }
 
 /**

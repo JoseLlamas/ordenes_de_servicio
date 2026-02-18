@@ -20,40 +20,29 @@ export async function load ({ locals, url }) {
     porPagina: 5,
     filtros: {}
   };
-  /**
-   * @type {Omit<Extract<Parameters<typeof paginarOrdenesServicioResumen>[0]['filtros'], { agenteId: any }>, 'agenteId'>}
-   */
-  const filtros = {};
   const resultValidation = await validateFiltrosPaginadorOrdenesServicio(Object.fromEntries(url.searchParams));
   if ('values' in resultValidation) {
     parameters.pagina = resultValidation.values.pagina;
     parameters.porPagina = resultValidation.values.porPagina;
-    if (typeof resultValidation.values.fecha !== 'undefined') {
+    if (resultValidation.values.fecha != null) {
       const fecha = resultValidation.values.fecha;
-      filtros.rangoFechas = createDesdeHastaUTC(fecha, fecha);
+      parameters.filtros.rangoFechas = createDesdeHastaUTC(fecha, fecha);
     }
-    if (typeof resultValidation.values.estado !== 'undefined') {
-      filtros.estado = resultValidation.values.estado;
-    }
-    if (typeof resultValidation.values.prioridad !== 'undefined') {
-      filtros.prioridad = resultValidation.values.prioridad;
-    }
+    parameters.filtros.estado = resultValidation.values.estado;
+    parameters.filtros.prioridad = resultValidation.values.prioridad;
   }
+  parameters.filtros.prioridad = null;
   const rolNombre = locals.usuario.rol.nombre;
   if (rolNombre === 'Agente') {
     parameters.filtros = {
-      ...filtros,
       agenteId: locals.usuario.id
     };
   } else if (rolNombre === 'Encargado' || rolNombre === 'Capturista') {
     if (locals.usuario.areasAcceso != null) {
       parameters.filtros = {
-        ...filtros,
         areasAsignadasId: locals.usuario.areasAcceso.map(area => area.id)
       };
     }
-  } else {
-    parameters.filtros = filtros;
   }
   const paginacion = await paginarOrdenesServicioResumen(parameters);
   return {

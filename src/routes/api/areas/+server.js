@@ -7,7 +7,7 @@ import { obtenerAreas } from '$lib/server/db/queries';
  */
 export async function GET ({ url, locals }) {
   try {
-    if (!locals.authorize) {
+    if (locals.authorize == null) {
       return json({ message: 'No autorizado' }, { status: 401 });
     }
     const direccionGeneralId = Number(url.searchParams.get('direccionGeneralId'));

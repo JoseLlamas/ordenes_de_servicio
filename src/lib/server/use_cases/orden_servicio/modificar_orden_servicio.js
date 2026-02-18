@@ -3,17 +3,13 @@ import { obtenerOrdenServicioSimple, pathOrdenServicio } from '$lib/server/db/qu
 import { BusinessRuleException, BusinessRules, ForbiddenException } from '$lib/server/exceptions';
 
 /**
- * @typedef {Omit<Extract<Awaited<ReturnType<import('$lib/server/validators')['validateModificacionOrdenServicio']>>, { values: any }>['values'], 'ordenServicioId'>} Data
- */
-
-/**
  *
  * @param {NonNullable<App.Locals['usuario']>} usuario
  * @param {NonNullable<App.Locals['authorize']>} authorize
  */
 export function createModificarOrdenServicioUseCase (usuario, authorize) {
   /**
-   * @param {Data} data
+   * @param {Omit<Extract<Awaited<ReturnType<import('$lib/server/validators')['validateModificacionOrdenServicio']>>, { values: any }>['values'], 'ordenServicioId'>} data
    */
   return (ordenServicioId, data) => {
     return db.transaction(async tx => {

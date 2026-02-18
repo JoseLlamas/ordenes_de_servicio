@@ -16,7 +16,7 @@ import { and, asc } from 'drizzle-orm';
  * @param {DbOrTx} [dbOrTx = db]
  * @return {Promise<EmpleadoDTO[]>}
  */
-export async function obtenerEmpleadosPorArea (areaId, filters = { activo: true }, dbOrTx = db) {
+export function obtenerEmpleadosPorArea (areaId, filters = { activo: true }, dbOrTx = db) {
   const params = [
     eq(empleados.areaId, areaId)
   ];
@@ -90,17 +90,19 @@ export async function obtenerEmpleadoPorId (id, dbOrTx = db) {
 /**
  * @param {string} nombre
  * @param {string} primerApellido
- * @param {string} [segundoApellido]
+ * @param {string | null} [segundoApellido]
  * @param {DbOrTx} [dbOrTx = db]
  * @return {Promise<EmpleadoDetalleDTO[]>}
  */
-export async function obtenerEmpleadoPorNombre (nombre, primerApellido, segundoApellido, dbOrTx = db) {
+export function obtenerEmpleadoPorNombre (nombre, primerApellido, segundoApellido, dbOrTx = db) {
   const conditions = [
     eq(empleados.nombre, nombre),
-    eq(empleados.primerApellido, primerApellido),
-    segundoApellido != null ? eq(empleados.segundoApellido, segundoApellido) : undefined
-  ].filter(Boolean);
-  return await dbOrTx.query.empleados.findMany({
+    eq(empleados.primerApellido, primerApellido)
+  ];
+  if (segundoApellido != null) {
+    conditions.push(eq(empleados.segundoApellido, segundoApellido));
+  }
+  return dbOrTx.query.empleados.findMany({
     columns: {
       id: true,
       nombre: true,
@@ -132,14 +134,17 @@ export async function obtenerEmpleadoPorNombre (nombre, primerApellido, segundoA
  * @param {DbOrTx} [dbOrTx = db]
  * @return {Promise<EmpleadoDTO[]>}
  */
-export async function obtenerEmpleadosSinUsuario (filters = { activo: true }, dbOrTx = db) {
-  const conditions = [
-    filters.areaId != null ? eq(empleados.areaId, filters.areaId) : undefined,
-    filters.activo != null ? eq(empleados.activo, filters.activo) : undefined,
-    notExists(dbOrTx.select().from(invitaciones).where(eq(invitaciones.empleadoId, empleados.id))),
-    notExists(dbOrTx.select().from(usuarios).where(eq(usuarios.empleadoId, empleados.id)))
-  ].filter(Boolean);
-  return await dbOrTx.query.empleados.findMany({
+export function obtenerEmpleadosSinUsuario (filters = { activo: true }, dbOrTx = db) {
+  const conditions = [];
+  if (filters.areaId != null) {
+    conditions.push(eq(empleados.areaId, filters.areaId));
+  }
+  if (filters.activo != null) {
+    conditions.push(eq(empleados.activo, filters.activo));
+  }
+  conditions.push(notExists(dbOrTx.select().from(invitaciones).where(eq(invitaciones.empleadoId, empleados.id))));
+  conditions.push(notExists(dbOrTx.select().from(usuarios).where(eq(usuarios.empleadoId, empleados.id))));
+  return dbOrTx.query.empleados.findMany({
     columns: {
       id: true,
       nombre: true,

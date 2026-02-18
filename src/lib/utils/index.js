@@ -72,7 +72,7 @@ export function escribirNombreCompleto (persona) {
  * @param {string | null} [value]
  */
 export function setValueQueryString (url, key, value) {
-  if (value) {
+  if (value != null && value.length > 0) {
     url.searchParams.set(key, value);
   } else {
     if (url.searchParams.has(key)) {

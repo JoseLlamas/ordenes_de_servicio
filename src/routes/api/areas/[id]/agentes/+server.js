@@ -7,7 +7,7 @@ import { obtenerAgentes } from '$lib/server/db/queries';
  */
 export async function GET ({ params, locals, url }) {
   try {
-    if (!locals.authorize) {
+    if (locals.authorize == null) {
       return json({ message: 'No autorizado' }, { status: 401 });
     }
     const areaId = Number(params.id);

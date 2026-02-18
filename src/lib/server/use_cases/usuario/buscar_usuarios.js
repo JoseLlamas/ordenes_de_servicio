@@ -13,7 +13,7 @@ import { ForbiddenException } from '$lib/server/exceptions';
 export function createBuscarUsuariosUseCase (authorize) {
   /**
   *
-  * @param {{areaId: number, soloActivos?: boolean}} filters
+  * @param {{areaId: number, soloActivos: boolean}} filters
   * @return {Promise<UsuarioResumenDTO[]>}
   * @throws {ForbiddenException}
   */
@@ -21,12 +21,6 @@ export function createBuscarUsuariosUseCase (authorize) {
     if (authorize.cannot('read', 'Usuario', { areaId: filters.areaId })) {
       throw new ForbiddenException('No puede buscar usuarios del area que está consultando');
     }
-    const params = {
-      areaId: filters.areaId
-    };
-    if (filters.soloActivos != null) {
-      params.activo = filters.soloActivos;
-    }
-    return obtenerUsuariosResumenes(params);
+    return obtenerUsuariosResumenes({ areaId: filters.areaId, soloActivos: filters.soloActivos });
   };
 }

@@ -6,13 +6,22 @@ import Joi from 'joi';
 import { createValidator } from './validator';
 
 const schema = Joi.object({
-  areaId: Joi.number().integer().empty(['', null]).required().messages({
-    'any.required': 'El area es requerida'
-  }),
-  soloActivos: Joi.boolean().empty(['', null]).truthy('on')
+  areaId: Joi
+    .number()
+    .integer()
+    .empty(['', null])
+    .required()
+    .messages({
+      'any.required': 'El area es requerida'
+    }),
+  soloActivos: Joi
+    .boolean()
+    .empty(['', null])
+    .truthy('on')
+    .default(false)
 });
 
 /**
- * @type {Validator<{ areaId: number, soloActivos?: boolean }>}
+ * @type {Validator<{ areaId: number, soloActivos: boolean }>}
  */
 export const validateBuscarUsuarios = createValidator(schema);

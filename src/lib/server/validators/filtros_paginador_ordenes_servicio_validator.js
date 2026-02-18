@@ -9,15 +9,18 @@ const schema = Joi.object({
   fecha: Joi
     .string()
     .pattern(/\d{4}-\d{2}-\d{2}/)
-    .empty(['', null]),
+    .empty(['', null])
+    .default(null),
   estado: Joi
     .string()
     .empty(['', null])
-    .valid('NUEVO', 'PROCESO', 'PENDIENTE', 'RESUELTO', 'CERRADO', 'CANCELADO'),
+    .valid('NUEVO', 'PROCESO', 'PENDIENTE', 'RESUELTO', 'CERRADO', 'CANCELADO')
+    .default(null),
   prioridad: Joi
     .string()
     .empty(['', null])
-    .valid('BAJA', 'MEDIA', 'ALTA', 'CRITICA'),
+    .valid('BAJA', 'MEDIA', 'ALTA', 'CRITICA')
+    .default(null),
   pagina: Joi
     .number()
     .integer()
@@ -35,9 +38,9 @@ const schema = Joi.object({
 
 /**
  * @type {Validator<{
- *  fecha?: string,
- *  estado?: 'NUEVO' | 'PROCESO' | 'PENDIENTE' | 'RESUELTO' | 'CERRADO' | 'CANCELADO',
- *  prioridad?: 'BAJA' | 'MEDIA' | 'ALTA' | 'CRITICA',
+ *  fecha: string | null,
+ *  estado: 'NUEVO' | 'PROCESO' | 'PENDIENTE' | 'RESUELTO' | 'CERRADO' | 'CANCELADO' | null,
+ *  prioridad: 'BAJA' | 'MEDIA' | 'ALTA' | 'CRITICA' | null,
  *  pagina: number,
  *  porPagina: number
  * }>}

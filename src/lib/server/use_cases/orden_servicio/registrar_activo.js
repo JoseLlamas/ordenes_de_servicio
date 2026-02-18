@@ -1,4 +1,4 @@
-import { obtenerOrdenServicioSimple, registrarActivos } from '$lib/server/db/queries';
+import { obtenerOrdenServicioSimple, registrarActivo } from '$lib/server/db/queries';
 import { db } from '$lib/server/db';
 import { BusinessRuleException, BusinessRules, ForbiddenException } from '$lib/server/exceptions';
 
@@ -7,10 +7,17 @@ import { BusinessRuleException, BusinessRules, ForbiddenException } from '$lib/s
  * @param {NonNullable<App.Locals['usuario']>} usuario
  * @param {NonNullable<App.Locals['authorize']>} authorize
  */
-export function createAgregarActivoUseCase (usuario, authorize) {
+export function createRegistrarActivoUseCase (usuario, authorize) {
   /**
    * @param {number} ordenServicioId
-   * @param {Omit<Extract<Awaited<ReturnType<import('$lib/server/validators')['validateRegistroActivo']>>, { values: any }>['values'], 'ordenServicioId'>} data
+   * @param {{
+   *  numeroSerie: string | null,
+   *  numeroInventario: string | null,
+   *  categoriaActivoId: number,
+   *  marca: string | null,
+   *  modelo: string | null,
+   *  observaciones: string | null
+   * }} data
    */
   return (ordenServicioId, data) => {
     return db.transaction(async tx => {
@@ -30,10 +37,10 @@ export function createAgregarActivoUseCase (usuario, authorize) {
           BusinessRules.AGREGACION_ACTIVO_FUERA_DE_ESTADO
         );
       }
-      await registrarActivos([{
+      return await registrarActivo({
         ordenServicioId: ordenServicio.id,
         ...data
-      }], tx);
+      }, tx);
     });
   };
 }

@@ -7,7 +7,7 @@ import { obtenerCategoriasOrdenPorArea } from '$lib/server/db/queries';
  */
 export async function GET ({ params, locals }) {
   try {
-    if (typeof locals.authorize === 'undefined') {
+    if (locals.authorize == null) {
       return json({ message: 'No autorizado' }, { status: 401 });
     }
     const areaId = Number(params.id);

@@ -1,4 +1,4 @@
-import { error, json } from '@sveltejs/kit';
+import { json } from '@sveltejs/kit';
 import { obtenerCategoriasActivoPorArea } from '$lib/server/db/queries';
 
 /**
@@ -7,7 +7,7 @@ import { obtenerCategoriasActivoPorArea } from '$lib/server/db/queries';
  */
 export async function GET ({ params, locals }) {
   try {
-    if (typeof locals.authorize === 'undefined') {
+    if (locals.authorize == null) {
       throw json({ mensaje: 'No autorizado' }, { status: 401 });
     }
     const areaId = Number(params.id);

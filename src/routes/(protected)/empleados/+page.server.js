@@ -1,7 +1,7 @@
 import { assertAuthenticated } from '$lib/server/auth/guards';
 import { ForbiddenException } from '$lib/server/exceptions';
 import { createBuscarEmpleadosUseCase } from '$lib/server/use_cases/empleado';
-import { validatorBusquedaEmpleados } from '$lib/server/validators';
+import { validateBusquedaEmpleados } from '$lib/server/validators';
 import { error, fail, redirect } from '@sveltejs/kit';
 
 /**
@@ -20,7 +20,7 @@ export const actions = {
   buscar: async ({ request, locals }) => {
     assertAuthenticated(locals);
     const data = Object.fromEntries(await request.formData());
-    const resultValidation = await validatorBusquedaEmpleados(data);
+    const resultValidation = await validateBusquedaEmpleados(data);
     if ('errors' in resultValidation) {
       return fail(422, {
         errors: resultValidation.errors

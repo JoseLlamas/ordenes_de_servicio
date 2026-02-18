@@ -12,7 +12,7 @@ import { ForbiddenException } from '$lib/server/exceptions';
  */
 export function createBuscarEmpleadosUseCase (authorize) {
   /**
-   * @param {{ nombre: string, primerApellido: string, segundoApellido?: string }} filterData
+   * @param {{ nombre: string, primerApellido: string, segundoApellido?: string | null }} filterData
    * @return {Promise<EmpleadoDetalleDTO[]>}
    */
   return async (filterData) => {

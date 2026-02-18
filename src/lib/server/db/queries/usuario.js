@@ -43,15 +43,18 @@ export async function registrarUsuario (data, dbOrTx = db) {
 
 /**
  *
- * @param {{ areaId?: number, activo?: boolean }} [filters]
+ * @param {{ areaId?: number, soloActivos?: boolean }} [filters]
  * @param {DbOrTx} [dbOrTx=db]
  * @return {Promise<UsuarioResumenDTO[]>}
  */
 export async function obtenerUsuariosResumenes (filters = {}, dbOrTx = db) {
-  const conditions = [
-    filters.areaId != null ? eq(empleados.areaId, filters.areaId) : undefined,
-    filters.activo != null ? eq(usuarios.activo, filters.activo) : undefined
-  ].filter(Boolean);
+  const conditions = [];
+  if (filters.areaId != null) {
+    conditions.push(eq(empleados.areaId, filters.areaId));
+  }
+  if (filters.soloActivos != null && filters.soloActivos) {
+    conditions.push(eq(usuarios.activo, true));
+  }
   const query = dbOrTx
     .select({
       id: usuarios.id,

@@ -10,20 +10,6 @@ import { alias } from 'drizzle-orm/mysql-core';
 
 /**
  * @typedef {{
- *  rangoFechas?: [Date, Date],
- *  estado?: 'NUEVO' | 'PROCESO' | 'PENDIENTE' | 'RESUELTO' | 'CERRADO' | 'CANCELADO',
- *  prioridad?: 'BAJA' | 'MEDIA' | 'ALTA' | 'CRITICA',
- * }} Filtros
- *
- * @typedef {{
- *  agenteId: number
- * } & Filtros} FiltrosAgente
- *
- * @typedef {{
- *  areasAsignadasId: number[]
- * } & Filtros} FiltrosEncargadoYCapturista
- *
- * @typedef {{
  *  id: number,
  *  nombreUsuario: string,
  *  estaOcupado: boolean
@@ -64,7 +50,13 @@ export async function registrarOrdenServicio (data, dbOrTx = db) {
  * @param {object} opciones
  * @param {number} opciones.pagina
  * @param {number} opciones.porPagina
- * @param {Filtros | FiltrosAgente | FiltrosEncargadoYCapturista} opciones.filtros
+ * @param {{
+ *  rangoFechas?: [Date, Date] | null,
+ *  estado?: 'NUEVO' | 'PROCESO' | 'PENDIENTE' | 'RESUELTO' | 'CERRADO' | 'CANCELADO' | null ,
+ *  prioridad?: 'BAJA' | 'MEDIA' | 'ALTA' | 'CRITICA' | null,
+ *  agenteId?: number | null,
+ *  areasAsignadasId?: number[] | null
+ * }} opciones.filtros
  * @param {DbOrTx} [dbOrTx = db]
  * @return {Promise<{
  *  ordenesServicio: OrdenServicioResumenDTO[],
@@ -112,7 +104,7 @@ export async function paginarOrdenesServicioResumen ({
     .innerJoin(areaSolicitanteAlias, eq(schemas.ordenesServicio.areaSolicitanteId, areaSolicitanteAlias.id))
     .innerJoin(areaAsignadaAlias, eq(schemas.ordenesServicio.areaAsignadaId, areaAsignadaAlias.id));
   const params = [];
-  if ('agenteId' in filtros) {
+  if (filtros.agenteId != null) {
     params.push(
       exists(
         dbOrTx
@@ -126,8 +118,7 @@ export async function paginarOrdenesServicioResumen ({
           )
       )
     );
-  }
-  if ('areasAsignadasId' in filtros) {
+  } else if (filtros.areasAsignadasId != null) {
     params.push(inArray(schemas.ordenesServicio.areaAsignadaId, filtros.areasAsignadasId));
   }
   if (filtros.rangoFechas != null) {
@@ -433,13 +424,14 @@ export async function asignarAgentes (ordenServicioId, agentesId, dbOrTx = db) {
     agenteId,
     ordenServicioId
   }));
-  return await dbOrTx
+  return (await dbOrTx
     .insert(schemas.asignaciones)
     .values(values)
     .onDuplicateKeyUpdate({
       set: { agenteId: sql`VALUES(agente_id)` }
     })
-    .$returningId();
+    .$returningId())
+    .map(id => id.id);
 }
 
 /**

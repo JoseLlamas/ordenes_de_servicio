@@ -775,7 +775,7 @@
                     </dd>
                   </div>
 
-                  {#if ordenServicio.numeroOficio}
+                  {#if ordenServicio.numeroOficio != null}
                     <div>
                       <dt class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
                         Número de Oficio
@@ -828,7 +828,7 @@
                   </p>
                 </div>
 
-                {#if ordenServicio.cerradoEn}
+                {#if ordenServicio.cerradoEn != null}
                   <div>
                     <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">
                       Cerrado
@@ -836,7 +836,7 @@
                     <p class="text-sm text-gray-900 dark:text-white">
                       {formatearFecha(ordenServicio.cerradoEn)}
                     </p>
-                    {#if ordenServicio.cerradoPor}
+                    {#if ordenServicio.cerradoPor != null}
                       <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                         Por: {escribirNombreCompleto(ordenServicio.cerradoPor.empleado)}
                       </p>
@@ -844,7 +844,7 @@
                   </div>
                 {/if}
 
-                {#if ordenServicio.canceladoEn}
+                {#if ordenServicio.canceladoEn != null}
                   <div>
                     <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">
                       Cancelado
@@ -852,7 +852,7 @@
                     <p class="text-sm text-gray-900 dark:text-white">
                       {formatearFecha(ordenServicio.canceladoEn)}
                     </p>
-                    {#if ordenServicio.canceladoPor}
+                    {#if ordenServicio.canceladoPor != null}
                       <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                         Por: {escribirNombreCompleto(ordenServicio.canceladoPor.empleado)}
                       </p>
@@ -984,7 +984,7 @@
                   </div>
 
                   <!-- Observaciones -->
-                  {#if activo.observaciones}
+                  {#if activo.observaciones != null}
                     <div class="pt-2 border-t border-gray-200 dark:border-gray-700">
                       <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Observaciones</p>
                       <VerMas texto={activo.observaciones} />
