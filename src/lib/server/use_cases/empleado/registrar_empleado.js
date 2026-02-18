@@ -9,7 +9,14 @@ import { ForbiddenException } from '$lib/server/exceptions';
 export function createRegistrarEmpleadoUseCase (usuario, authorize) {
   /**
   *
-  * @param {Omit<Parameters<typeof registrarEmpleado>[0], 'activo'>} dataRegistroEmpleado
+  * @param {{
+  *  nombre: string,
+  *  primerApellido: string,
+  *  segundoApellido: string | null,
+  *  cargo: string | null,
+  *  direccionGeneralId: number,
+  *  areaId: number
+  * }} dataRegistroEmpleado
   * @return {Promise<number>}
   */
   return async (dataRegistroEmpleado) => {

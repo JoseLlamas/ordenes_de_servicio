@@ -9,7 +9,16 @@ import { BusinessRuleException, BusinessRules, ForbiddenException } from '$lib/s
  */
 export function createModificarOrdenServicioUseCase (usuario, authorize) {
   /**
-   * @param {Omit<Extract<Awaited<ReturnType<import('$lib/server/validators')['validateModificacionOrdenServicio']>>, { values: any }>['values'], 'ordenServicioId'>} data
+   * @param {number} ordenServicioId
+   * @param {{
+   *  telefonoSolicitante: string,
+   *  categoriaOrdenId: number,
+   *  otroCategoriaOrden: string | null,
+   *  prioridad: 'BAJA' | 'MEDIA' | 'ALTA' | 'CRITICA',
+   *  descripcion: string,
+   *  tipoEntrada: 'PRESENCIAL' | 'LLAMADA_TELEFONICA' | 'OFICIO' | 'INDICACION_SUPERIOR',
+   *  numeroOficio: string | null
+   * }} data
    */
   return (ordenServicioId, data) => {
     return db.transaction(async tx => {

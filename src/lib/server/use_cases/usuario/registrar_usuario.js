@@ -11,8 +11,8 @@ import { generateHashPassword } from '$lib/server/utils';
  *  password: string
  * }} data
  */
-export async function registrarUsuario (data) {
-  await db.transaction(async tx => {
+export function registrarUsuario (data) {
+  return db.transaction(async tx => {
     const invitacion = await obtenerInvitacion(data.token, tx);
     if (invitacion === null) {
       throw new BusinessRuleException('Token no registrado', BusinessRules.TOKEN_NO_REGISTRADO_PARA_REGISTRO_USUARIO);

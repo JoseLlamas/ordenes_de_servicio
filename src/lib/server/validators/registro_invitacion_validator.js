@@ -26,6 +26,7 @@ const schemaInvitacion = Joi.object({
     .array()
     .empty(['', null])
     .items(Joi.number().integer().empty(['', null]))
+    .required()
     .messages({
       'array.max': 'Cuando se selecciona el rol de administrador, no debe agregar ninguna area de alcalce',
       'any.required': 'El alcalce de rol es requerido'

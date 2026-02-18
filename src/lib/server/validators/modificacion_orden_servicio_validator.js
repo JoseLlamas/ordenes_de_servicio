@@ -88,11 +88,10 @@ const schema = Joi.object({
     .uppercase()
     .trim()
     .max(100)
-    .default(null)
     .when('tipoEntrada', {
       is: Joi.valid('OFICIO'),
       then: Joi.required(),
-      otherwise: Joi.optional()
+      otherwise: Joi.optional().default(null)
     })
     .messages({
       'any.required': 'Cuando la solicitud de la orden es por oficio, debe ingresar el número de ese oficio',
