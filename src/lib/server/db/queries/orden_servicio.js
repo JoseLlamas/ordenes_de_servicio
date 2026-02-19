@@ -467,7 +467,8 @@ export async function desasignarAgente (ordenServicioId, agenteId, dbOrTx = db) 
  *  descripcion?: string,
  *  numeroOficio?: string | null,
  *  prioridad?: 'BAJA' | 'MEDIA' | 'ALTA' | 'CRITICA',
- *  tipoEntrada?: 'PRESENCIAL' | 'LLAMADA_TELEFONICA' | 'OFICIO' | 'INDICACION_SUPERIOR'
+ *  tipoEntrada?: 'PRESENCIAL' | 'LLAMADA_TELEFONICA' | 'OFICIO' | 'INDICACION_SUPERIOR',
+ *  firmaEmpleadoSolicitante?: string | null
  * }} data
  * @param {DbOrTx} [dbOrTx = db]
  */

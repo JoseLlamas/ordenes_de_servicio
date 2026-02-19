@@ -26,7 +26,8 @@ export function createCambiarEstadoUseCase (usuario, authorize) {
    * @param {{
    *  ordenServicioId: number,
    *  nuevoEstado: 'PROCESO' | 'PENDIENTE' | 'RESUELTO' | 'CERRADO' | 'CANCELADO',
-   *  observacion: string | null
+   *  observacion: string | null,
+   *  firmaEmpleadoSolicitante: string | null
    * }} data
    */
   return (data) => {
@@ -76,6 +77,14 @@ export function createCambiarEstadoUseCase (usuario, authorize) {
       } else if (data.nuevoEstado === 'CERRADO') {
         dataUpdate.cerradoEn = new Date(Temporal.Now.instant().epochMilliseconds);
         dataUpdate.cerradoPorId = usuario.id;
+      } else if (data.nuevoEstado === 'RESUELTO') {
+        if (data.firmaEmpleadoSolicitante != null) {
+          dataUpdate.firmaEmpleadoSolicitante = data.firmaEmpleadoSolicitante;
+        } else {
+          throw new BusinessRuleException('La firma es requerida');
+        }
+      } else {
+        dataUpdate.firmaEmpleadoSolicitante = null;
       }
       await pathOrdenServicio(data.ordenServicioId, dataUpdate, tx);
       if (data.observacion != null) {

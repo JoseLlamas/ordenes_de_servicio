@@ -16,7 +16,7 @@ const schema = Joi.object({
     .empty(['', null])
     .valid('PROCESO', 'PENDIENTE', 'RESUELTO', 'CERRADO', 'CANCELADO')
     .required(),
-  firmaUsuario: Joi
+  firmaEmpleadoSolicitante: Joi
     .string()
     .empty(['', null])
     .trim()
@@ -47,7 +47,7 @@ const schema = Joi.object({
  *  ordenServicioId: number,
  *  nuevoEstado: 'PROCESO' | 'PENDIENTE' | 'RESUELTO' | 'CERRADO' | 'CANCELADO',
  *  observacion: string | null,
- *  firmaUsuario: string | null
+ *  firmaEmpleadoSolicitante: string | null
  * }>}
  */
 export const validateCambioEstado = createValidator(schema);

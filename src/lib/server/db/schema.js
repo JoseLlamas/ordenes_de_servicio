@@ -105,7 +105,8 @@ export const ordenesServicio = mysqlTable('ordenes_servicio', {
   cerradoPorId: int('cerrado_por_id', { unsigned: true }).references(() => usuarios.id, { onDelete: 'restrict' }),
   canceladoEn: timestamp('cancelado_en'),
   canceladoPorId: int('cancelado_por_id', { unsigned: true }).references(() => usuarios.id, { onDelete: 'restrict' }),
-  ordenServicioRelacionadoId: int('orden_servicio_relacionado_id', { unsigned: true })
+  ordenServicioRelacionadoId: int('orden_servicio_relacionado_id', { unsigned: true }),
+  firmaEmpleadoSolicitante: text('firma_empleado_solicitante')
 }, (table) => [
   foreignKey({
     columns: [table.ordenServicioRelacionadoId],

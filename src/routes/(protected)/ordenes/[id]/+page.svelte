@@ -26,7 +26,7 @@
   import Input from '$lib/components/Input.svelte';
   import Select from '$lib/components/Select.svelte';
   import CapturadorFirmaAvanzado from '$lib/components/CapturadorFirmaAvanzado.svelte';
-    import ButtonSecundary from '$lib/components/ButtonSecundary.svelte';
+  import ButtonSecundary from '$lib/components/ButtonSecundary.svelte';
 
   let { data, form } = $props();
 
@@ -105,13 +105,13 @@
 
   let observacionCambioEstado = $state('');
 
-  let firmaUsuario = $state('');
+  let firmaEmpleadoSolicitante = $state('');
 
   function limpiarFormularioCambiarEstado () {
     capturadorFirmaAvanzado?.reset();
     observacionCambioEstado = '';
     nuevoEstado = null;
-    firmaUsuario = '';
+    firmaEmpleadoSolicitante = '';
   }
 
   /**
@@ -120,9 +120,9 @@
   let capturadorFirmaAvanzado = $state(null);
 
   /**
-   * @type {Modal | undefined}
+   * @type {Modal | null}
   */
-  let modalCambiarEstado = $state();
+  let modalCambiarEstado = $state(null);
 
   /**
    * @type {Omit<typeof data.ordenServicio['estado'], 'NUEVO'> | null}
@@ -281,15 +281,15 @@
   {#if form?.errorsCambiarEstado?.observacion}
     <ErrorMessage>{form.errorsCambiarEstado.observacion}</ErrorMessage>
   {/if}
-  {#if form?.errorsCambiarEstado?.firmaUsuario}
-    <ErrorMessage>{form.errorsCambiarEstado.firmaUsuario}</ErrorMessage>
+  {#if form?.errorsCambiarEstado?.firmaEmpleadoSolicitante}
+    <ErrorMessage>{form.errorsCambiarEstado.firmaEmpleadoSolicitante}</ErrorMessage>
   {/if}
   {#if nuevoEstado === 'RESUELTO'}
     <CapturadorFirmaAvanzado
       obligatorio
       bind:this={capturadorFirmaAvanzado}
-      onguardar={(firma) => firmaUsuario = firma}
-      onlimpiar={() => firmaUsuario = ''}
+      onguardar={(firma) => firmaEmpleadoSolicitante = firma}
+      onlimpiar={() => firmaEmpleadoSolicitante = ''}
     />
   {/if}
   <TextArea
@@ -308,7 +308,7 @@
         ordenServicioId: ordenServicio.id,
         nuevoEstado: nuevoEstado,
         observacion: observacionCambioEstado,
-        firmaUsuario: firmaUsuario
+        firmaEmpleadoSolicitante: firmaEmpleadoSolicitante
       };
       formData.set('data', JSON.stringify(data));
       return async ({ update, result }) => {
@@ -320,9 +320,10 @@
       };
     }}
   >
-    <div class="flex flex-col lg:flex-row items-stretch w-full">
+    <div class="flex flex-col lg:flex-row gap-5">
       <ButtonSecundary
         type="button"
+        class="w-full"
         onclick={() => {
           limpiarFormularioCambiarEstado();
           modalCambiarEstado?.close();
@@ -332,6 +333,7 @@
       </ButtonSecundary>
       <ButtonAccept
         type="submit"
+        class="w-full"
       >
         Enviar
       </ButtonAccept>
