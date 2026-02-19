@@ -31,17 +31,12 @@ export async function load ({ locals, url }) {
     parameters.filtros.estado = resultValidation.values.estado;
     parameters.filtros.prioridad = resultValidation.values.prioridad;
   }
-  parameters.filtros.prioridad = null;
   const rolNombre = locals.usuario.rol.nombre;
   if (rolNombre === 'Agente') {
-    parameters.filtros = {
-      agenteId: locals.usuario.id
-    };
+    parameters.filtros.agenteId = locals.usuario.id;
   } else if (rolNombre === 'Encargado' || rolNombre === 'Capturista') {
     if (locals.usuario.areasAcceso != null) {
-      parameters.filtros = {
-        areasAsignadasId: locals.usuario.areasAcceso.map(area => area.id)
-      };
+      parameters.filtros.areasAsignadasId = locals.usuario.areasAcceso.map(area => area.id);
     }
   }
   const paginacion = await paginarOrdenesServicioResumen(parameters);

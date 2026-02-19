@@ -9,17 +9,24 @@ import { BusinessRuleException, BusinessRules, ForbiddenException } from '$lib/s
 import { Temporal } from 'temporal-polyfill/impl';
 
 /**
- * @typedef {Extract<Awaited<ReturnType<typeof import('$lib/server/validators').validateRegistroOrdenServicio>>, { values: any }>['values']} Data
- */
-
-/**
  *
  * @param {NonNullable<App.Locals['usuario']>} usuario
  * @param {NonNullable<App.Locals['authorize']>} authorize
  */
 export function createRegistrarOrdenServicioUseCase (usuario, authorize) {
   /**
-   * @param {Data} data
+   * @param {{
+   *  areaParaAsignarId: number,
+   *  empleadoSolicitanteId: number,
+   *  telefonoSolicitante: string,
+   *  categoriaOrdenId: number,
+   *  otroCategoriaOrden: string | null,
+   *  prioridad: 'BAJA' | 'MEDIA' | 'ALTA' | 'CRITICA',
+   *  descripcion: string,
+   *  ordenServicioRelacionadoId: number | null,
+   *  numeroOficio: string | null,
+   *  tipoEntrada: 'PRESENCIAL' | 'LLAMADA_TELEFONICA' | 'OFICIO' | 'INDICACION_SUPERIOR'
+   * }} data
    * @return {Promise<number>}
    * @throws {BusinessRuleException}
    * @throws {ForbiddenException}
@@ -54,7 +61,7 @@ export function createRegistrarOrdenServicioUseCase (usuario, authorize) {
         areaAsignadaId: data.areaParaAsignarId,
         encargadoAreaAsignadaId: encargadoAreaAsignada.id,
         creadoPorId: usuario.id,
-        ordenServicioRelacionadoId: data.orderServicioRelacionadoId,
+        ordenServicioRelacionadoId: data.ordenServicioRelacionadoId,
         creadoEn: creadoEn
       }, tx);
       return folio;

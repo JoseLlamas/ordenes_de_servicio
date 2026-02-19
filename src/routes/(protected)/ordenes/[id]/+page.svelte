@@ -25,6 +25,8 @@
   import FormAgregarActivo from '$lib/components/FormAgregarActivo.svelte';
   import Input from '$lib/components/Input.svelte';
   import Select from '$lib/components/Select.svelte';
+  import CapturadorFirmaAvanzado from '$lib/components/CapturadorFirmaAvanzado.svelte';
+    import ButtonSecundary from '$lib/components/ButtonSecundary.svelte';
 
   let { data, form } = $props();
 
@@ -101,10 +103,39 @@
 
   let submittingNuevoEstado = $state(false);
 
+  let observacionCambioEstado = $state('');
+
+  let firmaUsuario = $state('');
+
+  function limpiarFormularioCambiarEstado () {
+    capturadorFirmaAvanzado?.reset();
+    observacionCambioEstado = '';
+    nuevoEstado = null;
+    firmaUsuario = '';
+  }
+
+  /**
+   * @type {CapturadorFirmaAvanzado | null}
+  */
+  let capturadorFirmaAvanzado = $state(null);
+
+  /**
+   * @type {Modal | undefined}
+  */
+  let modalCambiarEstado = $state();
+
   /**
    * @type {Omit<typeof data.ordenServicio['estado'], 'NUEVO'> | null}
    */
   let nuevoEstado = $state(null);
+
+  /**
+   * @param {Omit<typeof data.ordenServicio['estado'], 'NUEVO'>} nE
+   */
+  function abrirModalCambiarEstado (nE) {
+    nuevoEstado = nE;
+    modalCambiarEstado?.open();
+  }
 
   let textoLabelNuevoEstado = $derived.by(() => {
     if (nuevoEstado === 'PROCESO') {
@@ -232,6 +263,81 @@
 
 <LoadingScreen hidden={!showLoadingScreen} />
 <ConfirmModal bind:this={confirmModal} />
+
+<Modal
+  title={`Cambiar estado a ${nuevoEstado}`}
+  bind:this={modalCambiarEstado}
+  onclose={() => limpiarFormularioCambiarEstado()}
+>
+  {#if form?.errorCambiarEstado}
+    <ErrorMessage>{form.errorCambiarEstado}</ErrorMessage>
+  {/if}
+  {#if form?.messageCambiarEstado}
+    <InfoMessage>{form.messageCambiarEstado}</InfoMessage>
+  {/if}
+  {#if form?.errorsCambiarEstado?.nuevoEstado}
+    <ErrorMessage>{form.errorsCambiarEstado.nuevoEstado}</ErrorMessage>
+  {/if}
+  {#if form?.errorsCambiarEstado?.observacion}
+    <ErrorMessage>{form.errorsCambiarEstado.observacion}</ErrorMessage>
+  {/if}
+  {#if form?.errorsCambiarEstado?.firmaUsuario}
+    <ErrorMessage>{form.errorsCambiarEstado.firmaUsuario}</ErrorMessage>
+  {/if}
+  {#if nuevoEstado === 'RESUELTO'}
+    <CapturadorFirmaAvanzado
+      obligatorio
+      bind:this={capturadorFirmaAvanzado}
+      onguardar={(firma) => firmaUsuario = firma}
+      onlimpiar={() => firmaUsuario = ''}
+    />
+  {/if}
+  <TextArea
+    id="observacion"
+    label={textoLabelNuevoEstado}
+    class="uppercase"
+    bind:value={observacionCambioEstado}
+  />
+  <form
+    action="?/cambiarEstado"
+    method="POST"
+    use:confirmBeforeEnhance={{ confirm: () => confirmModal?.confirm() ?? Promise.resolve(false) }}
+    use:enhance={({ formData }) => {
+      submittingNuevoEstado = true;
+      const data = {
+        ordenServicioId: ordenServicio.id,
+        nuevoEstado: nuevoEstado,
+        observacion: observacionCambioEstado,
+        firmaUsuario: firmaUsuario
+      };
+      formData.set('data', JSON.stringify(data));
+      return async ({ update, result }) => {
+        await update();
+        submittingNuevoEstado = false;
+        if (result.status === 200) {
+          limpiarFormularioCambiarEstado();
+        }
+      };
+    }}
+  >
+    <div class="flex flex-col lg:flex-row items-stretch w-full">
+      <ButtonSecundary
+        type="button"
+        onclick={() => {
+          limpiarFormularioCambiarEstado();
+          modalCambiarEstado?.close();
+        }}
+      >
+        Cancelar
+      </ButtonSecundary>
+      <ButtonAccept
+        type="submit"
+      >
+        Enviar
+      </ButtonAccept>
+    </div>
+  </form>
+</Modal>
 
 <Modal
   bind:this={modalAsignacion}
@@ -1060,83 +1166,39 @@
 
     <button
       class="px-4 py-2 rounded-lg text-sm font-medium bg-[#9b1f3d] text-white hover:bg-[#7f182f] transition-colors"
-      onclick={() => nuevoEstado = 'PROCESO'}
+      onclick={() => abrirModalCambiarEstado('PROCESO')}
       >
       Iniciar
     </button>
 
     <button
       class="px-4 py-2 rounded-lg text-sm font-medium bg-green-600 text-white hover:bg-green-700 transition-colors"
-      onclick={() => nuevoEstado = 'PENDIENTE'}
+      onclick={() => abrirModalCambiarEstado('PENDIENTE')}
     >
       Pediente
     </button>
 
     <button
       class="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors"
-      onclick={() => nuevoEstado = 'RESUELTO'}
+      onclick={() => abrirModalCambiarEstado('RESUELTO')}
     >
       Solucionar
     </button>
 
     <button
       class="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors"
-      onclick={() => nuevoEstado = 'CERRADO'}
+      onclick={() => abrirModalCambiarEstado('CERRADO')}
     >
       Cerrar
     </button>
 
     <button
       class="px-4 py-2 rounded-lg text-sm font-medium border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
-      onclick={() => nuevoEstado = 'CANCELADO'}
+      onclick={() => abrirModalCambiarEstado('CANCELADO')}
     >
       Cancelar
     </button>
   </div>
-  {#if nuevoEstado != null}
-    <form
-      action="?/cambiarEstado"
-      method="POST"
-      class="flex flex-col gap-3 pt-5"
-      use:confirmBeforeEnhance={{ confirm: () => confirmModal?.confirm() ?? Promise.resolve(false) }}
-      use:enhance={({ formData }) => {
-        submittingNuevoEstado = true;
-        formData.set('ordenServicioId', ordenServicio.id.toString());
-        formData.set('nuevoEstado', String(nuevoEstado ?? ''));
-        return async ({ update }) => {
-          await update();
-          submittingNuevoEstado = false;
-        };
-      }}
-    >
-
-    {#if form?.errorCambiarEstado}
-      <ErrorMessage>{form.errorCambiarEstado}</ErrorMessage>
-    {/if}
-    {#if form?.messageCambiarEstado}
-      <InfoMessage>{form.messageCambiarEstado}</InfoMessage>
-    {/if}
-    {#if form?.errorsCambiarEstado?.nuevoEstado}
-      <ErrorMessage>{form.errorsCambiarEstado.nuevoEstado}</ErrorMessage>
-    {/if}
-    {#if form?.errorsCambiarEstado?.observacion}
-      <ErrorMessage>{form.errorsCambiarEstado.observacion}</ErrorMessage>
-    {/if}
-      <div class="flex flex-col gap-3 items-stretch w-full">
-        <TextArea
-          name="observacion"
-          id="observacion"
-          label={textoLabelNuevoEstado}
-          class="uppercase"
-        />
-        <ButtonAccept
-          type="submit"
-        >
-          Enviar
-        </ButtonAccept>
-      </div>
-    </form>
-  {/if}
 </div>
 
 <!-- Contenedor principal - fondo gris en pantalla, blanco en impresión -->

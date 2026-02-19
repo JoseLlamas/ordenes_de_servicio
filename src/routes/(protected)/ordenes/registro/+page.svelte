@@ -5,11 +5,9 @@
   import Input from '$lib/components/Input.svelte';
   import TextArea from '$lib/components/TextArea.svelte';
   import LoadingScreen from '$lib/components/LoadingScreen.svelte';
-  import ButtonSecundary from '$lib/components/ButtonSecundary.svelte';
   import ErrorMessage from '$lib/components/ErrorMessage.svelte';
   import { obtenerAreasPorDireccion, obtenerEmpleadosPorArea, obtenerCategoriasOrdenPorArea } from '$lib/api';
   import { escribirNombreCompleto } from '$lib/utils';
-  import SinResultados from '$lib/components/SinResultados.svelte';
   import InfoMessage from '$lib/components/InfoMessage.svelte';
   import ErrorCard from '$lib/components/ErrorCard.svelte';
   import ConfirmModal from '$lib/components/ConfirmModal.svelte';

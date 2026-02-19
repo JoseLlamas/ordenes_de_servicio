@@ -118,7 +118,8 @@ export async function paginarOrdenesServicioResumen ({
           )
       )
     );
-  } else if (filtros.areasAsignadasId != null) {
+  }
+  if (filtros.areasAsignadasId != null) {
     params.push(inArray(schemas.ordenesServicio.areaAsignadaId, filtros.areasAsignadasId));
   }
   if (filtros.rangoFechas != null) {

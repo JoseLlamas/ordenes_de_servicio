@@ -89,8 +89,8 @@ export const actions = {
 
   cambiarEstado: async ({ request, locals }) => {
     assertAuthenticated(locals);
-    const data = Object.fromEntries(await request.formData());
-    const resultValidation = await validateCambioEstado(data);
+    const form = await request.formData();
+    const resultValidation = await validateCambioEstado(JSON.parse(/** @type {string} */ (form.get('data'))));
     if ('errors' in resultValidation) {
       return fail(422, {
         errorsCambiarEstado: resultValidation.errors

@@ -102,11 +102,10 @@ const schema = Joi.object({
     .uppercase()
     .trim()
     .max(100)
-    .default(null)
     .when('tipoEntrada', {
       is: Joi.valid('OFICIO'),
       then: Joi.required(),
-      otherwise: Joi.optional()
+      otherwise: Joi.optional().default(null)
     })
     .messages({
       'any.required': 'Cuando la solicitud de la orden es por oficio, debe ingresar el número de ese oficio',
@@ -123,7 +122,7 @@ const schema = Joi.object({
  *  otroCategoriaOrden: string | null,
  *  prioridad: 'BAJA' | 'MEDIA' | 'ALTA' | 'CRITICA',
  *  descripcion: string,
- *  orderServicioRelacionadoId: number | null,
+ *  ordenServicioRelacionadoId: number | null,
  *  tipoEntrada: 'PRESENCIAL' | 'LLAMADA_TELEFONICA' | 'OFICIO' | 'INDICACION_SUPERIOR',
  *  numeroOficio: string | null
  * }>}
