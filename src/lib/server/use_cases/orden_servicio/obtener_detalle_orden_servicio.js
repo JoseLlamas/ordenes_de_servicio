@@ -1,5 +1,5 @@
 import { obtenerOrdenServicioDetallePorId } from '$lib/server/db/queries';
-import { BusinessRuleException, ForbiddenException } from '$lib/server/exceptions';
+import { BusinessRuleException, BusinessRules, ForbiddenException } from '$lib/server/exceptions';
 
 /**
  *
@@ -14,7 +14,10 @@ export function createObtenerDetalleOrdenServicioUseCase (usuario, authorize) {
   return async (ordenServicioId) => {
     const ordenServicio = await obtenerOrdenServicioDetallePorId(ordenServicioId);
     if (ordenServicio == null) {
-      throw new BusinessRuleException('Orden de servicio no encontrada');
+      throw new BusinessRuleException(
+        'Orden de servicio no encontrada',
+        BusinessRules.ORDEN_DE_SERVICIO_NO_ENCONTRADA
+      );
     }
     if (authorize.cannot('read', 'Orden', { areaId: ordenServicio.areaAsignada.id })) {
       throw new ForbiddenException('No tiene permisos para ver esta orden de servicio');

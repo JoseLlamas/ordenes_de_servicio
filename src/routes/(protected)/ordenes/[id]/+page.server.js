@@ -29,7 +29,7 @@ export async function load ({ params, locals }) {
   if (!locals.authorize.has('read', 'Orden')) {
     redirect(303, '/sin-acceso');
   }
-  const ordenServicioId = parseInt(params.id);
+  const ordenServicioId = Number.parseInt(params.id);
   if (Number.isNaN(ordenServicioId)) {
     redirect(303, '/no-encontrado');
   }
