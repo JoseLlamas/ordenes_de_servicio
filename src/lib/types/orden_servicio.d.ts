@@ -51,6 +51,7 @@ export interface OrdenServicioDetalleDTO {
   telefonoSolicitante: string;
   encargadoAreaAsignada: Omit<EmpleadoDTO, 'activo'>;
   ordenServicioRelacionadoId: number | null;
+  firmaEmpleadoSolicitante: string | null;
   creadoEn: Date;
   cerradoEn: Date | null;
   canceladoEn: Date | null;

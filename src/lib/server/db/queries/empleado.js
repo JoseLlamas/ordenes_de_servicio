@@ -90,7 +90,7 @@ export async function obtenerEmpleadoPorId (id, dbOrTx = db) {
 /**
  * @param {string} nombre
  * @param {string} primerApellido
- * @param {string | null} [segundoApellido]
+ * @param {string} [segundoApellido]
  * @param {DbOrTx} [dbOrTx = db]
  * @return {Promise<EmpleadoDetalleDTO[]>}
  */

@@ -11,8 +11,8 @@ import { direccionesGenerales } from '../schema';
 *  @param {DbOrTx} [dbOrTx = db]
  * @return {Promise<DireccionGeneralDTO[]>}
  */
-export async function obtenerDireccionesGenerales (dbOrTx = db) {
-  return await dbOrTx.select({
+export function obtenerDireccionesGenerales (dbOrTx = db) {
+  return dbOrTx.select({
     id: direccionesGenerales.id,
     nombre: direccionesGenerales.nombre
   }).from(direccionesGenerales)

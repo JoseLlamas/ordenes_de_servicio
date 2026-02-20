@@ -1,5 +1,5 @@
 import { db } from '$lib/server/db';
-import { obtenerInvitacion, tieneUsuario, patchInvitacion, existeNombreUsuario, registrarUsuario as registrarUsuarioDB, obtenerAreaEmpleado } from '$lib/server/db/queries';
+import { obtenerInvitacion, tieneUsuario, patchInvitacion, existeNombreUsuario, registrarUsuario as registrarUsuarioDB } from '$lib/server/db/queries';
 import { BusinessRuleException, BusinessRules } from '$lib/server/exceptions';
 import { generateHashPassword } from '$lib/server/utils';
 
@@ -14,7 +14,7 @@ import { generateHashPassword } from '$lib/server/utils';
 export function registrarUsuario (data) {
   return db.transaction(async tx => {
     const invitacion = await obtenerInvitacion(data.token, tx);
-    if (invitacion === null) {
+    if (invitacion == null) {
       throw new BusinessRuleException('Token no registrado', BusinessRules.TOKEN_NO_REGISTRADO_PARA_REGISTRO_USUARIO);
     }
     if (invitacion.usado) {
@@ -27,16 +27,11 @@ export function registrarUsuario (data) {
       throw new BusinessRuleException('Nombre de usuario ya ocupado', BusinessRules.NOMBRE_USUARIO_NO_DISPONIBLE);
     }
     await patchInvitacion({ usado: true }, invitacion.id, tx);
-    const area = await obtenerAreaEmpleado(invitacion.empleadoId, tx);
-    if (area === null) {
-      throw new BusinessRuleException('El empleado no tiene area');
-    }
     return await registrarUsuarioDB({
       nombreUsuario: data.nombreUsuario,
       password: await generateHashPassword(data.password),
       activo: true,
       empleadoId: invitacion.empleadoId,
-      areaId: area.id,
       rolId: invitacion.rolId,
       avatar: null,
       areasAccesoId: invitacion.areasAccesoId

@@ -29,10 +29,9 @@ const schemaBusquedaEmpleados = Joi.object({
     .empty(['', null])
     .trim()
     .uppercase()
-    .default(null)
 });
 
 /**
- * @type {Validator<{ nombre: string, primerApellido: string, segundoApellido: string | null }>}
+ * @type {Validator<{ nombre: string, primerApellido: string, segundoApellido?: string }>}
  */
 export const validateBusquedaEmpleados = createValidator(schemaBusquedaEmpleados);

@@ -51,11 +51,11 @@ export async function registrarOrdenServicio (data, dbOrTx = db) {
  * @param {number} opciones.pagina
  * @param {number} opciones.porPagina
  * @param {{
- *  rangoFechas?: [Date, Date] | null,
- *  estado?: 'NUEVO' | 'PROCESO' | 'PENDIENTE' | 'RESUELTO' | 'CERRADO' | 'CANCELADO' | null ,
- *  prioridad?: 'BAJA' | 'MEDIA' | 'ALTA' | 'CRITICA' | null,
- *  agenteId?: number | null,
- *  areasAsignadasId?: number[] | null
+ *  rangoFechas?: [Date, Date],
+ *  estado?: 'NUEVO' | 'PROCESO' | 'PENDIENTE' | 'RESUELTO' | 'CERRADO' | 'CANCELADO',
+ *  prioridad?: 'BAJA' | 'MEDIA' | 'ALTA' | 'CRITICA',
+ *  agenteId?: number,
+ *  areasAsignadasId?: number[]
  * }} opciones.filtros
  * @param {DbOrTx} [dbOrTx = db]
  * @return {Promise<{
@@ -210,6 +210,7 @@ export async function obtenerOrdenServicioDetallePorId (id, dbOrTx = db) {
       otroCategoriaOrden: true,
       telefonoSolicitante: true,
       ordenServicioRelacionadoId: true,
+      firmaEmpleadoSolicitante: true,
       creadoEn: true,
       canceladoEn: true,
       cerradoEn: true
@@ -456,11 +457,11 @@ export async function desasignarAgente (ordenServicioId, agenteId, dbOrTx = db) 
  * @param {number} ordenServicioId
  * @param {{
  *  estado?: 'PROCESO' | 'PENDIENTE' | 'RESUELTO' | 'CERRADO' | 'CANCELADO',
- *  cerradoEn?: Date,
- *  cerradoPorId?: number,
- *  canceladoEn?: Date,
- *  canceladoPorId?: number,
- *  ordenServicioRelacionadoId?: number,
+ *  cerradoEn?: Date | null,
+ *  cerradoPorId?: number | null,
+ *  canceladoEn?: Date | null,
+ *  canceladoPorId?: number | null,
+ *  ordenServicioRelacionadoId?: number | null,
  *  telefonoSolicitante?: string,
  *  categoriaOrdenId?: number,
  *  otroCategoriaOrden?: string | null,

@@ -8,7 +8,7 @@
   import TextArea from './TextArea.svelte';
   import ErrorMessage from './ErrorMessage.svelte';
   import ErrorCard from './ErrorCard.svelte';
-    import InfoMessage from './InfoMessage.svelte';
+  import InfoMessage from './InfoMessage.svelte';
 
   /**
   * @import { CategoriaActivoDTO } from '$lib/types';

@@ -1,7 +1,7 @@
 import { fail, redirect } from '@sveltejs/kit';
 import { validateRegistroEmpleado } from '$lib/server/validators';
 import { createRegistrarEmpleadoUseCase } from '$lib/server/use_cases/empleado';
-import { BusinessRuleException, ForbiddenException } from '$lib/server/exceptions';
+import { ForbiddenException } from '$lib/server/exceptions';
 import { obtenerDireccionesGenerales } from '$lib/server/db/queries';
 import { assertAuthenticated } from '$lib/server/auth/guards';
 

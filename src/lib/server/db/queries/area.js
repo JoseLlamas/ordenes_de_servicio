@@ -36,7 +36,7 @@ export async function obtenerAreas (filters = {}, dbOrTx = db) {
  * @param {DbOrTx} [dbOrTx = db]
  * @return {Promise<AreaDTO[]>}
  */
-export async function obtenerAreasParaAsignar (dbOrTx = db) {
+export function obtenerAreasParaAsignar (dbOrTx = db) {
   const subQuery = dbOrTx
     .select({
       a: sql`1`
@@ -44,7 +44,7 @@ export async function obtenerAreasParaAsignar (dbOrTx = db) {
     .from(categoriasOrden)
     .where(eq(categoriasOrden.areaId, areas.id))
     .limit(1);
-  return await dbOrTx
+  return dbOrTx
     .select({
       id: areas.id,
       nombre: areas.nombre

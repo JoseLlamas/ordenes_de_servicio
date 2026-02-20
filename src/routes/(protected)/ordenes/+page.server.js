@@ -28,8 +28,12 @@ export async function load ({ locals, url }) {
       const fecha = resultValidation.values.fecha;
       parameters.filtros.rangoFechas = createDesdeHastaUTC(fecha, fecha);
     }
-    parameters.filtros.estado = resultValidation.values.estado;
-    parameters.filtros.prioridad = resultValidation.values.prioridad;
+    if (resultValidation.values.estado != null) {
+      parameters.filtros.estado = resultValidation.values.estado;
+    }
+    if (resultValidation.values.prioridad != null) {
+      parameters.filtros.prioridad = resultValidation.values.prioridad;
+    }
   }
   const rolNombre = locals.usuario.rol.nombre;
   if (rolNombre === 'Agente') {

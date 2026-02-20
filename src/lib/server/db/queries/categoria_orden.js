@@ -13,8 +13,8 @@ import { categoriasOrden } from '../schema';
  * @param {DbOrTx} [dbOrTx = db]
  * @return {Promise<CategoriaOrdenDTO[]>}
  */
-export async function obtenerCategoriasOrdenPorArea (areaId, dbOrTx = db) {
-  const co = await dbOrTx
+export function obtenerCategoriasOrdenPorArea (areaId, dbOrTx = db) {
+  return dbOrTx
     .select({
       id: categoriasOrden.id,
       descripcion: categoriasOrden.descripcion
@@ -22,5 +22,4 @@ export async function obtenerCategoriasOrdenPorArea (areaId, dbOrTx = db) {
     .from(categoriasOrden)
     .where(eq(categoriasOrden.areaId, areaId))
     .orderBy(asc(categoriasOrden.id));
-  return co;
 }

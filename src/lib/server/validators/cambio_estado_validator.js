@@ -23,7 +23,10 @@ const schema = Joi.object({
     .when('nuevoEstado', {
       is: Joi.valid('RESUELTO'),
       then: Joi.required(),
-      otherwise: Joi.optional().default(null)
+      otherwise: Joi.optional()
+    })
+    .messages({
+      'any.required': 'La fima es requerida'
     }),
   observacion: Joi
     .string()
@@ -47,7 +50,7 @@ const schema = Joi.object({
  *  ordenServicioId: number,
  *  nuevoEstado: 'PROCESO' | 'PENDIENTE' | 'RESUELTO' | 'CERRADO' | 'CANCELADO',
  *  observacion: string | null,
- *  firmaEmpleadoSolicitante: string | null
+ *  firmaEmpleadoSolicitante?: string
  * }>}
  */
 export const validateCambioEstado = createValidator(schema);

@@ -105,13 +105,16 @@
 
   let observacionCambioEstado = $state('');
 
-  let firmaEmpleadoSolicitante = $state('');
+  /**
+   * @type {string | null}
+  */
+  let firmaEmpleadoSolicitante = $state(null);
 
   function limpiarFormularioCambiarEstado () {
     capturadorFirmaAvanzado?.reset();
     observacionCambioEstado = '';
     nuevoEstado = null;
-    firmaEmpleadoSolicitante = '';
+    firmaEmpleadoSolicitante = null;
   }
 
   /**
@@ -289,7 +292,7 @@
       obligatorio
       bind:this={capturadorFirmaAvanzado}
       onguardar={(firma) => firmaEmpleadoSolicitante = firma}
-      onlimpiar={() => firmaEmpleadoSolicitante = ''}
+      onlimpiar={() => firmaEmpleadoSolicitante = null}
     />
   {/if}
   <TextArea
@@ -307,9 +310,11 @@
       const data = {
         ordenServicioId: ordenServicio.id,
         nuevoEstado: nuevoEstado,
-        observacion: observacionCambioEstado,
-        firmaEmpleadoSolicitante: firmaEmpleadoSolicitante
+        observacion: observacionCambioEstado
       };
+      if (firmaEmpleadoSolicitante != null) {
+        data.firmaEmpleadoSolicitante = firmaEmpleadoSolicitante;
+      }
       formData.set('data', JSON.stringify(data));
       return async ({ update, result }) => {
         await update();
@@ -687,7 +692,7 @@
                 <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-3">
                   Solicitante
                 </p>
-                <div class="flex items-start gap-3">
+                <div class="flex items-start flex-col gap-3">
                   <div class="flex-1 min-w-0">
                     <p class="text-sm font-medium text-gray-900 dark:text-white">
                       {escribirNombreCompleto(ordenServicio.empleadoSolicitante)}
@@ -696,6 +701,15 @@
                       {ordenServicio.empleadoSolicitante.cargo}
                     </p>
                   </div>
+                  {#if ordenServicio.firmaEmpleadoSolicitante != null}
+                    <div >
+                      <img
+                        src={ordenServicio.firmaEmpleadoSolicitante}
+                        alt="Firma solicitante"
+                        class="border border-gray-300 rounded-lg bg-white"
+                      />
+                    </div>
+                  {/if}
                 </div>
               </div>
 
@@ -1307,7 +1321,16 @@
 
       <div class="grid grid-cols-2 gap-8">
         <div class="text-center">
-          <div class="h-18 mb-2"></div>
+          {#if ordenServicio.firmaEmpleadoSolicitante != null}
+            <div >
+              <img
+                src={ordenServicio.firmaEmpleadoSolicitante}
+                alt="Firma solicitante"
+              />
+            </div>
+          {:else}
+            <div class="h-18 mb-2"></div>
+          {/if}
           <div class="border-t-2 border-gray-900 pt-2">
             <p class="text-sm text-gray-900 font-medium">Firma Solicitante</p>
             <p class="text-xs text-gray-600 mt-1">{escribirNombreCompleto(ordenServicio.empleadoSolicitante)}</p>

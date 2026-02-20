@@ -27,7 +27,7 @@ export function createCambiarEstadoUseCase (usuario, authorize) {
    *  ordenServicioId: number,
    *  nuevoEstado: 'PROCESO' | 'PENDIENTE' | 'RESUELTO' | 'CERRADO' | 'CANCELADO',
    *  observacion: string | null,
-   *  firmaEmpleadoSolicitante: string | null
+   *  firmaEmpleadoSolicitante?: string
    * }} data
    */
   return (data) => {
@@ -81,7 +81,10 @@ export function createCambiarEstadoUseCase (usuario, authorize) {
         if (data.firmaEmpleadoSolicitante != null) {
           dataUpdate.firmaEmpleadoSolicitante = data.firmaEmpleadoSolicitante;
         } else {
-          throw new BusinessRuleException('La firma es requerida');
+          throw new BusinessRuleException(
+            'La firma es requerida',
+            BusinessRules.FIRMA_EMPLEADO_SOLICITANTE_REQUERIDA
+          );
         }
       } else {
         dataUpdate.firmaEmpleadoSolicitante = null;

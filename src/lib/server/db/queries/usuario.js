@@ -22,7 +22,6 @@ import { sql, asc } from 'drizzle-orm';
  *  activo: boolean,
  *  password: string,
  *  empleadoId: number,
- *  areaId: number,
  *  rolId: number,
  *  avatar: string | null,
  *  areasAccesoId: number[] | null
@@ -31,19 +30,20 @@ import { sql, asc } from 'drizzle-orm';
  * @return {Promise<number>}
  */
 export async function registrarUsuario (data, dbOrTx = db) {
+  const values = {
+    ...data,
+    areasAccesoId: data.areasAccesoId !== null ? JSON.stringify(data.areasAccesoId) : null
+  };
   const [{ id }] = await dbOrTx
     .insert(usuarios)
-    .values({
-      ...data,
-      areasAccesoId: data.areasAccesoId !== null ? JSON.stringify(data.areasAccesoId) : null
-    })
+    .values(values)
     .$returningId();
   return id;
 }
 
 /**
  *
- * @param {{ areaId?: number, soloActivos?: boolean }} [filters]
+ * @param {{ areaId?: number, soloActivos?: boolean}} [filters]
  * @param {DbOrTx} [dbOrTx=db]
  * @return {Promise<UsuarioResumenDTO[]>}
  */

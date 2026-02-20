@@ -13,7 +13,7 @@ export async function load ({ params, locals }) {
   }
   const id = Number(params.id);
   if (Number.isNaN(id)) {
-    error(404, 'Recurso no encontrado');
+    redirect(303, '/no-encontrado');
   }
   const obtenerUsuario = createObtenerUsuarioUseCase(locals.usuario, locals.authorize);
   try {
@@ -23,7 +23,7 @@ export async function load ({ params, locals }) {
     };
   } catch (exc) {
     if (exc instanceof NotFoundException) {
-      error(404, exc.message);
+      redirect(303, '/no-encontrado');
     }
     if (exc instanceof BusinessRuleException && exc.rule === BusinessRules.USUARIO_NO_CONSULTAR_DETALLE_USUARIO_LOGUEADO) {
       redirect(303, '/perfil');
