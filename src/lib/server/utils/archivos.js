@@ -40,5 +40,8 @@ export async function procesarAvatar (file) {
  * @param {string} relativePath
  */
 export async function borrarArchivo (relativePath) {
-  await fs.unlink(path.join(UPLOADS_DIRECTORY, relativePath));
+  try {
+    await fs.access(path.join(UPLOADS_DIRECTORY, relativePath));
+    await fs.unlink(path.join(UPLOADS_DIRECTORY, relativePath));
+  } catch { /* empty */ }
 }
