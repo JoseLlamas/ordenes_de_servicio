@@ -1,0 +1,1 @@
+ALTER TABLE `ordenes_servicio` MODIFY COLUMN `firma_empleado_solicitante` varchar(255);

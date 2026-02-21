@@ -330,20 +330,6 @@ export async function existeNombreUsuario (nombreUsuario, dbOrTx = db) {
  * @return {Promise<AgenteDTO[]>}
  */
 export async function obtenerAgentes (filters = {}, dbOrTx = db) {
-  const subquery = dbOrTx
-    .select({
-      ordenServicioId: ordenesServicio.id
-    })
-    .from(asignaciones)
-    .innerJoin(ordenesServicio, eq(asignaciones.ordenServicioId, ordenesServicio.id))
-    .where(
-      and(
-        eq(asignaciones.agenteId, usuarios.id),
-        eq(ordenesServicio.estado, 'PROCESO')
-      )
-    )
-    .limit(1)
-    .as('a');
   const params = [
     eq(roles.nombre, 'Agente'),
     eq(usuarios.activo, true),
@@ -371,7 +357,14 @@ export async function obtenerAgentes (filters = {}, dbOrTx = db) {
       'empleado.area.nombre': areas.nombre,
       'rol.id': roles.id,
       'rol.nombre': roles.nombre,
-      'ordenServicioId': sql`${subquery}`
+      ordenServicioId: sql`(
+        select os.id
+        from asignaciones a
+        inner join ordenes_servicio os on a.orden_servicio_id = os.id
+        where a.agente_id = ${usuarios.id}
+          and os.estado = 'PROCESO'
+        limit 1
+      )`.as('orden_servicio_id')
     })
     .from(usuarios)
     .innerJoin(empleados, eq(usuarios.empleadoId, empleados.id))

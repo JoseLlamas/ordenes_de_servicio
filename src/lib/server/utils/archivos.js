@@ -21,6 +21,24 @@ export async function guardarArchivo (buffer, fileName, subdirectory) {
 
 /**
  *
+ * @param {string} base64
+ * @param {'agente' | 'solicitante'} tipo
+ * @param {number} ordenServicioId
+ * @param {number} year
+ */
+export async function guardarFirma (base64, tipo, ordenServicioId, year) {
+  const firmasDir = path.join('static', 'firmas', year.toString());
+  await fs.mkdir(firmasDir, { recursive: true });
+  const base64Data = base64.replace(/^data:image\/\w+;base64,/, '');
+  const buffer = Buffer.from(base64Data, 'base64');
+  const filename = `${ordenServicioId}-${tipo}.png`;
+  const filepath = path.join(firmasDir, filename);
+  await fs.writeFile(filepath, buffer);
+  return path.join('firmas', year.toString(), filename);
+}
+
+/**
+ *
  * @param {File} file
  * @return {Promise<Buffer>}
  */

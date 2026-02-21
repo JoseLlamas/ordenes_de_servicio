@@ -567,7 +567,7 @@
 <div class="print:hidden bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 mb-6">
   <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
     <div class="flex-1">
-      <div class="flex items-center gap-3 mb-2">
+      <div class="flex items-center flex-wrap gap-3 mb-2">
         <a
           title="regresar"
           href="/ordenes"
@@ -704,7 +704,7 @@
                   {#if ordenServicio.firmaEmpleadoSolicitante != null}
                     <div >
                       <img
-                        src={ordenServicio.firmaEmpleadoSolicitante}
+                        src={ordenServicio.firmaEmpleadoSolicitante.replace('static', '')}
                         alt="Firma solicitante"
                         class="border border-gray-300 rounded-lg bg-white"
                       />
@@ -1324,7 +1324,7 @@
           {#if ordenServicio.firmaEmpleadoSolicitante != null}
             <div >
               <img
-                src={ordenServicio.firmaEmpleadoSolicitante}
+                src={ordenServicio.firmaEmpleadoSolicitante.replace('static', '')}
                 alt="Firma solicitante"
               />
             </div>

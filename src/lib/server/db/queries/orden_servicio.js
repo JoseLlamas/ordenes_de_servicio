@@ -514,7 +514,8 @@ export async function obtenerOrdenServicioParaCambiarEstado (ordenServicioId, db
       id: schemas.ordenesServicio.id,
       estado: schemas.ordenesServicio.estado,
       areaAsignadaId: schemas.ordenesServicio.areaAsignadaId,
-      agentes: subquery.agentes
+      agentes: subquery.agentes,
+      creadoEn: schemas.ordenesServicio.creadoEn
     })
     .from(schemas.ordenesServicio)
     .innerJoinLateral(subquery, sql`true`)
@@ -524,6 +525,7 @@ export async function obtenerOrdenServicioParaCambiarEstado (ordenServicioId, db
       id: orden.id,
       estado: orden.estado,
       areaAsignadaId: orden.areaAsignadaId,
+      creadoEn: orden.creadoEn,
       agentes: /** @type {AgenteParaCambiarEstado[]} */ (orden.agentes)
     };
   }
