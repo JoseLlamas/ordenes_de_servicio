@@ -27,7 +27,7 @@
 
 {#if avatar != null}
   <img
-    src={`/${avatar}`}
+    src={`/uploads/${avatar}`}
     alt="Avatar"
     class={[sizeW, sizeH, 'rounded-full', 'ring-2', 'ring-gray-200', 'dark:ring-gray-700', backgroundColor]}
   />

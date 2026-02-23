@@ -722,14 +722,16 @@
                     <p class="text-sm font-medium text-gray-900 dark:text-white">
                       {escribirNombreCompleto(ordenServicio.empleadoSolicitante)}
                     </p>
-                    <p class="text-xs text-gray-500 dark:text-gray-400">
-                      {ordenServicio.empleadoSolicitante.cargo}
-                    </p>
+                    {#if ordenServicio.empleadoSolicitante.cargo != null}
+                      <p class="text-xs text-gray-500 dark:text-gray-400">
+                        {ordenServicio.empleadoSolicitante.cargo}
+                      </p>
+                    {/if}
                   </div>
                   {#if ordenServicio.firmaEmpleadoSolicitante != null}
                     <div >
                       <img
-                        src={`/${ordenServicio.firmaEmpleadoSolicitante}`}
+                        src={`/uploads/${ordenServicio.firmaEmpleadoSolicitante}`}
                         alt="Firma solicitante"
                         class="border border-gray-300 rounded-lg bg-white"
                       />
@@ -737,6 +739,38 @@
                   {/if}
                 </div>
               </div>
+
+              {#if ordenServicio.usuarioFirmaAtendio != null}
+                <div class="bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+                  <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-3">
+                    Usuario que atendio
+                  </p>
+                  <div class="flex items-start flex-col gap-3">
+                    <div class="flex-1 min-w-0">
+                      <p class="text-sm font-medium text-gray-900 dark:text-white">
+                        {escribirNombreCompleto(ordenServicio.usuarioFirmaAtendio.empleado)} - ({ordenServicio.usuarioFirmaAtendio.rol.nombre})
+                      </p>
+                      <p class="text-xs text-gray-500 dark:text-gray-400">
+                        @{ordenServicio.usuarioFirmaAtendio.nombreUsuario}
+                      </p>
+                      {#if ordenServicio.usuarioFirmaAtendio.empleado.cargo != null}
+                        <p class="text-xs text-gray-500 dark:text-gray-400">
+                          {ordenServicio.usuarioFirmaAtendio.empleado.cargo}
+                        </p>
+                      {/if}
+                    </div>
+                    {#if ordenServicio.firmaUsuarioAtendio != null}
+                      <div >
+                        <img
+                          src={`/uploads/${ordenServicio.firmaUsuarioAtendio}`}
+                          alt="Firma solicitante"
+                          class="border border-gray-300 rounded-lg bg-white"
+                        />
+                      </div>
+                    {/if}
+                  </div>
+                </div>
+              {/if}
 
               <!-- Encargado -->
               <div class="bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
@@ -748,9 +782,11 @@
                     <p class="text-sm font-medium text-gray-900 dark:text-white">
                       {escribirNombreCompleto(ordenServicio.encargadoAreaAsignada)}
                     </p>
-                    <p class="text-xs text-gray-500 dark:text-gray-400">
-                      {ordenServicio.encargadoAreaAsignada.cargo}
-                    </p>
+                    {#if ordenServicio.encargadoAreaAsignada.cargo != null}
+                      <p class="text-xs text-gray-500 dark:text-gray-400">
+                        {ordenServicio.encargadoAreaAsignada.cargo}
+                      </p>
+                    {/if}
                   </div>
                 </div>
               </div>
@@ -865,7 +901,6 @@
                   </div>
                 {/if}
               </div>
-
             </div>
           </div>
 
@@ -1349,7 +1384,7 @@
           {#if ordenServicio.firmaEmpleadoSolicitante != null}
             <div >
               <img
-                src={`/${ordenServicio.firmaEmpleadoSolicitante}`}
+                src={`/uploads/${ordenServicio.firmaEmpleadoSolicitante}`}
                 alt="Firma solicitante"
               />
             </div>
@@ -1366,7 +1401,7 @@
           {#if ordenServicio.firmaUsuarioAtendio != null}
             <div >
               <img
-                src={`/${ordenServicio.firmaUsuarioAtendio}`}
+                src={`/uploads/${ordenServicio.firmaUsuarioAtendio}`}
                 alt="Firma usuario atendio"
               />
             </div>
@@ -1414,7 +1449,7 @@
           </dd>
         </div>
         <div>
-          <dt class="text-sm font-medium text-gray-600">Atendió</dt>
+          <dt class="text-sm font-medium text-gray-600">U. ingreso solicitud</dt>
           <dd class="mt-1 text-base text-gray-900">{escribirNombreCompleto(ordenServicio.creadoPor.empleado)}</dd>
         </div>
       </div>

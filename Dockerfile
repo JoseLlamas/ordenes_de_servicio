@@ -20,13 +20,10 @@ WORKDIR /app
 COPY --from=builder /app/build ./build/
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/package-lock.json ./package-lock.json
-COPY --from=builder /app/.svelte-kit ./.svelte-kit
 COPY --from=builder /app/node_modules node_modules/
-COPY --from=builder /app/static static/
 
-RUN mkdir -p static/firmas static/avatares && \
-  chown -R node:node /app && \
-  chmod -R 755 /app/static
+RUN mkdir -p uploads/firmas uploads/avatares && \
+  chown -R node:node /app
 
 USER node
 

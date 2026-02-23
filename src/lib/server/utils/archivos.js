@@ -2,6 +2,8 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import sharp from 'sharp';
 
+const UPLOADS_DIR = 'uploads';
+
 /**
  * @param {Buffer} buffer
  * @param {string} fileName
@@ -9,7 +11,7 @@ import sharp from 'sharp';
  * @return {Promise<string>}
  */
 export async function guardarAvatar (buffer, fileName) {
-  const dirPath = path.join('static', 'avatares');
+  const dirPath = path.join(UPLOADS_DIR, 'avatares');
   await fs.mkdir(dirPath, { recursive: true });
   const fullPath = path.join(dirPath, fileName);
   await fs.writeFile(fullPath, buffer);
@@ -23,7 +25,7 @@ export async function guardarAvatar (buffer, fileName) {
  * @param {string} filename
  */
 export async function guardarFirma (base64, year, filename) {
-  const firmasDir = path.join('static', 'firmas', year.toString());
+  const firmasDir = path.join(UPLOADS_DIR, 'firmas', year.toString());
   await fs.mkdir(firmasDir, { recursive: true });
   const base64Data = base64.replace(/^data:image\/\w+;base64,/, '');
   const buffer = Buffer.from(base64Data, 'base64');
@@ -54,7 +56,7 @@ export async function procesarAvatar (file) {
  */
 export async function borrarArchivo (relativePath) {
   try {
-    await fs.access(path.join('static', relativePath));
-    await fs.unlink(path.join('static', relativePath));
+    await fs.access(path.join(UPLOADS_DIR, relativePath));
+    await fs.unlink(path.join(UPLOADS_DIR, relativePath));
   } catch { /* empty */ }
 }
