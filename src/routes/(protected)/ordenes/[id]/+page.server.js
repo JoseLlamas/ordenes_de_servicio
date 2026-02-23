@@ -120,14 +120,14 @@ export const actions = {
   desasignarAgente: async ({ request, locals }) => {
     assertAuthenticated(locals);
     const data = Object.fromEntries(await request.formData());
+    const resultValidation = await validateDesasignacionAgente(data);
+    if ('errors' in resultValidation) {
+      return fail(422, {
+        errorsDesasignacionAgente: resultValidation.errors
+      });
+    }
+    const desasignarAgente = createDesasignarAgenteUseCase(locals.usuario, locals.authorize);
     try {
-      const resultValidation = await validateDesasignacionAgente(data);
-      if ('errors' in resultValidation) {
-        return fail(422, {
-          errorsDesasignacionAgente: resultValidation.errors
-        });
-      }
-      const desasignarAgente = createDesasignarAgenteUseCase(locals.usuario, locals.authorize);
       await desasignarAgente(resultValidation.values.ordenServicioId, resultValidation.values.agenteId);
       return {
         messageDesasignacionAgente: 'Agente desasignado'

@@ -1,40 +1,8 @@
-import { sequence } from '@sveltejs/kit/hooks';
 import { getAuthCookies, deleteAuthCookies } from '$lib/server/utils';
 import { validarSesion } from '$lib/server/use_cases/auth';
 import { createValidateAuthorization, defineAbilitiesFor } from '$lib/server/auth';
-import fs from 'node:fs/promises';
-import path from 'node:path';
 import { registrarLog } from '$lib/server/db/queries';
 import { Temporal } from 'temporal-polyfill/impl';
-
-/**
- * @type {import('@sveltejs/kit').Handle}
- */
-async function handleUploadsFiles ({ event, resolve }) {
-  if (event.url.pathname.startsWith('/uploads/')) {
-    const filePath = path.join('./uploads', event.url.pathname.replace('/uploads/', ''));
-    try {
-      const file = await fs.readFile(filePath);
-      const ext = path.extname(filePath);
-      const contentType = {
-        '.jpg': 'image/jpeg',
-        '.jpeg': 'image/jpeg',
-        '.png': 'image/png',
-        '.webp': 'image/webp',
-        '.gif': 'image/gif'
-      }[ext] ?? 'application/octet-stream';
-      return new Response(file, {
-        headers: {
-          'Content-Type': contentType,
-          'Cache-Control': 'public, max-age=31536000'
-        }
-      });
-    } catch {
-      return new Response('Not Found', { status: 404 });
-    }
-  }
-  return resolve(event);
-}
 
 /**
  * @type {import('@sveltejs/kit').Handle}
@@ -59,7 +27,7 @@ async function handleAuth ({ event, resolve }) {
   return resolve(event);
 }
 
-export const handle = sequence(handleUploadsFiles, handleAuth);
+export const handle = handleAuth;
 
 /**
  * @type {import('@sveltejs/kit').HandleServerError}

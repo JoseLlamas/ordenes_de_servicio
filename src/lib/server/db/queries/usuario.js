@@ -1,4 +1,4 @@
-import { eq, and, inArray, isNotNull, like, not, exists } from 'drizzle-orm';
+import { eq, and, inArray, isNotNull, like, exists, ne } from 'drizzle-orm';
 import { db } from '../index';
 import {
   usuarios,
@@ -325,7 +325,7 @@ export async function existeNombreUsuario (nombreUsuario, dbOrTx = db) {
 }
 
 /**
- * @param {{ nombre?: string, areasId?: number[] }} [filters = {}]
+ * @param {{ nombre?: string, areaId?: number }} [filters = {}]
  * @param {DbOrTx} [dbOrTx = db]
  * @return {Promise<AgenteDTO[]>}
  */
@@ -338,8 +338,8 @@ export async function obtenerAgentes (filters = {}, dbOrTx = db) {
   if (filters.nombre != null) {
     params.push(like(empleados.nombre, `%${filters.nombre}%`));
   }
-  if (filters.areasId != null && filters.areasId.length > 0) {
-    params.push(sql`JSON_CONTAINS(${usuarios.areasAccesoId}, ${JSON.stringify(filters.areasId)}, '$')`);
+  if (filters.areaId != null) {
+    params.push(sql`${filters.areaId} MEMBER OF(${usuarios.areasAccesoId})`);
   }
   const query = dbOrTx
     .select({
@@ -405,34 +405,33 @@ export async function obtenerAgentes (filters = {}, dbOrTx = db) {
  */
 export async function obtenerUsuariosParaAsignarAgentes (ordenServicioId, usuariosId, dbOrTx = db) {
   const subquery = dbOrTx
-    .select({
-      a: sql`1`
-    })
+    .select()
     .from(asignaciones)
     .innerJoin(ordenesServicio, eq(ordenesServicio.id, asignaciones.ordenServicioId))
     .where(
       and(
         eq(asignaciones.agenteId, usuarios.id),
         eq(ordenesServicio.estado, 'PROCESO'),
-        not(eq(ordenesServicio.id, ordenServicioId))
+        ne(ordenesServicio.id, ordenServicioId)
       )
     );
-  const users = await dbOrTx
+  const query = dbOrTx
     .select({
       id: usuarios.id,
       areasAccesoId: usuarios.areasAccesoId,
       activo: usuarios.activo,
       rol: roles.nombre,
-      estadoOcupado: exists(subquery)
+      ocupado: exists(subquery)
     })
     .from(usuarios)
     .innerJoin(roles, eq(usuarios.rolId, roles.id))
     .where(inArray(usuarios.id, usuariosId));
+  const users = await query;
   return users.map(user => ({
     id: user.id,
     activo: user.activo,
     areasAccesoId: /** @type {number[] | null} */ (user.areasAccesoId != null ? JSON.parse(user.areasAccesoId) : null),
     rol: user.rol,
-    estadoOcupado: Boolean(/** @type {boolean} */ (user.estadoOcupado))
+    ocupado: Boolean(/** @type {boolean} */ (user.ocupado))
   }));
 }

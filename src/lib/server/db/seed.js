@@ -106,6 +106,16 @@ async function seed () {
   await db.insert(schema.direccionesGenerales).values(jsonDireccionesGenerales.direcciones_generales);
   await db.insert(schema.areas).values(jsonAreas.areas.filter((area) => area.activo === 1).map(area => ({ ...area, direccionGeneralId: area.direccion_general_id })));
   await db.insert(schema.categoriasActivo).values(jsonCategoriasActivos.data.filter((c) => c.tipo > 0).map(c => ({ descripcion: c.descripcion, areaId: 317 })));
+  await db.insert(schema.categoriasActivo).values([{
+    descripcion: 'OTRO',
+    areaId: 317
+  }, {
+    descripcion: 'OTRO',
+    areaId: 316
+  }, {
+    descripcion: 'OTRO',
+    areaId: 315
+  }]);
   await db.insert(schema.empleados).values(jsonEmpleadosInformatica.map((empl) => ({ ...empl, direccionGeneralId: 21, activo: true })));
 
   await db.insert(schema.categoriasOrden).values([

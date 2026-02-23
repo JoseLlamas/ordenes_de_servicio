@@ -1,4 +1,4 @@
-import { and, asc, count, desc, eq, exists, gte, inArray, lte, sql } from 'drizzle-orm';
+import { and, asc, count, desc, eq, exists, gte, inArray, lte, ne, sql } from 'drizzle-orm';
 import { db } from '..';
 import * as schemas from '../schema';
 import { alias } from 'drizzle-orm/mysql-core';
@@ -473,7 +473,7 @@ export async function desasignarAgente (ordenServicioId, agenteId, dbOrTx = db) 
  * }} data
  * @param {DbOrTx} [dbOrTx = db]
  */
-export async function pathOrdenServicio (ordenServicioId, data, dbOrTx = db) {
+export async function patchOrdenServicio (ordenServicioId, data, dbOrTx = db) {
   await dbOrTx
     .update(schemas.ordenesServicio)
     .set(data)
@@ -486,50 +486,50 @@ export async function pathOrdenServicio (ordenServicioId, data, dbOrTx = db) {
  * @param {DbOrTx} [dbOrTx = db]
  */
 export async function obtenerOrdenServicioParaCambiarEstado (ordenServicioId, dbOrTx = db) {
-  const subquery = dbOrTx
-    .select({
-      agentes: sql`COALESCE(
-        JSON_ARRAYAGG(
-          JSON_OBJECT(
-            'id', ${schemas.asignaciones.agenteId},
-            'nombreUsuario', ${schemas.usuarios.nombreUsuario},
-            'estaOcupado', EXISTS(
-              SELECT 1
-              FROM ${schemas.asignaciones} a
-              INNER JOIN ${schemas.ordenesServicio} o ON a.orden_servicio_id = o.id
-              WHERE a.agente_id = ${schemas.usuarios.id}
-              AND o.estado = 'PROCESO'
-              AND o.id != ${schemas.ordenesServicio.id}
-            )
-          )
-        )
-      , JSON_ARRAY())`.as('agentes')
-    })
-    .from(schemas.usuarios)
-    .innerJoin(schemas.asignaciones, eq(schemas.usuarios.id, schemas.asignaciones.agenteId))
-    .where(eq(schemas.asignaciones.ordenServicioId, schemas.ordenesServicio.id))
-    .as('agentes');
   const [orden] = await dbOrTx
     .select({
       id: schemas.ordenesServicio.id,
       estado: schemas.ordenesServicio.estado,
       areaAsignadaId: schemas.ordenesServicio.areaAsignadaId,
-      agentes: subquery.agentes,
       creadoEn: schemas.ordenesServicio.creadoEn
     })
     .from(schemas.ordenesServicio)
-    .innerJoinLateral(subquery, sql`true`)
     .where(eq(schemas.ordenesServicio.id, ordenServicioId));
-  if (orden != null) {
-    return {
-      id: orden.id,
-      estado: orden.estado,
-      areaAsignadaId: orden.areaAsignadaId,
-      creadoEn: orden.creadoEn,
-      agentes: /** @type {AgenteParaCambiarEstado[]} */ (orden.agentes)
-    };
+  if (orden == null) {
+    return null;
   }
-  return null;
+  const agentes = await dbOrTx
+    .select({
+      id: schemas.asignaciones.agenteId,
+      nombreUsuario: schemas.usuarios.nombreUsuario,
+      estaOcupado: exists(
+        dbOrTx
+          .select()
+          .from(schemas.asignaciones)
+          .innerJoin(schemas.ordenesServicio, eq(schemas.asignaciones.ordenServicioId, schemas.ordenesServicio.id))
+          .where(
+            and(
+              eq(schemas.asignaciones.agenteId, schemas.usuarios.id),
+              eq(schemas.ordenesServicio.estado, 'PROCESO'),
+              ne(schemas.ordenesServicio.id, ordenServicioId)
+            )
+          )
+      )
+    })
+    .from(schemas.usuarios)
+    .innerJoin(schemas.asignaciones, eq(schemas.usuarios.id, schemas.asignaciones.agenteId))
+    .where(eq(schemas.asignaciones.ordenServicioId, ordenServicioId));
+  return {
+    id: orden.id,
+    estado: orden.estado,
+    areaAsignadaId: orden.areaAsignadaId,
+    creadoEn: orden.creadoEn,
+    agentes: agentes.map(a => ({
+      id: a.id,
+      nombreUsuario: a.nombreUsuario,
+      estaOcupado: Boolean(a.estaOcupado)
+    }))
+  };
 }
 
 /**

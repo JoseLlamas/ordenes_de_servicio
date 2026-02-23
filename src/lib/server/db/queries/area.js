@@ -1,4 +1,4 @@
-import { eq, asc, and, inArray, exists, sql } from 'drizzle-orm';
+import { eq, asc, and, inArray, exists } from 'drizzle-orm';
 import { db } from '..';
 import { areas, categoriasOrden } from '../schema';
 
@@ -38,9 +38,7 @@ export async function obtenerAreas (filters = {}, dbOrTx = db) {
  */
 export function obtenerAreasParaAsignar (dbOrTx = db) {
   const subQuery = dbOrTx
-    .select({
-      a: sql`1`
-    })
+    .select()
     .from(categoriasOrden)
     .where(eq(categoriasOrden.areaId, areas.id))
     .limit(1);
@@ -53,5 +51,3 @@ export function obtenerAreasParaAsignar (dbOrTx = db) {
     .where(exists(subQuery))
     .orderBy(asc(areas.nombre));
 }
-
-

@@ -41,7 +41,7 @@ export function createAsignarAgentesUseCase (usuario, authorize) {
           BusinessRules.NO_SE_PUEDE_ASIGNAR_USUARIO_COMO_AGENTE
         );
       }
-      if (ordenServicio.estado === 'PROCESO' && usuarios.some(usuario => usuario.estadoOcupado)) {
+      if (ordenServicio.estado === 'PROCESO' && usuarios.some(usuario => usuario.ocupado)) {
         throw new BusinessRuleException(
           'Mientras la OS esté en PROCESO, no se le puede agregar un agente que está asignado a otro OS en PROCESO',
           BusinessRules.AGENTE_OCUPADO_EN_OTRO_OS_EN_PROCESO

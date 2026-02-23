@@ -119,7 +119,7 @@
     </div>
   {/if}
 
-  <div class="border-2 border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden bg-white dark:bg-gray-900">
+  <div class="border-2 border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden bg-white ">
     <canvas
       bind:this={canvasRef}
       class="w-full h-48 touch-none"

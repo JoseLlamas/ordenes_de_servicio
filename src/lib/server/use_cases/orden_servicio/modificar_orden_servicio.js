@@ -1,5 +1,5 @@
 import { db } from '$lib/server/db';
-import { obtenerOrdenServicioSimple, pathOrdenServicio } from '$lib/server/db/queries';
+import { obtenerOrdenServicioSimple, patchOrdenServicio } from '$lib/server/db/queries';
 import { BusinessRuleException, BusinessRules, ForbiddenException } from '$lib/server/exceptions';
 
 /**
@@ -38,7 +38,7 @@ export function createModificarOrdenServicioUseCase (usuario, authorize) {
           BusinessRules.MODIFICACION_DE_ORDEN_FUERA_DE_ESTADO
         );
       }
-      await pathOrdenServicio(ordenServicio.id, data, tx);
+      await patchOrdenServicio(ordenServicio.id, data, tx);
     });
   };
 }

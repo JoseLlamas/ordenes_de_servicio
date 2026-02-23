@@ -15,7 +15,7 @@ export async function GET ({ params, locals, url }) {
       return json({ message: 'areaId requerido' }, { status: 400 });
     }
     const filters = {
-      areasId: [areaId]
+      areaId
     };
     let nombre = url.searchParams.get('nombre')?.trim() ?? '';
     if (nombre.length >= 1) {

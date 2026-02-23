@@ -1,6 +1,6 @@
 import { db } from '$lib/server/db';
 import {
-  pathOrdenServicio,
+  patchOrdenServicio,
   registrarObservacion,
   obtenerOrdenServicioParaCambiarEstado
 } from '$lib/server/db/queries';
@@ -96,7 +96,7 @@ export function createCambiarEstadoUseCase (usuario, authorize) {
       } else {
         dataUpdate.firmaEmpleadoSolicitante = null;
       }
-      await pathOrdenServicio(data.ordenServicioId, dataUpdate, tx);
+      await patchOrdenServicio(data.ordenServicioId, dataUpdate, tx);
       if (data.observacion != null) {
         await registrarObservacion({
           ordenServicioId: ordenServicio.id,

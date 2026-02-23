@@ -2,21 +2,18 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import sharp from 'sharp';
 
-const UPLOADS_DIRECTORY = './uploads';
-
 /**
  * @param {Buffer} buffer
  * @param {string} fileName
- * @param {string} subdirectory
  *
  * @return {Promise<string>}
  */
-export async function guardarArchivo (buffer, fileName, subdirectory) {
-  const dirPath = path.join(UPLOADS_DIRECTORY, subdirectory);
+export async function guardarAvatar (buffer, fileName) {
+  const dirPath = path.join('static', 'avatares');
   await fs.mkdir(dirPath, { recursive: true });
   const fullPath = path.join(dirPath, fileName);
   await fs.writeFile(fullPath, buffer);
-  return path.join(subdirectory, fileName);
+  return path.join('avatares', fileName);
 }
 
 /**
@@ -59,7 +56,7 @@ export async function procesarAvatar (file) {
  */
 export async function borrarArchivo (relativePath) {
   try {
-    await fs.access(path.join(UPLOADS_DIRECTORY, relativePath));
-    await fs.unlink(path.join(UPLOADS_DIRECTORY, relativePath));
+    await fs.access(path.join('static', relativePath));
+    await fs.unlink(path.join('static', relativePath));
   } catch { /* empty */ }
 }
