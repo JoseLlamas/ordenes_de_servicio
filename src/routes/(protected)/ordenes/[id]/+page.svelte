@@ -110,17 +110,28 @@
   */
   let firmaEmpleadoSolicitante = $state(null);
 
+  /**
+   * @type {string | null}
+   */
+  let firmaUsuarioAtendio = $state(null);
+
   function limpiarFormularioCambiarEstado () {
-    capturadorFirmaAvanzado?.reset();
+    capturadorFirmaAvanzadoSolicitante?.reset();
+    capturadorFirmaAvanzadoAtendio?.reset();
     observacionCambioEstado = '';
-    nuevoEstado = null;
     firmaEmpleadoSolicitante = null;
+    firmaUsuarioAtendio = null;
   }
 
   /**
    * @type {CapturadorFirmaAvanzado | null}
   */
-  let capturadorFirmaAvanzado = $state(null);
+  let capturadorFirmaAvanzadoSolicitante = $state(null);
+
+  /**
+   * @type {CapturadorFirmaAvanzado | null}
+  */
+  let capturadorFirmaAvanzadoAtendio = $state(null);
 
   /**
    * @type {Modal | null}
@@ -287,10 +298,21 @@
   {#if form?.errorsCambiarEstado?.firmaEmpleadoSolicitante}
     <ErrorMessage>{form.errorsCambiarEstado.firmaEmpleadoSolicitante}</ErrorMessage>
   {/if}
+  {#if form?.errorsCambiarEstado?.firmaUsuarioAtendio}
+    <ErrorMessage>{form.errorsCambiarEstado.firmaUsuarioAtendio}</ErrorMessage>
+  {/if}
   {#if nuevoEstado === 'RESUELTO'}
     <CapturadorFirmaAvanzado
+      titulo="Ingrese la firma del usuario que atendio"
       obligatorio
-      bind:this={capturadorFirmaAvanzado}
+      bind:this={capturadorFirmaAvanzadoAtendio}
+      onguardar={(firma) => firmaUsuarioAtendio = firma}
+      onlimpiar={() => firmaUsuarioAtendio = null}
+    />
+    <CapturadorFirmaAvanzado
+      titulo="Ingrese la firma del empleado solicitante"
+      obligatorio
+      bind:this={capturadorFirmaAvanzadoSolicitante}
       onguardar={(firma) => firmaEmpleadoSolicitante = firma}
       onlimpiar={() => firmaEmpleadoSolicitante = null}
     />
@@ -314,6 +336,9 @@
       };
       if (firmaEmpleadoSolicitante != null) {
         data.firmaEmpleadoSolicitante = firmaEmpleadoSolicitante;
+      }
+      if (firmaUsuarioAtendio != null) {
+        data.firmaUsuarioAtendio = firmaUsuarioAtendio;
       }
       formData.set('data', JSON.stringify(data));
       return async ({ update, result }) => {
@@ -704,7 +729,7 @@
                   {#if ordenServicio.firmaEmpleadoSolicitante != null}
                     <div >
                       <img
-                        src={ordenServicio.firmaEmpleadoSolicitante.replace('static', '')}
+                        src={`/${ordenServicio.firmaEmpleadoSolicitante}`}
                         alt="Firma solicitante"
                         class="border border-gray-300 rounded-lg bg-white"
                       />
@@ -1324,7 +1349,7 @@
           {#if ordenServicio.firmaEmpleadoSolicitante != null}
             <div >
               <img
-                src={ordenServicio.firmaEmpleadoSolicitante.replace('static', '')}
+                src={`/${ordenServicio.firmaEmpleadoSolicitante}`}
                 alt="Firma solicitante"
               />
             </div>
@@ -1332,15 +1357,27 @@
             <div class="h-18 mb-2"></div>
           {/if}
           <div class="border-t-2 border-gray-900 pt-2">
-            <p class="text-sm text-gray-900 font-medium">Firma Solicitante</p>
+            <p class="text-sm text-gray-900 font-medium">Firma solicitante</p>
             <p class="text-xs text-gray-600 mt-1">{escribirNombreCompleto(ordenServicio.empleadoSolicitante)}</p>
           </div>
         </div>
 
         <div class="text-center">
-          <div class="h-18 mb-2"></div>
+          {#if ordenServicio.firmaUsuarioAtendio != null}
+            <div >
+              <img
+                src={`/${ordenServicio.firmaUsuarioAtendio}`}
+                alt="Firma usuario atendio"
+              />
+            </div>
+          {:else}
+            <div class="h-18 mb-2"></div>
+          {/if}
           <div class="border-t-2 border-gray-900 pt-2">
-            <p class="text-sm text-gray-900 font-medium">Firma Agente</p>
+            <p class="text-sm text-gray-900 font-medium">Firma usuario atendio</p>
+            {#if ordenServicio.usuarioFirmaAtendio != null}
+              <p class="text-xs text-gray-600 mt-1">{escribirNombreCompleto(ordenServicio.usuarioFirmaAtendio?.empleado)}</p>
+            {/if}
           </div>
         </div>
 

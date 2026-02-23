@@ -106,7 +106,9 @@ export const ordenesServicio = mysqlTable('ordenes_servicio', {
   canceladoEn: timestamp('cancelado_en'),
   canceladoPorId: int('cancelado_por_id', { unsigned: true }).references(() => usuarios.id, { onDelete: 'restrict' }),
   ordenServicioRelacionadoId: int('orden_servicio_relacionado_id', { unsigned: true }),
-  firmaEmpleadoSolicitante: varchar('firma_empleado_solicitante', { length: 255 })
+  firmaEmpleadoSolicitante: varchar('firma_empleado_solicitante', { length: 255 }),
+  usuarioFirmaAtendioId: int('usuario_firma_atendio_id', { unsigned: true }).references(() => usuarios.id, { onDelete: 'restrict' }),
+  firmaUsuarioAtendio: varchar('firma_usuario_atendio', { length: 255 })
 }, (table) => [
   foreignKey({
     columns: [table.ordenServicioRelacionadoId],
@@ -236,6 +238,10 @@ export const ordenesServicioRelations = relations(ordenesServicio, ({ one, many 
   }),
   canceladoPor: one(usuarios, {
     fields: [ordenesServicio.canceladoPorId],
+    references: [usuarios.id]
+  }),
+  usuarioFirmaAtendio: one(usuarios, {
+    fields: [ordenesServicio.usuarioFirmaAtendioId],
     references: [usuarios.id]
   }),
   activos: many(activos),

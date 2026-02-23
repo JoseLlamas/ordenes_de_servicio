@@ -10,6 +10,10 @@ services:
     container_name: ordenes_servicio
     image: ordenes_servicio
     restart: unless-stopped
+    user: "1000:1000"
+    volumes:
+      - ./data/firmas:/app/static/firmas
+      - ./data/avatares:/app/static/avatares
     depends_on:
       - db
     environment:

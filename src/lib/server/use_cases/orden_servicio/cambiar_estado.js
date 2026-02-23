@@ -7,7 +7,7 @@ import {
 import { BusinessRuleException, BusinessRules, ForbiddenException } from '$lib/server/exceptions';
 import { verificarCambioEstado, fromEstadoOrdenATipoObservacion } from '$lib/utils';
 import { Temporal } from 'temporal-polyfill';
-import { guardarFirma } from '$lib/server/utils';
+import { guardarFirma, borrarArchivo } from '$lib/server/utils';
 
 const PERMISOS = {
   'PROCESO': 'start',
@@ -28,7 +28,8 @@ export function createCambiarEstadoUseCase (usuario, authorize) {
    *  ordenServicioId: number,
    *  nuevoEstado: 'PROCESO' | 'PENDIENTE' | 'RESUELTO' | 'CERRADO' | 'CANCELADO',
    *  observacion: string | null,
-   *  firmaEmpleadoSolicitante?: string
+   *  firmaEmpleadoSolicitante?: string,
+   *  firmaUsuarioAtendio?: string
    * }} data
    */
   return (data) => {
@@ -79,14 +80,20 @@ export function createCambiarEstadoUseCase (usuario, authorize) {
         dataUpdate.cerradoEn = new Date(Temporal.Now.instant().epochMilliseconds);
         dataUpdate.cerradoPorId = usuario.id;
       } else if (data.nuevoEstado === 'RESUELTO') {
-        if (data.firmaEmpleadoSolicitante != null) {
+        if (data.firmaEmpleadoSolicitante != null && data.firmaUsuarioAtendio != null) {
           const pathFirmaSolicitante = await guardarFirma(
             data.firmaEmpleadoSolicitante,
-            'solicitante',
-            ordenServicio.id,
-            ordenServicio.creadoEn.getFullYear()
+            ordenServicio.creadoEn.getFullYear(),
+            `${ordenServicio.id}-solicitante.png`
+          );
+          const pathFirmaUsuarioAtendio = await guardarFirma(
+            data.firmaUsuarioAtendio,
+            ordenServicio.creadoEn.getFullYear(),
+            `${ordenServicio.id}-atendio.png`
           );
           dataUpdate.firmaEmpleadoSolicitante = pathFirmaSolicitante;
+          dataUpdate.firmaUsuarioAtendio = pathFirmaUsuarioAtendio;
+          dataUpdate.usuarioFirmaAtendioId = usuario.id;
         } else {
           throw new BusinessRuleException(
             'La firma es requerida',
@@ -94,7 +101,13 @@ export function createCambiarEstadoUseCase (usuario, authorize) {
           );
         }
       } else {
-        dataUpdate.firmaEmpleadoSolicitante = null;
+        if (ordenServicio.firmaEmpleadoSolicitante != null && ordenServicio.firmaUsuarioAtendio) {
+          dataUpdate.firmaEmpleadoSolicitante = null;
+          dataUpdate.firmaUsuarioAtendio = null;
+          dataUpdate.usuarioFirmaAtendioId = null;
+          await borrarArchivo(ordenServicio.firmaEmpleadoSolicitante);
+          await borrarArchivo(ordenServicio.firmaUsuarioAtendio);
+        }
       }
       await patchOrdenServicio(data.ordenServicioId, dataUpdate, tx);
       if (data.observacion != null) {

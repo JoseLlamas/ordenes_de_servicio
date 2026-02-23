@@ -1,0 +1,3 @@
+ALTER TABLE `ordenes_servicio` ADD `usuario_firma_atendio_id` int unsigned;--> statement-breakpoint
+ALTER TABLE `ordenes_servicio` ADD `firma_usuario_atendio` varchar(255);--> statement-breakpoint
+ALTER TABLE `ordenes_servicio` ADD CONSTRAINT `ordenes_servicio_usuario_firma_atendio_id_usuarios_id_fk` FOREIGN KEY (`usuario_firma_atendio_id`) REFERENCES `usuarios`(`id`) ON DELETE restrict ON UPDATE no action;

@@ -52,6 +52,7 @@ export interface OrdenServicioDetalleDTO {
   encargadoAreaAsignada: Omit<EmpleadoDTO, 'activo'>;
   ordenServicioRelacionadoId: number | null;
   firmaEmpleadoSolicitante: string | null;
+  firmaUsuarioAtendio: string | null;
   creadoEn: Date;
   cerradoEn: Date | null;
   canceladoEn: Date | null;
@@ -75,6 +76,13 @@ export interface OrdenServicioDetalleDTO {
     avatar: string | null;
     rol: Omit<RolDTO, 'descripcion'>;
     empleado: Omit<EmpleadoDTO, 'activo'>
+  } | null;
+  usuarioFirmaAtendio: {
+    id: number;
+    nombreUsuario: string;
+    avatar: string | null;
+    rol: Omit<RolDTO, 'descripcion'>;
+    empleado: Omit<EmpleadoDTO, 'activo'>;
   } | null;
   activos: ActivoDetalleDTO[];
   agentes: {

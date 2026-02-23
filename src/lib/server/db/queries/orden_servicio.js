@@ -211,6 +211,7 @@ export async function obtenerOrdenServicioDetallePorId (id, dbOrTx = db) {
       telefonoSolicitante: true,
       ordenServicioRelacionadoId: true,
       firmaEmpleadoSolicitante: true,
+      firmaUsuarioAtendio: true,
       creadoEn: true,
       canceladoEn: true,
       cerradoEn: true
@@ -301,6 +302,30 @@ export async function obtenerOrdenServicioDetallePorId (id, dbOrTx = db) {
         }
       },
       canceladoPor: {
+        columns: {
+          id: true,
+          nombreUsuario: true,
+          avatar: true
+        },
+        with: {
+          rol: {
+            columns: {
+              id: true,
+              nombre: true
+            }
+          },
+          empleado: {
+            columns: {
+              id: true,
+              nombre: true,
+              primerApellido: true,
+              segundoApellido: true,
+              cargo: true
+            }
+          }
+        }
+      },
+      usuarioFirmaAtendio: {
         columns: {
           id: true,
           nombreUsuario: true,
@@ -469,7 +494,9 @@ export async function desasignarAgente (ordenServicioId, agenteId, dbOrTx = db) 
  *  numeroOficio?: string | null,
  *  prioridad?: 'BAJA' | 'MEDIA' | 'ALTA' | 'CRITICA',
  *  tipoEntrada?: 'PRESENCIAL' | 'LLAMADA_TELEFONICA' | 'OFICIO' | 'INDICACION_SUPERIOR',
- *  firmaEmpleadoSolicitante?: string | null
+ *  firmaUsuarioAtendio?: string | null,
+ *  firmaEmpleadoSolicitante?: string | null,
+ *  usuarioFirmaAtendioId?: number | null
  * }} data
  * @param {DbOrTx} [dbOrTx = db]
  */
@@ -491,7 +518,9 @@ export async function obtenerOrdenServicioParaCambiarEstado (ordenServicioId, db
       id: schemas.ordenesServicio.id,
       estado: schemas.ordenesServicio.estado,
       areaAsignadaId: schemas.ordenesServicio.areaAsignadaId,
-      creadoEn: schemas.ordenesServicio.creadoEn
+      creadoEn: schemas.ordenesServicio.creadoEn,
+      firmaEmpleadoSolicitante: schemas.ordenesServicio.firmaEmpleadoSolicitante,
+      firmaUsuarioAtendio: schemas.ordenesServicio.firmaUsuarioAtendio
     })
     .from(schemas.ordenesServicio)
     .where(eq(schemas.ordenesServicio.id, ordenServicioId));
@@ -524,6 +553,8 @@ export async function obtenerOrdenServicioParaCambiarEstado (ordenServicioId, db
     estado: orden.estado,
     areaAsignadaId: orden.areaAsignadaId,
     creadoEn: orden.creadoEn,
+    firmaEmpleadoSolicitante: orden.firmaEmpleadoSolicitante,
+    firmaUsuarioAtendio: orden.firmaUsuarioAtendio,
     agentes: agentes.map(a => ({
       id: a.id,
       nombreUsuario: a.nombreUsuario,
