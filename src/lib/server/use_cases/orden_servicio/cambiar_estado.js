@@ -101,7 +101,7 @@ export function createCambiarEstadoUseCase (usuario, authorize) {
           );
         }
       } else {
-        if (ordenServicio.firmaEmpleadoSolicitante != null && ordenServicio.firmaUsuarioAtendio) {
+        if (ordenServicio.firmaEmpleadoSolicitante != null && ordenServicio.firmaUsuarioAtendio != null) {
           dataUpdate.firmaEmpleadoSolicitante = null;
           dataUpdate.firmaUsuarioAtendio = null;
           dataUpdate.usuarioFirmaAtendioId = null;
