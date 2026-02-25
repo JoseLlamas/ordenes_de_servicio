@@ -1,21 +1,55 @@
 import { assertAuthenticated } from '$lib/server/auth/guards';
 import {
   obtenerAreasParaAsignar,
-  obtenerDireccionesGenerales
+  obtenerDireccionesGenerales,
+  obtenerEmpleadoParaPrellenadoPorId,
+  obtenerAreas,
+  obtenerEmpleadosPorArea
 } from '$lib/server/db/queries';
 import { BusinessRuleException, ForbiddenException } from '$lib/server/exceptions';
 import { createRegistrarOrdenServicioUseCase } from '$lib/server/use_cases/orden_servicio';
 import { validateRegistroOrdenServicio } from '$lib/server/validators';
 import { fail, redirect } from '@sveltejs/kit';
+import Joi from 'joi';
 
 /**
  *
  * @type {import('./$types').PageServerLoad}
  */
-export async function load ({ locals }) {
+export async function load ({ locals, url }) {
   assertAuthenticated(locals);
   if (!locals.authorize.has('create', 'Orden')) {
     redirect(303, '/sin-acceso');
+  }
+  /**
+   * @type {{
+   *  areas: Awaited<ReturnType<typeof obtenerAreas>>
+   *  empleadoSolicitanteId: number,
+   *  empleadoSolicitanteAreaId: number,
+   *  empleadoSolicitanteDireccionGeneralId: number,
+   *  empleados: Awaited<ReturnType<typeof obtenerEmpleadosPorArea>>
+   * } | null}
+   */
+  let datosSolicitantePre = null;
+  const resultValidation = Joi
+    .number()
+    .integer()
+    .empty(['', null])
+    .default(null)
+    .validate(url.searchParams.get('empleadoId'));
+  if (resultValidation.error == null && resultValidation.value != null) {
+    let empleadoSolicitante = await obtenerEmpleadoParaPrellenadoPorId(resultValidation.value);
+    if (empleadoSolicitante != null && empleadoSolicitante.activo) {
+      let areas = await obtenerAreas({ direccionGeneralId: empleadoSolicitante.direccionGeneralId });
+      let empleados = await obtenerEmpleadosPorArea(empleadoSolicitante.areaId);
+      datosSolicitantePre = {
+        areas,
+        empleados,
+        empleadoSolicitanteId: empleadoSolicitante.id,
+        empleadoSolicitanteAreaId: empleadoSolicitante.areaId,
+        empleadoSolicitanteDireccionGeneralId: empleadoSolicitante.direccionGeneralId
+      };
+    }
   }
   const [
     areasParaAsignar,
@@ -27,7 +61,8 @@ export async function load ({ locals }) {
   const areas = areasParaAsignar.filter(area => locals.authorize.can('create', 'Orden', { areaId: area.id }));
   return {
     areasParaAsignar: areas,
-    direccionesGenerales
+    direccionesGenerales,
+    datosSolicitantePre
   };
 }
 

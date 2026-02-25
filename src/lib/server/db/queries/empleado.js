@@ -88,6 +88,23 @@ export async function obtenerEmpleadoPorId (id, dbOrTx = db) {
 }
 
 /**
+ *
+ * @param {number} id
+ * @param {DbOrTx} [dbOrTx = db]
+ */
+export async function obtenerEmpleadoParaPrellenadoPorId (id, dbOrTx = db) {
+  return (await dbOrTx.query.empleados.findFirst({
+    columns: {
+      id: true,
+      activo: true,
+      areaId: true,
+      direccionGeneralId: true
+    },
+    where: eq(empleados.id, id)
+  })) ?? null;
+}
+
+/**
  * @param {string} nombre
  * @param {string} primerApellido
  * @param {string} [segundoApellido]

@@ -23,20 +23,50 @@
   */
   let areaParaAsignar = $state(null);
 
+  function inicializarDireccionGeneralEmpleadoSolicitante () {
+    if (data.datosSolicitantePre != null) {
+      const direccionGeneralId = data.datosSolicitantePre.empleadoSolicitanteDireccionGeneralId;
+      return (data.direccionesGenerales.find(
+        (d) => d.id === direccionGeneralId
+      )) ?? null;
+    }
+    return null;
+  }
+
   /**
    * @type {(typeof data.direccionesGenerales[number] | null)}
   */
-  let direccionGeneralEmpleadoSolicitante = $state(null);
+  let direccionGeneralEmpleadoSolicitante = $state(inicializarDireccionGeneralEmpleadoSolicitante());
+
+  function inicializarAreaEmpleadoSolicitante () {
+    if (data.datosSolicitantePre != null) {
+      const areaId = data.datosSolicitantePre.empleadoSolicitanteAreaId;
+      return (data.datosSolicitantePre.areas.find(
+        a => a.id === areaId
+      )) ?? null;
+    }
+    return null;
+  }
 
   /**
    * @type {Awaited<ReturnType<typeof obtenerAreasPorDireccion>>[number] | null}
    */
-  let areaEmpleadoSolicitante = $state(null);
+  let areaEmpleadoSolicitante = $state(inicializarAreaEmpleadoSolicitante());
+
+  function inicializarEmpleadoSolicitante () {
+    if (data.datosSolicitantePre != null) {
+      const empleadoId = data.datosSolicitantePre.empleadoSolicitanteId;
+      return (data.datosSolicitantePre.empleados.find(
+        a => a.id === empleadoId
+      )) ?? null;
+    }
+    return null;
+  }
 
   /**
    * @type {Awaited<ReturnType<typeof obtenerEmpleadosPorArea>>[number] | null}
    */
-  let empleadoSolicitante = $state(null);
+  let empleadoSolicitante = $state(inicializarEmpleadoSolicitante());
 
   /**
    * @type {string | null}
@@ -78,20 +108,34 @@
    */
   let categoriasOrden = $state([]);
 
+  function inicializarAreas () {
+    if (data.datosSolicitantePre != null) {
+      return data.datosSolicitantePre.areas;
+    }
+    return [];
+  }
+
   /**
    * @type {Awaited<ReturnType<typeof obtenerAreasPorDireccion>>}
    */
-  let areas = $state([]);
+  let areas = $state(inicializarAreas());
+
+  function inicializarEmpleados () {
+    if (data.datosSolicitantePre != null) {
+      return data.datosSolicitantePre.empleados;
+    }
+    return [];
+  }
 
   /**
    * @type {Awaited<ReturnType<typeof obtenerEmpleadosPorArea>>}
    */
-  let empleados = $state([]);
+  let empleados = $state(inicializarEmpleados());
 
   /**
-   * @type {ConfirmModal | undefined}
+   * @type {ConfirmModal | null}
   */
-  let confirmModal = $state();
+  let confirmModal = $state(null);
 
   let fetchingCategoriasOrden = $state(false);
 

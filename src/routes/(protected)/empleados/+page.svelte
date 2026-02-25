@@ -6,6 +6,7 @@
   import TitleSection from '$lib/components/TitleSection.svelte';
   import LoaderLine from '$lib/components/LoaderLine.svelte';
   import SinResultados from '$lib/components/SinResultados.svelte';
+    import Link from '$lib/components/Link.svelte';
 
   let { form } = $props();
 
@@ -91,6 +92,7 @@
           <th class="py-2 px-4">Area</th>
           <th class="py-2 px-4">Cargo</th>
           <th class="py-2 px-4">Activo</th>
+          <th class="py-2 px-4">Acción</th>
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-200">
@@ -127,6 +129,20 @@
             <td class="py-2 px-4 lg:table-cell block">
               <span class="lg:hidden font-semibold">Activo</span>
               {empleado.activo ? 'Si' : 'No'}
+            </td>
+            <td class="py-2 px-4 lg:table-cell block">
+              <span class="lg:hidden font-semibold">Activo</span>
+              {#if empleado.activo}
+                <Link
+                  variant="secondary"
+                  size="sm"
+                  href={`/ordenes/registro?empleadoId=${empleado.id}`}
+                >
+                  Crear OS
+                </Link>
+              {:else}
+                ...
+              {/if}
             </td>
           </tr>
         {/each}

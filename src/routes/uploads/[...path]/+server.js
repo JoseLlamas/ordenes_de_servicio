@@ -1,4 +1,3 @@
-// routes/uploads/[...path]/+server.js
 import { readFile } from 'fs/promises';
 import { join } from 'path';
 import { error } from '@sveltejs/kit';
@@ -11,7 +10,6 @@ export async function GET ({ params }) {
   try {
     const file = await readFile(filepath);
 
-    // Detectar content-type por extensión
     const ext = params.path.split('.').pop();
     const contentType = {
       png: 'image/png',
