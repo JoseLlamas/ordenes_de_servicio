@@ -40,14 +40,13 @@ export async function guardarFirma (base64, year, filename) {
  * @return {Promise<Buffer>}
  */
 export async function procesarAvatar (file) {
-  const buffer = await sharp(Buffer.from(await file.arrayBuffer()))
+  return sharp(Buffer.from(await file.arrayBuffer()))
     .resize(400, 400, {
       fit: 'cover',
       position: 'center'
     })
     .toFormat('webp', { quality: 90 })
     .toBuffer();
-  return buffer;
 }
 
 /**

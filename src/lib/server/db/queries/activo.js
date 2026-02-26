@@ -16,6 +16,7 @@ import { and, eq } from 'drizzle-orm';
  *  modelo: string | null
  * }} data
  * @param {DbOrTx} [dbOrTx = db]
+ * @returns {Promise<number>}
  */
 export async function registrarActivo (data, dbOrTx = db) {
   const [{ id }] = await dbOrTx
@@ -29,6 +30,7 @@ export async function registrarActivo (data, dbOrTx = db) {
  *
  * @param {{ ordenServicioId: number, activoId: number }} data
  * @param {DbOrTx} [dbOrTx = db]
+ * @returns {Promise<void>}
  */
 export async function eliminarActivo (data, dbOrTx = db) {
   await dbOrTx

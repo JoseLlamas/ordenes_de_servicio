@@ -12,7 +12,7 @@ import { areas, categoriasOrden } from '../schema';
  * @param {DbOrTx} [dbOrTx = db]
  * @return {Promise<AreaDTO[]>}
  */
-export async function obtenerAreas (filters = {}, dbOrTx = db) {
+export function obtenerAreas (filters = {}, dbOrTx = db) {
   const conditions = [];
   if (filters.direccionGeneralId != null) {
     conditions.push(eq(areas.direccionGeneralId, filters.direccionGeneralId));
