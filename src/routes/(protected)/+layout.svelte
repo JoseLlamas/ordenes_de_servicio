@@ -26,6 +26,7 @@
 
   // Menú de navegación
   const menuItems = [
+    { href: '/', icon: '🏠', label: 'Inicio' },
     { href: '/dashboard', icon: '📊', label: 'Dashboard' },
     { href: '/ordenes', icon: '🎫', label: 'Ordenes' },
     { href: '/empleados', icon: '👔', label: 'Empleados' },
@@ -220,7 +221,7 @@
             <a href="/terms" class="hover:text-gray-900 dark:hover:text-gray-200 transition-colors">Términos</a>
           </div>
           <p class="text-center sm:text-right">
-            © 2025 Alcaldía Iztapalapa. Todos los derechos reservados.
+            © 2026 Alcaldía Iztapalapa. Todos los derechos reservados.
           </p>
         </div>
       </div>

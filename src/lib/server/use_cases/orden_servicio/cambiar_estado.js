@@ -81,15 +81,16 @@ export function createCambiarEstadoUseCase (usuario, authorize) {
         dataUpdate.cerradoPorId = usuario.id;
       } else if (data.nuevoEstado === 'RESUELTO') {
         if (data.firmaEmpleadoSolicitante != null && data.firmaUsuarioAtendio != null) {
+          const time = Date.now();
           const pathFirmaSolicitante = await guardarFirma(
             data.firmaEmpleadoSolicitante,
             ordenServicio.creadoEn.getFullYear(),
-            `${ordenServicio.id}-solicitante.png`
+            `${ordenServicio.id}-${time}-solicitante.png`
           );
           const pathFirmaUsuarioAtendio = await guardarFirma(
             data.firmaUsuarioAtendio,
             ordenServicio.creadoEn.getFullYear(),
-            `${ordenServicio.id}-atendio.png`
+            `${ordenServicio.id}-${time}-atendio.png`
           );
           dataUpdate.firmaEmpleadoSolicitante = pathFirmaSolicitante;
           dataUpdate.firmaUsuarioAtendio = pathFirmaUsuarioAtendio;
