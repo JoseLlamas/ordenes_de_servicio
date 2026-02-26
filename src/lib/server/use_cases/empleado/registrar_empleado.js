@@ -4,7 +4,6 @@ import { ForbiddenException } from '$lib/server/exceptions';
 /**
  * @param {NonNullable<App.Locals['usuario']>} usuario
  * @param {NonNullable<App.Locals['authorize']>} authorize
- * @returns
  */
 export function createRegistrarEmpleadoUseCase (usuario, authorize) {
   /**

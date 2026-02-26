@@ -6,17 +6,36 @@
   import TitleSection from '$lib/components/TitleSection.svelte';
   import LoaderLine from '$lib/components/LoaderLine.svelte';
   import SinResultados from '$lib/components/SinResultados.svelte';
-    import Link from '$lib/components/Link.svelte';
+  import TarjetaEmpleado from '$lib/components/TarjetaEmpleado.svelte';
+  import Paginador from '$lib/components/Paginador.svelte';
+  import { goto } from '$app/navigation';
 
   let { form } = $props();
 
   let fetching = $state(false);
 
+  /**
+   *
+   * @param {NonNullable<NonNullable<typeof form>['empleados']>} xs
+   */
+  const asEmpleados = (xs) => xs;
 </script>
 
 <svelte:head>
   <title>Ver empleados</title>
 </svelte:head>
+
+{#snippet imprimirEmpleados(emp)}
+  {@const empleados = asEmpleados(emp)}
+  <div class="grid grid-cols-1 lg:grid-cols-2">
+    {#each empleados as empleado(empleado.id)}
+      <TarjetaEmpleado
+        empleado={empleado}
+        onCrearOS={(empleadoId) => goto(`/ordenes/registro?empleadoId=${empleadoId}`)}
+      />
+    {/each}
+  </div>
+{/snippet}
 
 <TitleSection>
   Ver
@@ -81,74 +100,14 @@
 
 {#if form?.empleados}
   {#if form.empleados.length > 0}
-  <div class="overflow-x-auto">
-    <table class="min-w-full divide-y divide-gray-200 text-sm">
-      <thead class="bg-gray-100 text-gray-700 text-left">
-        <tr class="hidden lg:table-row">
-          <th class="py-2 px-4">Nombre</th>
-          <th class="py-2 px-4">Primer Apellido</th>
-          <th class="py-2 px-4">Segundo Apellido</th>
-          <th class="py-2 px-4">Dirección General</th>
-          <th class="py-2 px-4">Area</th>
-          <th class="py-2 px-4">Cargo</th>
-          <th class="py-2 px-4">Activo</th>
-          <th class="py-2 px-4">Acción</th>
-        </tr>
-      </thead>
-      <tbody class="divide-y divide-gray-200">
-        {#each form.empleados as empleado(empleado.id)}
-        <!-- Repetir este bloque por cada item -->
-          <tr class="block lg:table-row border-b lg:border-none p-4 lg:p-0">
-            <!-- Nombre -->
-            <td class="py-2 px-4 lg:table-cell block">
-              <span class="lg:hidden font-semibold">Nombre:</span>
-              {empleado.nombre}
-            </td>
-            <!-- Primer Apellido -->
-            <td class="py-2 px-4 lg:table-cell block">
-              <span class="lg:hidden font-semibold">Primer Apellido:</span>
-              {empleado.primerApellido}
-            </td>
-            <!-- Segundo Apellido -->
-            <td class="py-2 px-4 lg:table-cell block">
-              <span class="lg:hidden font-semibold">Segundo Apellido:</span>
-              {empleado.segundoApellido ?? 'N/A'}
-            </td>
-            <td class="py-2 px-4 lg:table-cell block">
-              <span class="lg:hidden font-semibold">Dirección General:</span>
-              {empleado.direccionGeneral.nombre}
-            </td>
-            <td class="py-2 px-4 lg:table-cell block">
-              <span class="lg:hidden font-semibold">Area:</span>
-              {empleado.area.nombre}
-            </td>
-            <td class="py-2 px-4 lg:table-cell block">
-              <span class="lg:hidden font-semibold">Cargo:</span>
-              {empleado.cargo ?? 'N/A'}
-            </td>
-            <td class="py-2 px-4 lg:table-cell block">
-              <span class="lg:hidden font-semibold">Activo</span>
-              {empleado.activo ? 'Si' : 'No'}
-            </td>
-            <td class="py-2 px-4 lg:table-cell block">
-              <span class="lg:hidden font-semibold">Activo</span>
-              {#if empleado.activo}
-                <Link
-                  variant="secondary"
-                  size="sm"
-                  href={`/ordenes/registro?empleadoId=${empleado.id}`}
-                >
-                  Crear OS
-                </Link>
-              {:else}
-                ...
-              {/if}
-            </td>
-          </tr>
-        {/each}
-      </tbody>
-    </table>
-  </div>
+    <div class="overflow-x-auto">
+      <Paginador
+        records={form.empleados}
+        render={imprimirEmpleados}
+        showTopMenu={false}
+        perPagina={6}
+      />
+    </div>
   {:else}
     <SinResultados />
   {/if}

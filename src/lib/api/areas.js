@@ -6,7 +6,7 @@ import { api } from './client';
  * @param {AbortSignal} [signal]
  * @return {Promise<import('$lib/types').AreaDTO[]>}
  */
-export async function obtenerAreasPorDireccion (direccionGeneralId, signal) {
+export function obtenerAreasPorDireccion (direccionGeneralId, signal) {
   const queryString = new URLSearchParams();
   queryString.append('direccionGeneralId', String(direccionGeneralId));
   return api(`/api/areas?${queryString.toString()}`, { signal });

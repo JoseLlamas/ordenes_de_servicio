@@ -162,6 +162,7 @@
 
   function handleDireccionGeneralChange () {
     areas = [];
+    empleados = [];
     areaEmpleadoSolicitante = null;
     empleadoSolicitante = null;
     if (direccionGeneralEmpleadoSolicitante == null) {

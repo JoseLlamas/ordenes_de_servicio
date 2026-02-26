@@ -17,7 +17,7 @@ export function createBuscarUsuariosUseCase (authorize) {
   * @return {Promise<UsuarioResumenDTO[]>}
   * @throws {ForbiddenException}
   */
-  return (filters) => {
+  return async (filters) => {
     if (authorize.cannot('read', 'Usuario', { areaId: filters.areaId })) {
       throw new ForbiddenException('No puede buscar usuarios del area que está consultando');
     }

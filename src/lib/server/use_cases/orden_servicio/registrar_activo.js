@@ -37,7 +37,7 @@ export function createRegistrarActivoUseCase (usuario, authorize) {
           BusinessRules.AGREGACION_ACTIVO_FUERA_DE_ESTADO
         );
       }
-      return await registrarActivo({
+      return registrarActivo({
         ordenServicioId: ordenServicio.id,
         ...data
       }, tx);

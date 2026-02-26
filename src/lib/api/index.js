@@ -9,8 +9,8 @@ export * from './empleados';
  * @param {AbortSignal} [signal]
  * @returns {Promise<import('$lib/types').CategoriaOrdenDTO[]>}
  */
-export async function obtenerCategoriasOrdenPorArea (areaId, signal) {
-  return await api(`/api/areas/${areaId}/categorias-orden`, { signal });
+export function obtenerCategoriasOrdenPorArea (areaId, signal) {
+  return api(`/api/areas/${areaId}/categorias-orden`, { signal });
 }
 
 /**
@@ -19,7 +19,7 @@ export async function obtenerCategoriasOrdenPorArea (areaId, signal) {
  * @param {AbortSignal} [signal]
  * @returns {Promise<import('$lib/types').CategoriaActivoDTO[]>}
  */
-export async function obtenerCategoriasActivoPorArea (areaId, signal) {
+export function obtenerCategoriasActivoPorArea (areaId, signal) {
   return api(`/api/areas/${areaId}/categorias-activo`, { signal });
 }
 
@@ -30,7 +30,7 @@ export async function obtenerCategoriasActivoPorArea (areaId, signal) {
  * @param {AbortSignal} [signal]
  * @returns {Promise<import('$lib/types').AgenteDTO[]>}
  */
-export async function obtenerAgentes (areaId, nombre, signal) {
+export function obtenerAgentes (areaId, nombre, signal) {
   const queryString = new URLSearchParams;
   if (nombre != null) {
     queryString.append('nombre', nombre);

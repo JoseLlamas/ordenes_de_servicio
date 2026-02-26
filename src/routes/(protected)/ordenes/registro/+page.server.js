@@ -10,7 +10,6 @@ import { BusinessRuleException, ForbiddenException } from '$lib/server/exception
 import { createRegistrarOrdenServicioUseCase } from '$lib/server/use_cases/orden_servicio';
 import { validateRegistroOrdenServicio } from '$lib/server/validators';
 import { fail, redirect } from '@sveltejs/kit';
-import Joi from 'joi';
 
 /**
  *
@@ -31,14 +30,9 @@ export async function load ({ locals, url }) {
    * } | null}
    */
   let datosSolicitantePre = null;
-  const resultValidation = Joi
-    .number()
-    .integer()
-    .empty(['', null])
-    .default(null)
-    .validate(url.searchParams.get('empleadoId'));
-  if (resultValidation.error == null && resultValidation.value != null) {
-    let empleadoSolicitante = await obtenerEmpleadoParaPrellenadoPorId(resultValidation.value);
+  const empleadoId = Number.parseInt(url.searchParams.get('empleadoId') ?? '');
+  if (empleadoId && empleadoId > 0) {
+    let empleadoSolicitante = await obtenerEmpleadoParaPrellenadoPorId(empleadoId);
     if (empleadoSolicitante != null && empleadoSolicitante.activo) {
       let areas = await obtenerAreas({ direccionGeneralId: empleadoSolicitante.direccionGeneralId });
       let empleados = await obtenerEmpleadosPorArea(empleadoSolicitante.areaId);

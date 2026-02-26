@@ -11,13 +11,13 @@ export function createCambiarAvatarUseCase (usuario) {
    */
   return (file) => {
     return db.transaction(async (tx) => {
-      const avatarAnterios = usuario.avatar;
+      const avatarAnterior = usuario.avatar;
       const buffer = await procesarAvatar(file);
       const avatarNuevo = `${crypto.randomUUID()}.webp`;
       const relativePath = await guardarAvatar(buffer, avatarNuevo);
       await patchUsuario({ avatar: relativePath }, usuario.id, tx);
-      if (avatarAnterios != null) {
-        await borrarArchivo(avatarAnterios);
+      if (avatarAnterior != null) {
+        await borrarArchivo(avatarAnterior);
       }
     });
   };

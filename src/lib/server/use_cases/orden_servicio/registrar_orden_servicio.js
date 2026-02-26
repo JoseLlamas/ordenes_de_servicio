@@ -32,10 +32,10 @@ export function createRegistrarOrdenServicioUseCase (usuario, authorize) {
    * @throws {ForbiddenException}
    */
   return (data) => {
-    if (authorize.cannot('create', 'Orden', { areaId: data.areaParaAsignarId })) {
-      throw new ForbiddenException('No tiene permiso o alcance para crear una orden de servicio');
-    }
     return db.transaction(async tx => {
+      if (authorize.cannot('create', 'Orden', { areaId: data.areaParaAsignarId })) {
+        throw new ForbiddenException('No tiene permiso o alcance para crear una orden de servicio');
+      }
       const anioActual = Temporal.Now.zonedDateTimeISO('America/Mexico_City').year;
       const folio = await obtenerFolioSiguiente(anioActual, data.areaParaAsignarId, tx);
       const empleadoSolicitante = await obtenerEmpleadoPorId(data.empleadoSolicitanteId, tx);

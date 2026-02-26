@@ -11,6 +11,7 @@
   import ConfirmModal from '$lib/components/ConfirmModal.svelte';
   import ErrorCard from '$lib/components/ErrorCard.svelte';
   import { obtenerAreasPorDireccion } from '$lib/api/areas';
+  import LoaderLine from '$lib/components/LoaderLine.svelte';
 
   let { data, form } = $props();
 
@@ -27,7 +28,9 @@
   /**
    * @type {boolean}
    */
-  let fetching = $state(false);
+  let submitting = $state(false);
+
+  let fetchingAreas = $state(false);
 
   /**
    * @type {Awaited<ReturnType<typeof obtenerAreasPorDireccion>>}
@@ -40,16 +43,20 @@
     if (direccionGeneralId === null) {
       return;
     }
+    fetchingAreas = true;
     void obtenerAreasPorDireccion(direccionGeneralId)
       .then((result) => {
         areas = result;
+      })
+      .finally(() => {
+        fetchingAreas = false;
       });
   }
 
   /**
-   * @type {ConfirmModal | undefined}
+   * @type {ConfirmModal | null}
   */
-  let confirmModal = $state();
+  let confirmModal = $state(null);
 </script>
 
 <svelte:head>
@@ -58,16 +65,16 @@
 
 <ConfirmModal bind:this={confirmModal} />
 
-<LoadingScreen hidden={!fetching} />
+<LoadingScreen hidden={!submitting} />
 
 <TitleSection>
   Registro
 </TitleSection>
 
 
-{#if form?.mensaje}
+{#if form?.message}
   <InfoMessage>
-    {form.mensaje}
+    {form.message}
   </InfoMessage>
 {/if}
 {#if form?.error}
@@ -81,10 +88,10 @@
   class="mt-3 p-2 grid grid-cols-1 lg:grid-cols-3 gap-x-4 gap-y-2"
   use:confirmBeforeEnhance={{ confirm: () => confirmModal?.confirm({ texto: '¿Está seguro de registrar al empleado?' }) ?? Promise.resolve(false) }}
   use:enhance={() => {
-    fetching = true;
+    submitting = true;
     return async ({ update }) => {
       await update();
-      fetching = false;
+      submitting = false;
     };
   }}
   novalidate
@@ -119,6 +126,9 @@
         <option value={area.id}>{area.nombre}</option>
       {/each}
     </Select>
+    {#if fetchingAreas}
+      <LoaderLine />
+    {/if}
     {#if form?.errors?.areaId}
       <ErrorMessage>
         {form.errors.areaId}

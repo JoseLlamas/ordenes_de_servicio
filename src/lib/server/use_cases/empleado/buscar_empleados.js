@@ -19,7 +19,7 @@ export function createBuscarEmpleadosUseCase (authorize) {
     if (authorize.cannot('read', 'Empleado')) {
       throw new ForbiddenException('No tiene permisos para ver empleados');
     }
-    return await obtenerEmpleadoPorNombre(
+    return obtenerEmpleadoPorNombre(
       filterData.nombre,
       filterData.primerApellido,
       filterData.segundoApellido

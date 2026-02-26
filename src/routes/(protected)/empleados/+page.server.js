@@ -27,7 +27,8 @@ export const actions = {
       });
     }
     try {
-      const empleados = await createBuscarEmpleadosUseCase(locals.authorize)(resultValidation.values);
+      const buscarEmpleados = createBuscarEmpleadosUseCase(locals.authorize);
+      const empleados = await buscarEmpleados(resultValidation.values);
       return {
         empleados
       };

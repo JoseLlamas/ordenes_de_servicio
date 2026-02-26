@@ -6,7 +6,7 @@ import { api } from './client';
  * @param {AbortSignal} [signal]
  * @return {Promise<import('$lib/types').EmpleadoDTO[]>}
  */
-export async function obtenerEmpleadosSinUsuarioPorArea (areaId, signal) {
+export function obtenerEmpleadosSinUsuarioPorArea (areaId, signal) {
   return api(`/api/areas/${areaId}/empleados/sin-usuario`, { signal });
 }
 
@@ -17,6 +17,6 @@ export async function obtenerEmpleadosSinUsuarioPorArea (areaId, signal) {
  * @param {AbortSignal} [signal]
  * @return {Promise<import('$lib/types').EmpleadoDTO[]>}
  */
-export async function obtenerEmpleadosPorArea (areaId, signal) {
+export function obtenerEmpleadosPorArea (areaId, signal) {
   return api(`/api/areas/${areaId}/empleados`, { signal });
 }

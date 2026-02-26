@@ -34,9 +34,10 @@ export const actions = {
       });
     }
     try {
-      const id = await createRegistrarEmpleadoUseCase(locals.usuario, locals.authorize)(resultValidation.values);
+      const registrarEmpleado = createRegistrarEmpleadoUseCase(locals.usuario, locals.authorize);
+      await registrarEmpleado(resultValidation.values);
       return {
-        mensaje: `Empleado registrado ${id}`
+        message: 'Empleado registrado'
       };
     } catch (exc) {
       if (exc instanceof ForbiddenException) {

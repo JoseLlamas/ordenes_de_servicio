@@ -11,9 +11,9 @@ export function createRegistrarInvitacionUseCase (usuario, authorize) {
   /**
    * @param {{ empleadoId: number, rolId: number, areasAccesoId: number[] }} values
    */
-  return async (values) => {
-    const token = nanoid(10);
+  return (values) => {
     return db.transaction(async tx => {
+      const token = nanoid(10);
       const empleado = await obtenerEmpleadoPorId(values.empleadoId, tx);
       if (empleado == null || !empleado.activo) {
         throw new BusinessRuleException('Empleado no encontrado', BusinessRules.EMPLEADO_NO_ENCONTRADO_EN_INVITACION);
