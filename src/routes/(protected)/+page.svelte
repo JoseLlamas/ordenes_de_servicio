@@ -27,7 +27,7 @@
         <input
           type="text"
           bind:value={busqueda}
-          placeholder="Buscar orden por folio o descripción..."
+          placeholder="Buscar orden por folio"
           class="
             w-full px-6 py-4 pl-14 rounded-2xl
             bg-white dark:bg-gray-800
