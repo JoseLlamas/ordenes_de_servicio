@@ -303,18 +303,17 @@
   {/if}
   {#if nuevoEstado === 'RESUELTO'}
     <CapturadorFirmaAvanzado
-      titulo="Ingrese la firma del usuario que atendio"
+      titulo="Que el solicitante ingrese su firma"
+      bind:this={capturadorFirmaAvanzadoSolicitante}
+      onguardar={(firma) => firmaEmpleadoSolicitante = firma}
+      onlimpiar={() => firmaEmpleadoSolicitante = null}
+    />
+    <CapturadorFirmaAvanzado
+      titulo="Ingrese su firma"
       obligatorio
       bind:this={capturadorFirmaAvanzadoAtendio}
       onguardar={(firma) => firmaUsuarioAtendio = firma}
       onlimpiar={() => firmaUsuarioAtendio = null}
-    />
-    <CapturadorFirmaAvanzado
-      titulo="Ingrese la firma del empleado solicitante"
-      obligatorio
-      bind:this={capturadorFirmaAvanzadoSolicitante}
-      onguardar={(firma) => firmaEmpleadoSolicitante = firma}
-      onlimpiar={() => firmaEmpleadoSolicitante = null}
     />
   {/if}
   <TextArea
@@ -334,11 +333,14 @@
         nuevoEstado: nuevoEstado,
         observacion: observacionCambioEstado
       };
-      if (firmaEmpleadoSolicitante != null) {
-        data.firmaEmpleadoSolicitante = firmaEmpleadoSolicitante;
-      }
-      if (firmaUsuarioAtendio != null) {
-        data.firmaUsuarioAtendio = firmaUsuarioAtendio;
+      if (nuevoEstado === 'RESUELTO') {
+        if (firmaEmpleadoSolicitante != null) {
+          data.firmaEmpleadoSolicitante = firmaEmpleadoSolicitante;
+        }
+        if (firmaUsuarioAtendio != null) {
+          data.firmaUsuarioAtendio = firmaUsuarioAtendio;
+        }
+        data.tipoEntrada = ordenServicio.tipoEntrada;
       }
       formData.set('data', JSON.stringify(data));
       return async ({ update, result }) => {

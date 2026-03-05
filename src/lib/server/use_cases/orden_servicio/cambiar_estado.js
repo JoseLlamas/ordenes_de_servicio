@@ -29,7 +29,8 @@ export function createCambiarEstadoUseCase (usuario, authorize) {
    *  nuevoEstado: 'PROCESO' | 'PENDIENTE' | 'RESUELTO' | 'CERRADO' | 'CANCELADO',
    *  observacion: string | null,
    *  firmaEmpleadoSolicitante?: string,
-   *  firmaUsuarioAtendio?: string
+   *  firmaUsuarioAtendio?: string,
+   *  tipoEntrada?: 'PRESENCIAL' | 'OFICIO' | 'LLAMADA_TELEFONICA' | 'INDICACION_SUPERIOR'
    * }} data
    */
   return (data) => {
@@ -80,33 +81,42 @@ export function createCambiarEstadoUseCase (usuario, authorize) {
         dataUpdate.cerradoEn = new Date(Temporal.Now.instant().epochMilliseconds);
         dataUpdate.cerradoPorId = usuario.id;
       } else if (data.nuevoEstado === 'RESUELTO') {
-        if (data.firmaEmpleadoSolicitante != null && data.firmaUsuarioAtendio != null) {
-          const time = Date.now();
+        if (data.firmaUsuarioAtendio == null) {
+          throw new BusinessRuleException(
+            'La firma del usuario en sesión es requerida',
+            BusinessRules.FIRMA_USUARIO_ATENDIO_REQUERIDA
+          );
+        }
+        if (data.tipoEntrada === 'PRESENCIAL' && data.firmaEmpleadoSolicitante == null) {
+          throw new BusinessRuleException(
+            'La firma del solicitante es requerida sí la entrada es presencial',
+            BusinessRules.FIRMA_EMPLEADO_SOLICITANTE_REQUERIDA
+          );
+        }
+        const time = Date.now();
+        const pathFirmaUsuarioAtendio = await guardarFirma(
+          data.firmaUsuarioAtendio,
+          ordenServicio.creadoEn.getFullYear(),
+          `${ordenServicio.id}-${time}-atendio.png`
+        );
+        dataUpdate.firmaUsuarioAtendio = pathFirmaUsuarioAtendio;
+        dataUpdate.usuarioFirmaAtendioId = usuario.id;
+        if (data.firmaEmpleadoSolicitante != null) {
           const pathFirmaSolicitante = await guardarFirma(
             data.firmaEmpleadoSolicitante,
             ordenServicio.creadoEn.getFullYear(),
             `${ordenServicio.id}-${time}-solicitante.png`
           );
-          const pathFirmaUsuarioAtendio = await guardarFirma(
-            data.firmaUsuarioAtendio,
-            ordenServicio.creadoEn.getFullYear(),
-            `${ordenServicio.id}-${time}-atendio.png`
-          );
           dataUpdate.firmaEmpleadoSolicitante = pathFirmaSolicitante;
-          dataUpdate.firmaUsuarioAtendio = pathFirmaUsuarioAtendio;
-          dataUpdate.usuarioFirmaAtendioId = usuario.id;
-        } else {
-          throw new BusinessRuleException(
-            'La firma es requerida',
-            BusinessRules.FIRMA_EMPLEADO_SOLICITANTE_REQUERIDA
-          );
         }
       } else {
-        if (ordenServicio.firmaEmpleadoSolicitante != null && ordenServicio.firmaUsuarioAtendio != null) {
+        if (ordenServicio.firmaEmpleadoSolicitante != null) {
           dataUpdate.firmaEmpleadoSolicitante = null;
+          await borrarArchivo(ordenServicio.firmaEmpleadoSolicitante);
+        }
+        if (ordenServicio.firmaUsuarioAtendio != null) {
           dataUpdate.firmaUsuarioAtendio = null;
           dataUpdate.usuarioFirmaAtendioId = null;
-          await borrarArchivo(ordenServicio.firmaEmpleadoSolicitante);
           await borrarArchivo(ordenServicio.firmaUsuarioAtendio);
         }
       }
