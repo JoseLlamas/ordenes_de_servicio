@@ -340,7 +340,6 @@
         if (firmaUsuarioAtendio != null) {
           data.firmaUsuarioAtendio = firmaUsuarioAtendio;
         }
-        data.tipoEntrada = ordenServicio.tipoEntrada;
       }
       formData.set('data', JSON.stringify(data));
       return async ({ update, result }) => {
@@ -624,17 +623,19 @@
 
     <div class="flex flex-wrap gap-2">
 
-      <button
-        onclick={() => modalModificarOrden?.open()}
-        class="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors flex items-center gap-2">
-        Editar
-      </button>
+      {#if !(ordenServicio.estado === 'CERRADO' || ordenServicio.estado === 'CANCELADO')}
+        <button
+          onclick={() => modalModificarOrden?.open()}
+          class="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors flex items-center gap-2">
+          Editar
+        </button>
 
-      <button
-        onclick={() => modalAsignacion?.open()}
-        class="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors flex items-center gap-2">
-        Asignar
-      </button>
+        <button
+          onclick={() => modalAsignacion?.open()}
+          class="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors flex items-center gap-2">
+          Asignar
+        </button>
+      {/if}
 
       <button
         onclick={() => window.print()}
@@ -1049,7 +1050,7 @@
           </div>
         </div>
 
-        {#if observacionParaMostrar != null}
+        {#if ['CERRADO', 'CANCELADO'].includes(ordenServicio.estado) && observacionParaMostrar != null}
           <div>
             <Observacion
               observacion={observacionParaMostrar}
@@ -1239,45 +1240,58 @@
   </div>
 </div>
 
-<div class="block print:hidden bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 mb-6">
-  <div class="flex flex-col gap-6 lg:flex-row lg:justify-around lg:gap-0">
+{#if !(ordenServicio.estado === 'CERRADO' || ordenServicio.estado === 'CANCELADO')}
+  <div class="block print:hidden bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 mb-6">
+    <div class="flex flex-col gap-6 lg:gap-6 lg:flex-row lg:items-stretch">
 
-    <button
-      class="px-4 py-2 rounded-lg text-sm font-medium bg-[#9b1f3d] text-white hover:bg-[#7f182f] transition-colors"
-      onclick={() => abrirModalCambiarEstado('PROCESO')}
-      >
-      Iniciar
-    </button>
+      {#if ['NUEVO', 'PENDIENTE', 'RESUELTO'].includes(ordenServicio.estado)}
+        <button
+          class="px-4 py-2 rounded-lg text-sm font-medium bg-[#9b1f3d] text-white hover:bg-[#7f182f] transition-colors"
+          onclick={() => abrirModalCambiarEstado('PROCESO')}
+          >
+          Iniciar
+        </button>
+      {/if}
 
-    <button
-      class="px-4 py-2 rounded-lg text-sm font-medium bg-green-600 text-white hover:bg-green-700 transition-colors"
-      onclick={() => abrirModalCambiarEstado('PENDIENTE')}
-    >
-      Pediente
-    </button>
+      {#if ['PROCESO'].includes(ordenServicio.estado)}
+        <button
+          class="px-4 py-2 rounded-lg text-sm font-medium bg-green-600 text-white hover:bg-green-700 transition-colors"
+          onclick={() => abrirModalCambiarEstado('PENDIENTE')}
+        >
+          Pediente
+        </button>
+      {/if}
 
-    <button
-      class="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors"
-      onclick={() => abrirModalCambiarEstado('RESUELTO')}
-    >
-      Solucionar
-    </button>
+      {#if ['PROCESO'].includes(ordenServicio.estado)}
+        <button
+          class="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+          onclick={() => abrirModalCambiarEstado('RESUELTO')}
+        >
+          Solucionar
+        </button>
+      {/if}
 
-    <button
-      class="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors"
-      onclick={() => abrirModalCambiarEstado('CERRADO')}
-    >
-      Cerrar
-    </button>
+      {#if ['RESUELTO'].includes(ordenServicio.estado)}
+        <button
+          class="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+          onclick={() => abrirModalCambiarEstado('CERRADO')}
+        >
+          Cerrar
+        </button>
+      {/if}
 
-    <button
-      class="px-4 py-2 rounded-lg text-sm font-medium border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
-      onclick={() => abrirModalCambiarEstado('CANCELADO')}
-    >
-      Cancelar
-    </button>
+      {#if ['NUEVO', 'PENDIENTE', 'PROCESO'].includes(ordenServicio.estado)}
+        <button
+          class="px-4 py-2 rounded-lg text-sm font-medium border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
+          onclick={() => abrirModalCambiarEstado('CANCELADO')}
+        >
+          Cancelar
+        </button>
+      {/if}
+
+    </div>
   </div>
-</div>
+{/if}
 
 <!-- Contenedor principal - fondo gris en pantalla, blanco en impresión -->
 <div class="hidden print:block  bg-gray-100 print:bg-white py-8 print:py-0">

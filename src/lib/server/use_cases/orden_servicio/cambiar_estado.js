@@ -27,10 +27,9 @@ export function createCambiarEstadoUseCase (usuario, authorize) {
    * @param {{
    *  ordenServicioId: number,
    *  nuevoEstado: 'PROCESO' | 'PENDIENTE' | 'RESUELTO' | 'CERRADO' | 'CANCELADO',
-   *  observacion: string | null,
+   *  observacion?: string,
    *  firmaEmpleadoSolicitante?: string,
-   *  firmaUsuarioAtendio?: string,
-   *  tipoEntrada?: 'PRESENCIAL' | 'OFICIO' | 'LLAMADA_TELEFONICA' | 'INDICACION_SUPERIOR'
+   *  firmaUsuarioAtendio?: string
    * }} data
    */
   return (data) => {
@@ -83,11 +82,11 @@ export function createCambiarEstadoUseCase (usuario, authorize) {
       } else if (data.nuevoEstado === 'RESUELTO') {
         if (data.firmaUsuarioAtendio == null) {
           throw new BusinessRuleException(
-            'La firma del usuario en sesión es requerida',
+            'Tu firma es requerida',
             BusinessRules.FIRMA_USUARIO_ATENDIO_REQUERIDA
           );
         }
-        if (data.tipoEntrada === 'PRESENCIAL' && data.firmaEmpleadoSolicitante == null) {
+        if (ordenServicio.tipoEntrada === 'PRESENCIAL' && data.firmaEmpleadoSolicitante == null) {
           throw new BusinessRuleException(
             'La firma del solicitante es requerida sí la entrada es presencial',
             BusinessRules.FIRMA_EMPLEADO_SOLICITANTE_REQUERIDA

@@ -16,56 +16,21 @@ const schema = Joi.object({
     .empty(['', null])
     .valid('PROCESO', 'PENDIENTE', 'RESUELTO', 'CERRADO', 'CANCELADO')
     .required(),
-  tipoEntrada: Joi
-    .string()
-    .valid('PRESENCIAL', 'OFICIO', 'LLAMADA_TELEFONICA', 'INDICACION_SUPERIOR')
-    .when('nuevoEstado', {
-      is: Joi.valid('RESUELTO'),
-      then: Joi.required(),
-      otherwise: Joi.forbidden()
-    })
-    .strip(true),
   firmaEmpleadoSolicitante: Joi
     .string()
     .empty(['', null])
-    .trim()
-    .when('nuevoEstado', {
-      is: Joi.valid('RESUELTO'),
-      then: Joi.when('tipoEntrada', {
-        is: 'PRESENCIAL',
-        then: Joi.required(),
-        otherwise: Joi.optional()
-      }),
-      otherwise: Joi.optional()
-    })
-    .messages({
-      'any.required': 'La firma del solicitante es requerida'
-    }),
+    .trim(),
   firmaUsuarioAtendio: Joi
     .string()
     .empty(['', null])
-    .trim()
-    .when('nuevoEstado', {
-      is: Joi.valid('RESUELTO'),
-      then: Joi.required(),
-      otherwise: Joi.optional()
-    })
-    .messages({
-      'any.required': 'La firma del usuario que atendio es requerida'
-    }),
+    .trim(),
   observacion: Joi
     .string()
     .empty(['', null])
     .trim()
     .max(1000)
     .uppercase()
-    .when('nuevoEstado', {
-      is: Joi.valid('PENDIENTE', 'RESUELTO', 'CANCELADO'),
-      then: Joi.required(),
-      otherwise: Joi.optional().default(null)
-    })
     .messages({
-      'any.required': 'La observación es requerida en PENDIENTE, RESUELTO Y CANCELADO',
       'string.max': 'La observación no puede tener más de 1000 carácteres'
     })
 });
@@ -74,7 +39,7 @@ const schema = Joi.object({
  * @type {Validator<{
  *  ordenServicioId: number,
  *  nuevoEstado: 'PROCESO' | 'PENDIENTE' | 'RESUELTO' | 'CERRADO' | 'CANCELADO',
- *  observacion: string | null,
+ *  observacion?: string,
  *  firmaEmpleadoSolicitante?: string,
  *  firmaUsuarioAtendio?: string
  * }>}

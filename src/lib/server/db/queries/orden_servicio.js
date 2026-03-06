@@ -519,6 +519,7 @@ export async function obtenerOrdenServicioParaCambiarEstado (ordenServicioId, db
       estado: schemas.ordenesServicio.estado,
       areaAsignadaId: schemas.ordenesServicio.areaAsignadaId,
       creadoEn: schemas.ordenesServicio.creadoEn,
+      tipoEntrada: schemas.ordenesServicio.tipoEntrada,
       firmaEmpleadoSolicitante: schemas.ordenesServicio.firmaEmpleadoSolicitante,
       firmaUsuarioAtendio: schemas.ordenesServicio.firmaUsuarioAtendio
     })
@@ -555,6 +556,7 @@ export async function obtenerOrdenServicioParaCambiarEstado (ordenServicioId, db
     creadoEn: orden.creadoEn,
     firmaEmpleadoSolicitante: orden.firmaEmpleadoSolicitante,
     firmaUsuarioAtendio: orden.firmaUsuarioAtendio,
+    tipoEntrada: orden.tipoEntrada,
     agentes: agentes.map(a => ({
       id: a.id,
       nombreUsuario: a.nombreUsuario,
