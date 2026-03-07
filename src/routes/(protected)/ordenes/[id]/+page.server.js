@@ -39,7 +39,14 @@ export async function load ({ params, locals }) {
     const categoriasOrden = await obtenerCategoriasOrdenPorArea(ordenServicio.areaAsignada.id);
     return {
       ordenServicio,
-      categoriasOrden
+      categoriasOrden,
+      puedeIniciarOrden: locals.authorize.has('start', 'Orden'),
+      puedePonerEnPendienteOrden: locals.authorize.has('pending', 'Orden'),
+      puedeResolverOrden: locals.authorize.has('resolve', 'Orden'),
+      puedeCerrarOrden: locals.authorize.has('close', 'Orden'),
+      puedeCancelarOrden: locals.authorize.has('cancel', 'Orden'),
+      puedeModificarOrden: locals.authorize.has('update', 'Orden'),
+      puedeAsignarODesasignarAOrden: locals.authorize.has('assign', 'Orden')
     };
   } catch (exc) {
     if (exc instanceof BusinessRuleException) {

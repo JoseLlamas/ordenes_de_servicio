@@ -623,18 +623,22 @@
 
     <div class="flex flex-wrap gap-2">
 
-      {#if !(ordenServicio.estado === 'CERRADO' || ordenServicio.estado === 'CANCELADO')}
-        <button
-          onclick={() => modalModificarOrden?.open()}
-          class="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors flex items-center gap-2">
-          Editar
-        </button>
+      {#if ['NUEVO', 'PROCESO', 'PENDIENTE'].includes(ordenServicio.estado)}
+        {#if data.puedeModificarOrden}
+          <button
+            onclick={() => modalModificarOrden?.open()}
+            class="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors flex items-center gap-2">
+            Editar
+          </button>
+        {/if}
 
-        <button
-          onclick={() => modalAsignacion?.open()}
-          class="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors flex items-center gap-2">
-          Asignar
-        </button>
+        {#if data.puedeAsignarODesasignarAOrden}
+          <button
+            onclick={() => modalAsignacion?.open()}
+            class="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors flex items-center gap-2">
+            Asignar
+          </button>
+        {/if}
       {/if}
 
       <button
@@ -867,38 +871,40 @@
                         </div>
 
                         <!-- Botón de eliminar -->
-                        <form
-                          method="POST"
-                          action="?/desasignarAgente"
-                          use:confirmBeforeEnhance={{ confirm: () => confirmModal?.confirm({ texto: '¿Desea desasignar a este agente?' }) ?? Promise.resolve(false) }}
-                          use:enhance={() => {
-                            agenteRemoviendoId = agente.id;
-                            return async ({ update }) => {
-                              await update();
-                              agenteRemoviendoId = null;
-                            };
-                          }}
-                        >
-                          <input type="hidden" name="agenteId" value={agente.id} />
-                          <input type="hidden" name="ordenServicioId" value={ordenServicio.id} />
-                          <button
-                            type="submit"
-                            disabled={agenteRemoviendoId === agente.id}
-                            class="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed dark:hover:bg-red-950/30 dark:hover:text-red-400"
-                            title="Quitar asignación"
+                        {#if data.puedeAsignarODesasignarAOrden && ['NUEVO', 'PROCESO', 'PENDIENTE'].includes(ordenServicio.estado)}
+                          <form
+                            method="POST"
+                            action="?/desasignarAgente"
+                            use:confirmBeforeEnhance={{ confirm: () => confirmModal?.confirm({ texto: '¿Desea desasignar a este agente?' }) ?? Promise.resolve(false) }}
+                            use:enhance={() => {
+                              agenteRemoviendoId = agente.id;
+                              return async ({ update }) => {
+                                await update();
+                                agenteRemoviendoId = null;
+                              };
+                            }}
                           >
-                            {#if agenteRemoviendoId === agente.id}
-                              <svg class="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                              </svg>
-                            {:else}
-                              <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
-                              </svg>
-                            {/if}
-                          </button>
-                        </form>
+                            <input type="hidden" name="agenteId" value={agente.id} />
+                            <input type="hidden" name="ordenServicioId" value={ordenServicio.id} />
+                            <button
+                              type="submit"
+                              disabled={agenteRemoviendoId === agente.id}
+                              class="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed dark:hover:bg-red-950/30 dark:hover:text-red-400"
+                              title="Quitar asignación"
+                            >
+                              {#if agenteRemoviendoId === agente.id}
+                                <svg class="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                              {:else}
+                                <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                                  <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                </svg>
+                              {/if}
+                            </button>
+                          </form>
+                        {/if}
                       </div>
                     {/each}
                   </div>
@@ -1244,45 +1250,45 @@
   <div class="block print:hidden bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 mb-6">
     <div class="flex flex-col gap-6 lg:gap-6 lg:flex-row lg:items-stretch">
 
-      {#if ['NUEVO', 'PENDIENTE', 'RESUELTO'].includes(ordenServicio.estado)}
+      {#if data.puedeIniciarOrden && ['NUEVO', 'PENDIENTE', 'RESUELTO'].includes(ordenServicio.estado)}
         <button
-          class="px-4 py-2 rounded-lg text-sm font-medium bg-[#9b1f3d] text-white hover:bg-[#7f182f] transition-colors"
+          class="flex-1 px-4 py-2 rounded-lg text-sm font-medium bg-[#9b1f3d] text-white hover:bg-[#7f182f] transition-colors"
           onclick={() => abrirModalCambiarEstado('PROCESO')}
           >
           Iniciar
         </button>
       {/if}
 
-      {#if ['PROCESO'].includes(ordenServicio.estado)}
+      {#if data.puedePonerEnPendienteOrden && ['PROCESO'].includes(ordenServicio.estado)}
         <button
-          class="px-4 py-2 rounded-lg text-sm font-medium bg-green-600 text-white hover:bg-green-700 transition-colors"
+          class="flex-1 px-4 py-2 rounded-lg text-sm font-medium bg-green-600 text-white hover:bg-green-700 transition-colors"
           onclick={() => abrirModalCambiarEstado('PENDIENTE')}
         >
           Pediente
         </button>
       {/if}
 
-      {#if ['PROCESO'].includes(ordenServicio.estado)}
+      {#if data.puedeResolverOrden && ['PROCESO'].includes(ordenServicio.estado)}
         <button
-          class="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+          class="flex-1 px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors"
           onclick={() => abrirModalCambiarEstado('RESUELTO')}
         >
           Solucionar
         </button>
       {/if}
 
-      {#if ['RESUELTO'].includes(ordenServicio.estado)}
+      {#if data.puedeCerrarOrden && ['RESUELTO'].includes(ordenServicio.estado)}
         <button
-          class="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+          class="flex-1 px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors"
           onclick={() => abrirModalCambiarEstado('CERRADO')}
         >
           Cerrar
         </button>
       {/if}
 
-      {#if ['NUEVO', 'PENDIENTE', 'PROCESO'].includes(ordenServicio.estado)}
+      {#if data.puedeCancelarOrden && ['NUEVO', 'PENDIENTE', 'PROCESO'].includes(ordenServicio.estado)}
         <button
-          class="px-4 py-2 rounded-lg text-sm font-medium border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
+          class="flex-1 px-4 py-2 rounded-lg text-sm font-medium border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
           onclick={() => abrirModalCambiarEstado('CANCELADO')}
         >
           Cancelar

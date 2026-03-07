@@ -30,6 +30,7 @@ const schema = Joi.object({
     .trim()
     .max(1000)
     .uppercase()
+    .default(null)
     .messages({
       'string.max': 'La observación no puede tener más de 1000 carácteres'
     })
@@ -39,7 +40,7 @@ const schema = Joi.object({
  * @type {Validator<{
  *  ordenServicioId: number,
  *  nuevoEstado: 'PROCESO' | 'PENDIENTE' | 'RESUELTO' | 'CERRADO' | 'CANCELADO',
- *  observacion?: string,
+ *  observacion: string | null,
  *  firmaEmpleadoSolicitante?: string,
  *  firmaUsuarioAtendio?: string
  * }>}

@@ -27,7 +27,7 @@ export function createCambiarEstadoUseCase (usuario, authorize) {
    * @param {{
    *  ordenServicioId: number,
    *  nuevoEstado: 'PROCESO' | 'PENDIENTE' | 'RESUELTO' | 'CERRADO' | 'CANCELADO',
-   *  observacion?: string,
+   *  observacion: string | null,
    *  firmaEmpleadoSolicitante?: string,
    *  firmaUsuarioAtendio?: string
    * }} data
@@ -80,6 +80,12 @@ export function createCambiarEstadoUseCase (usuario, authorize) {
         dataUpdate.cerradoEn = new Date(Temporal.Now.instant().epochMilliseconds);
         dataUpdate.cerradoPorId = usuario.id;
       } else if (data.nuevoEstado === 'RESUELTO') {
+        if (!ordenServicio.agentes.some((agente) => usuario.id === agente.id)) {
+          throw new BusinessRuleException(
+            'Sólo un agente asignado puede firmar',
+            BusinessRules.SOLO_USUARIO_ASIGNADO_PUEDE_FIRMAR
+          );
+        }
         if (data.firmaUsuarioAtendio == null) {
           throw new BusinessRuleException(
             'Tu firma es requerida',
