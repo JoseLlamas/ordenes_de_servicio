@@ -1079,60 +1079,63 @@
             {form.messageEliminarActivo}
           </InfoMessage>
         {/if}
-        {#if ordenServicio.activos && ordenServicio.activos.length > 0}
+        {#if ordenServicio.activos.length > 0}
           <div class="mb-4 flex items-center justify-between">
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
               Total: {ordenServicio.activos.length} {ordenServicio.activos.length === 1 ? 'activo' : 'activos'}
             </h3>
-            <button
-              onclick={() => modalAgregarActivo?.open()}
-              class="px-4 py-2 text-sm font-medium text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/30 rounded-lg transition-colors"
-            >
-              Agregar activo
-            </button>
+            {#if data.puedeModificarOrden && ['NUEVO', 'PROCESO', 'PENDIENTE'].includes(ordenServicio.estado)}
+              <button
+                onclick={() => modalAgregarActivo?.open()}
+                class="px-4 py-2 text-sm font-medium text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/30 rounded-lg transition-colors"
+              >
+                Agregar activo
+              </button>
+            {/if}
           </div>
 
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {#each ordenServicio.activos as activo(activo.id)}
               <div class="group bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 p-4 hover:shadow-lg transition-all relative">
-
-                <form
-                  method="POST"
-                  action="?/eliminarActivo"
-                  use:confirmBeforeEnhance={{ confirm: () => confirmModal?.confirm({ texto: '¿Desea eliminar el activo?' }) ?? Promise.resolve(false) }}
-                  use:enhance={() => {
-                    activoEliminandoId = activo.id;
-                    return async ({ update }) => {
-                      await update();
-                      activoEliminandoId = null;
-                    };
-                  }}
-                >
-                  <input type="hidden" name="activoId" value={activo.id} />
-                  <input type="hidden" name="ordenServicioId" value={ordenServicio.id} />
-                  <button
-                    type="submit"
-                    aria-label="Eliminar activo {activo.numeroInventario}"
-                    disabled={activoEliminandoId === activo.id}
-                    class="
-                      absolute top-3 right-3 p-1.5 rounded-lg transition-all opacity-0 group-hover:opacity-100
-                      text-gray-400 dark:text-gray-500
-                      hover:text-red-600 dark:hover:text-red-400
-                      hover:bg-red-50 dark:hover:bg-red-950/30
-                    "
+                {#if data.puedeModificarOrden && ['NUEVO', 'PROCESO', 'PENDIENTE'].includes(ordenServicio.estado)}
+                  <form
+                    method="POST"
+                    action="?/eliminarActivo"
+                    use:confirmBeforeEnhance={{ confirm: () => confirmModal?.confirm({ texto: '¿Desea eliminar el activo?' }) ?? Promise.resolve(false) }}
+                    use:enhance={() => {
+                      activoEliminandoId = activo.id;
+                      return async ({ update }) => {
+                        await update();
+                        activoEliminandoId = null;
+                      };
+                    }}
                   >
-                    {#if activoEliminandoId === activo.id}
-                      <svg class="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
-                    {:else}
-                      <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
-                      </svg>
-                    {/if}
-                  </button>
-                </form>
+                    <input type="hidden" name="activoId" value={activo.id} />
+                    <input type="hidden" name="ordenServicioId" value={ordenServicio.id} />
+                    <button
+                      type="submit"
+                      aria-label="Eliminar activo {activo.numeroInventario}"
+                      disabled={activoEliminandoId === activo.id}
+                      class="
+                        absolute top-3 right-3 p-1.5 rounded-lg transition-all opacity-0 group-hover:opacity-100
+                        text-gray-400 dark:text-gray-500
+                        hover:text-red-600 dark:hover:text-red-400
+                        hover:bg-red-50 dark:hover:bg-red-950/30
+                      "
+                    >
+                      {#if activoEliminandoId === activo.id}
+                        <svg class="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                      {:else}
+                        <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                        </svg>
+                      {/if}
+                    </button>
+                  </form>
+                {/if}
 
                 <div class="space-y-3 pr-6">
                   <!-- Inventario -->
@@ -1197,17 +1200,19 @@
             <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
               Esta orden no tiene activos asociados
             </p>
-            <div class="mt-6">
-              <button
-                onclick={() => modalAgregarActivo?.open()}
-                class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
-              >
-                <svg class="-ml-1 mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                </svg>
-                Agregar activo
-              </button>
-            </div>
+            {#if data.puedeModificarOrden && ['NUEVO', 'PROCESO', 'PENDIENTE'].includes(ordenServicio.estado)}
+              <div class="mt-6">
+                <button
+                  onclick={() => modalAgregarActivo?.open()}
+                  class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+                >
+                  <svg class="-ml-1 mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                  </svg>
+                  Agregar activo
+                </button>
+              </div>
+            {/if}
           </div>
         {/if}
       </div>
