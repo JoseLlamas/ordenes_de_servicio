@@ -21,6 +21,7 @@ Thumbs.db
 !.env.test
 
 /uploads/
+/data/
 
 # Vite
 vite.config.js.timestamp-*

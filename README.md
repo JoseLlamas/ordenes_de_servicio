@@ -17,6 +17,14 @@ Si quiere borrar el volumen donde esta la db
 docker volume rm nombre_volumen
 
 ###################
+Para producción
+
+Ejecutar
+
+$ mkdir -p data/firmas data/avatares
+$ chown 1000:1000 data -R
+
+Después
 
 $ cat env.example > .env
 
@@ -28,16 +36,14 @@ Después de esto, en el .env, para poner correr la migración y el seed, hay que
 
 #####
 
-en caso de que tenga problemas con permisos de usuario mysql
+restringir el acceso a root desde remoto
 
 hacer lo siguiente
 
 docker exec -it ordenes_de_servicio-mysql.local mysql -u root -p
 
-ejecutar para dar acceso al usuario
+alter user 'root'@'%' account lock;
 
-drop user if exists 'usuario'@'localhost';
-drop user if exists 'usuario'@'%';
-create user 'usuario'@'%' identified by 'password';
-grant all privileges on db.* to 'usuario'@'%';
-flush privileges;
+para activar acceso
+
+alter user 'root'@'%' account unlock;
