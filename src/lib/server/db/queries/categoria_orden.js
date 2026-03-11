@@ -23,3 +23,20 @@ export function obtenerCategoriasOrdenPorArea (areaId, dbOrTx = db) {
     .where(eq(categoriasOrden.areaId, areaId))
     .orderBy(asc(categoriasOrden.id));
 }
+
+/**
+ *
+ * @param {number} id
+ * @param {DbOrTx} dbOrTx
+ * @return {Promise<CategoriaOrdenDTO | null>}
+ */
+export async function obtenerCategoriaOrdenPorId (id, dbOrTx = db) {
+  const [categoriaOrden] = await dbOrTx
+    .select({
+      id: categoriasOrden.id,
+      descripcion: categoriasOrden.descripcion
+    })
+    .from(categoriasOrden)
+    .where(eq(categoriasOrden.id, id));
+  return categoriaOrden ?? null;
+}

@@ -3,7 +3,8 @@ import {
   registrarOrdenServicio,
   obtenerFolioSiguiente,
   obtenerEmpleadoPorId,
-  obtenerEncargadoArea
+  obtenerEncargadoArea,
+  obtenerCategoriaOrdenPorId
 } from '$lib/server/db/queries';
 import { BusinessRuleException, BusinessRules, ForbiddenException } from '$lib/server/exceptions';
 import { Temporal } from 'temporal-polyfill/impl';
@@ -36,6 +37,30 @@ export function createRegistrarOrdenServicioUseCase (usuario, authorize) {
       if (authorize.cannot('create', 'Orden', { areaId: data.areaParaAsignarId })) {
         throw new ForbiddenException('No tiene permiso o alcance para crear una orden de servicio');
       }
+      const categoriaOrden = await obtenerCategoriaOrdenPorId(data.categoriaOrdenId, tx);
+      if (categoriaOrden == null) {
+        throw new BusinessRuleException(
+          'Categoria de orden no encontrada'
+        );
+      }
+      if (categoriaOrden.descripcion === 'OTRO' && data.otroCategoriaOrden == null) {
+        throw new BusinessRuleException(
+          'Si selecciona "OTRO" como categoria, debe ingresar manualmente la categoria en otro',
+          BusinessRules.SELECCIONAR_OTRO_SIN_INGRESAR_OTRO_MANUALMENTE
+        );
+      }
+      if (categoriaOrden.descripcion !== 'OTRO' && data.otroCategoriaOrden != null) {
+        throw new BusinessRuleException(
+          'Sólo debe ingresar manualmente otra categoria si ingresa "OTRO" como categoria',
+          BusinessRules.SELECCIONAR_DIFERENTE_A_OTRO_E_INGRESAR_OTRO_MANUALMENTE
+        );
+      }
+      if (data.tipoEntrada === 'OFICIO' && data.numeroOficio == null) {
+        throw new BusinessRuleException(
+          'Si selecciona como tipo de entrada "OFICIO", debe ingresar le número de oficio',
+          BusinessRules.SELECCIONAR_OFICIO_Y_NO_INGREGAR_NUMERO_OFICIO
+        );
+      }
       const anioActual = Temporal.Now.zonedDateTimeISO('America/Mexico_City').year;
       const folio = await obtenerFolioSiguiente(anioActual, data.areaParaAsignarId, tx);
       const empleadoSolicitante = await obtenerEmpleadoPorId(data.empleadoSolicitanteId, tx);
@@ -44,7 +69,10 @@ export function createRegistrarOrdenServicioUseCase (usuario, authorize) {
       }
       const encargadoAreaAsignada = await obtenerEncargadoArea(data.areaParaAsignarId, { activo: true }, tx);
       if (encargadoAreaAsignada == null) {
-        throw new BusinessRuleException('El area asignada no tiene encargado', BusinessRules.AREA_SIN_ENCARGADO);
+        throw new BusinessRuleException(
+          'El area asignada no tiene encargado',
+          BusinessRules.AREA_SIN_ENCARGADO
+        );
       }
       const creadoEn = new Date(Temporal.Now.instant().epochMilliseconds);
       await registrarOrdenServicio({

@@ -41,11 +41,6 @@ const schema = Joi.object({
     .messages({
       'any.required': 'La categoría de la orden es requerida'
     }),
-  categoriaOrdenText: Joi
-    .string()
-    .empty(['', null])
-    .required()
-    .strip(),
   otroCategoriaOrden: Joi
     .string()
     .empty(['', null])
@@ -53,15 +48,8 @@ const schema = Joi.object({
     .trim()
     .uppercase()
     .default(null)
-    .when('categoriaOrdenText', {
-      is: Joi.valid('OTRO'),
-      then: Joi.required(),
-      otherwise: Joi.forbidden()
-    })
     .messages({
-      'any.required': 'Si se escoge "OTRO" en categoría, se debe ingresar manualmente la categoría',
-      'string.max': 'La otra categoría no puede tener más de 100 carácteres',
-      'any.unknown': 'Sólo se puede ingregar otra categoría cuando se selecciona "OTRO"'
+      'string.max': 'La otra categoría no puede tener más de 100 carácteres'
     }),
   prioridad: Joi
     .string()
@@ -102,13 +90,8 @@ const schema = Joi.object({
     .uppercase()
     .trim()
     .max(100)
-    .when('tipoEntrada', {
-      is: Joi.valid('OFICIO'),
-      then: Joi.required(),
-      otherwise: Joi.optional().default(null)
-    })
+    .default(null)
     .messages({
-      'any.required': 'Cuando la solicitud de la orden es por oficio, debe ingresar el número de ese oficio',
       'string.max': 'El número de oficio no puede tener más de 100 carácteres'
     })
 });
