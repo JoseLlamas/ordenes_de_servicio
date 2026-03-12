@@ -6,6 +6,7 @@
     import { enhance } from '$app/forms';
     import { escribirNombreCompleto } from '$lib/utils/index.js';
     import ErrorCard from '$lib/components/ErrorCard.svelte';
+    import InfoMessage from '$lib/components/InfoMessage.svelte';
 
   let { data, form } = $props();
 
@@ -84,7 +85,6 @@
         <button
           type="button"
           onclick={() => modalResetPasswordRef?.open()}
-          disabled={!usuario.activo}
           class="
             shrink-0
             px-4 py-2 rounded-lg
@@ -159,7 +159,7 @@
     <div class="space-y-4">
       <div class="p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
         <div class="flex items-start gap-3">
-          <svg class="w-6 h-6 text-green-600 dark:text-green-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg class="w-6 h-6 text-green-600 dark:text-green-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           <div class="flex-1">

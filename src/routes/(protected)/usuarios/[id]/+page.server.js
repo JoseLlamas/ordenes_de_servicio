@@ -1,9 +1,8 @@
 import { error, fail, redirect } from '@sveltejs/kit';
-import { createObtenerUsuarioUseCase } from '$lib/server/use_cases/usuario';
+import { createObtenerUsuarioUseCase, createResetearPasswordUseCase } from '$lib/server/use_cases/usuario';
 import { BusinessRuleException, BusinessRules, NotFoundException, ForbiddenException } from '$lib/server/exceptions';
 import { assertAuthenticated } from '$lib/server/auth/guards';
 import { patchUsuario } from '$lib/server/db/queries';
-import { generarPasswordAleatoria, generateHashPassword } from '$lib/server/utils';
 
 /**
  * @type {import('./$types').PageServerLoad}
@@ -68,11 +67,20 @@ export const actions = {
     const data = await request.formData();
     const usuarioId = Number.parseInt(data.get('usuarioId')?.toString() ?? '');
     if (usuarioId && usuarioId > 0) {
-      const nuevoPassword = generarPasswordAleatoria();
-      await patchUsuario({ password: await generateHashPassword(nuevoPassword) }, usuarioId);
-      return {
-        nuevoPassword
-      };
+      const resetearPassword = createResetearPasswordUseCase(locals.usuario, locals.authorize);
+      try {
+        const nuevoPassword = await resetearPassword(usuarioId);
+        return {
+          nuevoPassword
+        };
+      } catch (exc) {
+        if (exc instanceof BusinessRuleException) {
+          return fail(422, {
+            errorResetPassword: exc.message
+          });
+        }
+        throw exc;
+      }
     } else {
       return fail(422, {
         errorResetPassword: 'Error al enviar el usuarioId'

@@ -442,6 +442,7 @@ export async function obtenerUsuariosParaAsignarAgentes (ordenServicioId, usuari
 /**
  * @param {number} empleadoId
  * @param {DbOrTx} dbOrTx
+ * @return {Promise<{ id: number, activo: boolean } | null>}
  */
 export async function obtenerUsuarioParaBajaDeEmpleado (empleadoId, dbOrTx = db) {
   const [user] = await dbOrTx.select({
@@ -452,4 +453,21 @@ export async function obtenerUsuarioParaBajaDeEmpleado (empleadoId, dbOrTx = db)
     .where(eq(usuarios.empleadoId, empleadoId))
     .limit(1);
   return user ?? null;
+}
+
+/**
+ *
+ * @param {number} id
+ * @param {DbOrTx} dbOrTx
+ * @return {Promise<{ id: number, activo: boolean } | null>}
+ */
+export async function obtenerUsuarioParaCambioPassword (id, dbOrTx = db) {
+  const [us] = await dbOrTx
+    .select({
+      id: usuarios.id,
+      activo: usuarios.activo
+    })
+    .from(usuarios)
+    .where(eq(usuarios.id, id));
+  return us ?? null;
 }
