@@ -6,11 +6,11 @@ import { ForbiddenException } from '$lib/server/exceptions';
  */
 
 /**
- *
+ * @param {NonNullable<App.Locals['usuario']>} usuario
  * @param {NonNullable<App.Locals['authorize']>} authorize
  * @returns
  */
-export function createBuscarUsuariosUseCase (authorize) {
+export function createBuscarUsuariosUseCase (usuario, authorize) {
   /**
   *
   * @param {{areaId: number, soloActivos: boolean}} filters
@@ -21,6 +21,10 @@ export function createBuscarUsuariosUseCase (authorize) {
     if (authorize.cannot('read', 'Usuario', { areaId: filters.areaId })) {
       throw new ForbiddenException('No puede buscar usuarios del area que está consultando');
     }
-    return obtenerUsuariosResumenes({ areaId: filters.areaId, soloActivos: filters.soloActivos });
+    return obtenerUsuariosResumenes({
+      areaId: filters.areaId,
+      soloActivos: filters.soloActivos,
+      withoutAdministrador: usuario.rol.nombre !== 'Administrador'
+    });
   };
 }

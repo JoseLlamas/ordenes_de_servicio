@@ -34,6 +34,9 @@ export async function load ({ locals, url }) {
     if (resultValidation.values.prioridad != null) {
       parameters.filtros.prioridad = resultValidation.values.prioridad;
     }
+    if (resultValidation.values.empleadoSolicitanteId != null) {
+      parameters.filtros.empleadoSolicitanteId = resultValidation.values.empleadoSolicitanteId;
+    }
   }
   const rolNombre = locals.usuario.rol.nombre;
   if (rolNombre === 'Agente') {

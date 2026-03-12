@@ -55,7 +55,8 @@ export async function registrarOrdenServicio (data, dbOrTx = db) {
  *  estado?: 'NUEVO' | 'PROCESO' | 'PENDIENTE' | 'RESUELTO' | 'CERRADO' | 'CANCELADO',
  *  prioridad?: 'BAJA' | 'MEDIA' | 'ALTA' | 'CRITICA',
  *  agenteId?: number,
- *  areasAsignadasId?: number[]
+ *  areasAsignadasId?: number[],
+ *  empleadoSolicitanteId?: number
  * }} opciones.filtros
  * @param {DbOrTx} [dbOrTx = db]
  * @return {Promise<{
@@ -135,6 +136,9 @@ export async function paginarOrdenesServicioResumen ({
   }
   if (filtros.prioridad != null) {
     params.push(eq(schemas.ordenesServicio.prioridad, filtros.prioridad));
+  }
+  if (filtros.empleadoSolicitanteId != null) {
+    params.push(eq(schemas.ordenesServicio.empleadoSolicitanteId, filtros.empleadoSolicitanteId));
   }
   if (params.length > 0) {
     query.where(and(...params));

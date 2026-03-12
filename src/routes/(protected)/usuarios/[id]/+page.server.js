@@ -44,6 +44,11 @@ export const actions = {
 
   async darDeBaja ({ request, locals }) {
     assertAuthenticated(locals);
+    if (locals.authorize.cannot('delete', 'Usuario')) {
+      return fail(403, {
+        errorDarDeBaja: 'No tiene permisos para dar de baja usuarios'
+      });
+    }
     const data = await request.formData();
     const usuarioId = Number.parseInt(data.get('usuarioId')?.toString() ?? '');
     if (usuarioId && usuarioId > 0) {

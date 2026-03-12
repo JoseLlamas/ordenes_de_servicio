@@ -216,9 +216,6 @@
         <div class="flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
           <div class="flex flex-wrap justify-center gap-4">
             <a href="/about" class="hover:text-gray-900 dark:hover:text-gray-200 transition-colors">Acerca de</a>
-            <a href="/contact" class="hover:text-gray-900 dark:hover:text-gray-200 transition-colors">Contacto</a>
-            <a href="/privacy-policy" class="hover:text-gray-900 dark:hover:text-gray-200 transition-colors">Privacidad</a>
-            <a href="/terms" class="hover:text-gray-900 dark:hover:text-gray-200 transition-colors">Términos</a>
           </div>
           <p class="text-center sm:text-right">
             © 2026 Alcaldía Iztapalapa. Todos los derechos reservados.

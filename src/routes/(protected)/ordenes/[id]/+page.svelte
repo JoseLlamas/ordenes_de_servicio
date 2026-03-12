@@ -556,7 +556,6 @@
         use:confirmBeforeEnhance={{ confirm: () => confirmModal?.confirm({ texto: '¿Desea modificar esta orden de servicio?' }) ?? Promise.resolve(true) }}
         use:enhance={({ formData }) => {
           submittingModificacion = true;
-          const categoriaOrden = data.categoriasOrden.find(categoriaOrden => categoriaOrden.id === datosNuevosModificacion.categoriaOrdenId);
           formData.set('data', JSON.stringify({
             ordenServicioId: ordenServicio.id,
             telefonoSolicitante: datosNuevosModificacion.telefonoSolicitante,
@@ -565,8 +564,7 @@
             categoriaOrdenId: datosNuevosModificacion.categoriaOrdenId,
             otroCategoriaOrden: datosNuevosModificacion.otroCategoriaOrden,
             prioridad: datosNuevosModificacion.prioridad,
-            descripcion: datosNuevosModificacion.descripcion,
-            categoriaOrdenText: categoriaOrden?.descripcion ?? ''
+            descripcion: datosNuevosModificacion.descripcion
           }));
           return async ({ update, result }) => {
             await update();

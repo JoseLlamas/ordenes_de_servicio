@@ -43,7 +43,7 @@ export async function registrarUsuario (data, dbOrTx = db) {
 
 /**
  *
- * @param {{ areaId?: number, soloActivos?: boolean}} [filters]
+ * @param {{ areaId?: number, soloActivos?: boolean, withoutAdministrador?: boolean}} [filters]
  * @param {DbOrTx} [dbOrTx=db]
  * @return {Promise<UsuarioResumenDTO[]>}
  */
@@ -54,6 +54,9 @@ export async function obtenerUsuariosResumenes (filters = {}, dbOrTx = db) {
   }
   if (filters.soloActivos != null && filters.soloActivos) {
     conditions.push(eq(usuarios.activo, true));
+  }
+  if (filters.withoutAdministrador != null && filters.withoutAdministrador) {
+    conditions.push(ne(roles.nombre, 'Administrador'));
   }
   const query = dbOrTx
     .select({
@@ -434,4 +437,19 @@ export async function obtenerUsuariosParaAsignarAgentes (ordenServicioId, usuari
     rol: user.rol,
     ocupado: Boolean(/** @type {boolean} */ (user.ocupado))
   }));
+}
+
+/**
+ * @param {number} empleadoId
+ * @param {DbOrTx} dbOrTx
+ */
+export async function obtenerUsuarioParaBajaDeEmpleado (empleadoId, dbOrTx = db) {
+  const [user] = await dbOrTx.select({
+    id: usuarios.id,
+    activo: usuarios.activo
+  })
+    .from(usuarios)
+    .where(eq(usuarios.empleadoId, empleadoId))
+    .limit(1);
+  return user ?? null;
 }

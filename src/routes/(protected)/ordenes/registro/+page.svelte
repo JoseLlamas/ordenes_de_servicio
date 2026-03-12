@@ -440,7 +440,6 @@
       tipoEntrada: tipoEntrada,
       numeroOficio: numeroOficio,
       categoriaOrdenId: categoriaOrden?.id ?? null,
-      categoriaOrdenText: categoriaOrden?.descripcion ?? null,
       otroCategoriaOrden: otroCategoriaOrden,
       prioridad: prioridad
     };

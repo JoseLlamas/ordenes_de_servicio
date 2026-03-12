@@ -1,5 +1,5 @@
 import { db } from '$lib/server/db';
-import { obtenerOrdenServicioSimple, patchOrdenServicio } from '$lib/server/db/queries';
+import { obtenerCategoriaOrdenPorId, obtenerOrdenServicioSimple, patchOrdenServicio } from '$lib/server/db/queries';
 import { BusinessRuleException, BusinessRules, ForbiddenException } from '$lib/server/exceptions';
 
 /**
@@ -31,6 +31,30 @@ export function createModificarOrdenServicioUseCase (usuario, authorize) {
       }
       if (authorize.cannot('update', 'Orden', { areaId: ordenServicio.areaAsignadaId })) {
         throw new ForbiddenException('No puede realizar esta operación');
+      }
+      const categoriaOrden = await obtenerCategoriaOrdenPorId(data.categoriaOrdenId, tx);
+      if (categoriaOrden == null) {
+        throw new BusinessRuleException(
+          'Categoria de orden no encontrada'
+        );
+      }
+      if (categoriaOrden.descripcion === 'OTRO' && data.otroCategoriaOrden == null) {
+        throw new BusinessRuleException(
+          'Si selecciona "OTRO" como categoria, debe ingresar manualmente la categoria en otro',
+          BusinessRules.SELECCIONAR_OTRO_SIN_INGRESAR_OTRO_MANUALMENTE
+        );
+      }
+      if (categoriaOrden.descripcion !== 'OTRO' && data.otroCategoriaOrden != null) {
+        throw new BusinessRuleException(
+          'Sólo debe ingresar manualmente otra categoria si ingresa "OTRO" como categoria',
+          BusinessRules.SELECCIONAR_DIFERENTE_A_OTRO_E_INGRESAR_OTRO_MANUALMENTE
+        );
+      }
+      if (data.tipoEntrada === 'OFICIO' && data.numeroOficio == null) {
+        throw new BusinessRuleException(
+          'Si selecciona como tipo de entrada "OFICIO", debe ingresar le número de oficio',
+          BusinessRules.SELECCIONAR_OFICIO_Y_NO_INGREGAR_NUMERO_OFICIO
+        );
       }
       if (!['NUEVO', 'PROCESO', 'PENDIENTE'].includes(ordenServicio.estado)) {
         throw new BusinessRuleException(

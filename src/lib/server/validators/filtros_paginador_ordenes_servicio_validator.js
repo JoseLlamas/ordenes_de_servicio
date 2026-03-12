@@ -18,6 +18,9 @@ const schema = Joi.object({
     .string()
     .empty(['', null])
     .valid('BAJA', 'MEDIA', 'ALTA', 'CRITICA'),
+  empleadoSolicitanteId: Joi
+    .number()
+    .integer(),
   pagina: Joi
     .number()
     .integer()
@@ -38,6 +41,7 @@ const schema = Joi.object({
  *  fecha?: string,
  *  estado?: 'NUEVO' | 'PROCESO' | 'PENDIENTE' | 'RESUELTO' | 'CERRADO' | 'CANCELADO',
  *  prioridad?: 'BAJA' | 'MEDIA' | 'ALTA' | 'CRITICA',
+ *  empleadoSolicitanteId?: number,
  *  pagina: number,
  *  porPagina: number
  * }>}

@@ -225,3 +225,16 @@ export async function obtenerEncargadoArea (areaId, filters = { activo: true }, 
     .limit(1);
   return encargado ?? null;
 }
+
+/**
+ *
+ * @param {{ activo?: boolean }} data
+ * @param {number} empleadoId
+ * @param {DbOrTx} dbOrTx
+ */
+export async function patchEmpleado (data, empleadoId, dbOrTx = db) {
+  await dbOrTx
+    .update(empleados)
+    .set(data)
+    .where(eq(empleados.id, empleadoId));
+}

@@ -1,6 +1,7 @@
 import { assertAuthenticated } from '$lib/server/auth/guards';
+import { patchEmpleado } from '$lib/server/db/queries';
 import { ForbiddenException } from '$lib/server/exceptions';
-import { createBuscarEmpleadosUseCase } from '$lib/server/use_cases/empleado';
+import { createBuscarEmpleadosUseCase, createDarDeBajaEmpleadoUseCase } from '$lib/server/use_cases/empleado';
 import { validateBusquedaEmpleados } from '$lib/server/validators';
 import { error, fail, redirect } from '@sveltejs/kit';
 
@@ -37,6 +38,32 @@ export const actions = {
         error (403, exc.message);
       }
       throw exc;
+    }
+  },
+
+  async darDeBaja ({ locals, request }) {
+    assertAuthenticated(locals);
+    const data = await request.formData();
+    const empleadoId = Number.parseInt(data.get('empleadoId')?.toString() ?? '');
+    if (empleadoId && empleadoId > 0) {
+      const darDeBaja = createDarDeBajaEmpleadoUseCase(locals.authorize);
+      try {
+        await darDeBaja(empleadoId);
+        return {
+          messageDarDeBaja: 'Empleado dado de baja'
+        };
+      } catch (exc) {
+        if (exc instanceof ForbiddenException) {
+          return fail(403, {
+            errorDarDeBaja: exc.message
+          });
+        }
+        throw exc;
+      }
+    } else {
+      return fail(422, {
+        errorDarDeBaja: 'Error al enviar el empleadoId'
+      });
     }
   }
 

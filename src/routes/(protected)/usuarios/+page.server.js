@@ -31,7 +31,7 @@ export const actions = {
       return fail(422, { errors: resultValidator.errors });
     }
     try {
-      const buscarUsuariosResumenes = createBuscarUsuariosUseCase(locals.authorize);
+      const buscarUsuariosResumenes = createBuscarUsuariosUseCase(locals.usuario, locals.authorize);
       const usuariosResumenes = await buscarUsuariosResumenes(resultValidator.values);
       return {
         usuariosResumenes

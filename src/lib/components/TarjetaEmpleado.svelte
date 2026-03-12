@@ -8,17 +8,17 @@
   /**
    * @type {{
    *   empleado: EmpleadoDetalleDTO,
-   *   onModificar?: (empleado: EmpleadoDetalleDTO) => void,
    *   onDarDeBaja?: (empleado: EmpleadoDetalleDTO) => void,
    *   onCrearOS?: (empleadoId: number) => void,
+   *   onBuscarOrdenes?: (empleadoId:number) => void,
    *   class?: string
    * }}
    */
   let {
     empleado,
-    onModificar,
     onDarDeBaja,
     onCrearOS,
+    onBuscarOrdenes,
     class: className = ''
   } = $props();
 
@@ -93,7 +93,7 @@
     <dl class="space-y-3">
       <!-- Dirección General -->
       <div class="flex items-start gap-3">
-        <svg class="w-5 h-5 text-gray-400 dark:text-gray-500 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg class="w-5 h-5 text-gray-400 dark:text-gray-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
         </svg>
         <div class="flex-1 min-w-0">
@@ -104,7 +104,7 @@
 
       <!-- Área -->
       <div class="flex items-start gap-3">
-        <svg class="w-5 h-5 text-gray-400 dark:text-gray-500 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg class="w-5 h-5 text-gray-400 dark:text-gray-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
         </svg>
         <div class="flex-1 min-w-0">
@@ -119,10 +119,10 @@
   <div class="p-4 bg-white dark:bg-gray-800">
     <!-- Desktop: botones en fila -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-2">
-      {#if empleado.activo}
+      {#if empleado.activo && onCrearOS != null}
         <button
           type="button"
-          onclick={() => onCrearOS?.(empleado.id)}
+          onclick={() => onCrearOS(empleado.id)}
           class="
             flex-1 flex items-center justify-center gap-2
             px-4 py-2.5 rounded-lg
@@ -139,32 +139,30 @@
         </button>
       {/if}
 
-      {#if onModificar != null}
+      {#if onBuscarOrdenes != null}
         <button
           type="button"
-          onclick={() => onModificar?.(copiarEmpleado(empleado))}
+          onclick={() => onBuscarOrdenes(empleado.id)}
           class="
-            flex items-center justify-center gap-2
+            flex-1 flex items-center justify-center gap-2
             px-4 py-2.5 rounded-lg
-            bg-gray-100 hover:bg-gray-200
-            dark:bg-gray-700 dark:hover:bg-gray-600
-            text-gray-700 dark:text-gray-200
-            font-medium text-sm
+            bg-blue-600 hover:bg-blue-700
+            text-white font-medium text-sm
             transition-colors
-            focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800
+            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800
           "
         >
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
           </svg>
-          Modificar
+          Buscar ordenes
         </button>
       {/if}
 
-      {#if onDarDeBaja != null}
+      {#if empleado.activo && onDarDeBaja != null}
         <button
           type="button"
-          onclick={() => onDarDeBaja?.(copiarEmpleado(empleado))}
+          onclick={() => onDarDeBaja(copiarEmpleado(empleado))}
           class="
             flex items-center justify-center gap-2
             px-4 py-2.5 rounded-lg

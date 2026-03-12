@@ -5,6 +5,7 @@
   import Modal from '$lib/components/Modal.svelte';
     import { enhance } from '$app/forms';
     import { escribirNombreCompleto } from '$lib/utils/index.js';
+    import ErrorCard from '$lib/components/ErrorCard.svelte';
 
   let { data, form } = $props();
 
@@ -148,6 +149,11 @@
   working={resetingPassword}
   onclose={() => nuevaPasswordGenerada = null}
 >
+  {#if form?.errorResetPassword}
+    <ErrorCard>
+      {form.errorResetPassword}
+    </ErrorCard>
+  {/if}
   {#if nuevaPasswordGenerada}
     <!-- Mostrar nueva contraseña generada -->
     <div class="space-y-4">
@@ -274,6 +280,11 @@
   title="Dar de Baja Usuario"
   working={dandoDeBaja}
 >
+  {#if form?.errorDarDeBaja}
+    <ErrorCard>
+      {form.errorDarDeBaja}
+    </ErrorCard>
+  {/if}
   <form
     method="POST"
     action="?/darDeBaja"
