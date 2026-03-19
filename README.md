@@ -28,7 +28,7 @@ Después
 
 $ cat env.example > .env
 
-Algo importante, en el .env, en MYSQL_HOST se debe poner "db" y en MYSQL_PORT se debe poner "3306", esto es para la compilación, además de poner ORIGIN y APP_PORT_FORWARD, con la ip del servidor (con puerto, el especificado en APP_PORT_FORWARD)
+Algo importante, en el .env, en MYSQL_HOST se debe poner "db" y en MYSQL_PORT se debe poner "3306", esto es para la compilación, además de poner ORIGIN (como escucha el host con ip de proxy) y APP_PORT_FORWARD (como escucha internamente el docker)
 
 $ docker compose -f compose.yaml up -d --build ordenes_servicio
 
