@@ -18,6 +18,8 @@ services:
       - db
     environment:
       ORIGIN: ${ORIGIN}
+      PROTOCOL_HEADER: X-Forwarded-Proto
+      HOST_HEADER: X-Forwarded-Host
       TZ: ${TIME_ZONE:-UTC}
       NODE_ENV: production
       MYSQL_HOST: ${MYSQL_HOST}
