@@ -47,3 +47,9 @@ alter user 'root'@'%' account lock;
 para activar acceso
 
 alter user 'root'@'%' account unlock;
+
+####
+
+para redireccionar via ssh al mysql, para conectarse desde remoto
+
+ssh -L 3306:127.0.0.1:3311 -p 2234 sistemas@187.203.172.120
