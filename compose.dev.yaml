@@ -2,7 +2,7 @@ services:
   db:
     image: "mysql:9.5"
     ports:
-      - "${MYSQL_PORT_FORWARD}:3306"
+      - "127.0.0.1:${MYSQL_PORT_FORWARD}:3306"
     hostname: "ordenes_de_servicio-mysql-dev.local"
     container_name: "ordenes_de_servicio-mysql-dev.local"
     environment:
