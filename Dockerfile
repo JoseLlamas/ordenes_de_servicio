@@ -27,5 +27,4 @@ RUN mkdir -p uploads/firmas uploads/avatares && \
 
 USER node
 
-EXPOSE 10002
 CMD ["node", "build"]

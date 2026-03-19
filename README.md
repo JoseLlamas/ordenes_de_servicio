@@ -2,7 +2,7 @@ Instalación en modo development
 
 cat env.example > .env
 
-en esta parte, en MYSQL_HOST debe ir con "127.0.0.1" y en MYSQL_PORT en "3311" y se quita ORIGIN, esto último es para producción
+en esta parte, en MYSQL_HOST debe ir con "127.0.0.1" y en MYSQL_PORT en "3311" y se quita ORIGIN y APP_PORT_FORWARD, esto último es para producción
 
 Ejecutar
 
@@ -10,7 +10,7 @@ docker compose -f compose.dev.yaml up -d db
 
 Para bajar el servicio de mysql
 
-docker compose -f compose.dev.yaml down db
+docker compose -f compose.dev.yaml down -v db
 
 Si quiere borrar el volumen donde esta la db
 
@@ -28,7 +28,7 @@ Después
 
 $ cat env.example > .env
 
-Algo importante, en el .env, en MYSQL_HOST se debe poner "db" y en MYSQL_PORT se debe poner "3306", esto es para la compilación, además de poner ORIGIN, con la ip del servidor
+Algo importante, en el .env, en MYSQL_HOST se debe poner "db" y en MYSQL_PORT se debe poner "3306", esto es para la compilación, además de poner ORIGIN y APP_PORT_FORWARD, con la ip del servidor (con puerto, el especificado en APP_PORT_FORWARD)
 
 $ docker compose -f compose.yaml up -d --build ordenes_servicio
 

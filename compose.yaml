@@ -1,14 +1,14 @@
 services:
-  ordenes_servicio:
+  ordenes_de_servicio:
     build:
       context: .
       target: prod
       dockerfile: Dockerfile
     ports:
-      - "127.0.0.1:10002:3000"
-    hostname: "ordenes_servicio.local"
-    container_name: ordenes_servicio
-    image: ordenes_servicio
+      - "127.0.0.1:${APP_PORT_FORWARD}:3000"
+    hostname: "ordenes_de_servicio.local"
+    container_name: ordenes_de_servicio
+    image: ordenes_de_servicio
     restart: unless-stopped
     user: "node:node"
     volumes:
