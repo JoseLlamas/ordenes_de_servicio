@@ -143,17 +143,18 @@ export async function paginarOrdenesServicioResumen ({
   if (params.length > 0) {
     query.where(and(...params));
   }
+  const whereCondition = params.length > 0 ? and(...params) : undefined;
   let offset = (pagina - 1) * porPagina;
   const [rows, [{ total }]] = await Promise.all([
     query
-      .where(params.length > 0 ? and(...params) : undefined)
+      .where(whereCondition)
       .limit(porPagina)
       .offset(offset)
       .orderBy(desc(schemas.ordenesServicio.creadoEn)),
     dbOrTx
       .select({ total: count() })
       .from(schemas.ordenesServicio)
-      .where(params.length > 0 ? and(...params) : undefined)
+      .where(whereCondition)
   ]);
   const totalPaginas = Math.ceil(total / porPagina);
   return {
