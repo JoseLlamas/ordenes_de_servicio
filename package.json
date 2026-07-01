@@ -49,12 +49,6 @@
 		"signature_pad": "^5.1.3",
 		"temporal-polyfill": "^0.3.0"
 	},
-	"pnpm": {
-		"onlyBuiltDependencies": [
-			"esbuild",
-			"sharp"
-		]
-	},
 
 	"volta": {
 		"node": "24.12.0",
