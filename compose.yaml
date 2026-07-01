@@ -1,11 +1,11 @@
 services:
-  ordenes_de_servicio:
+  app:
     build:
       context: .
       target: prod
       dockerfile: Dockerfile
     ports:
-      - "127.0.0.1:${APP_PORT_FORWARD}:3000"
+      - "127.0.0.1:8081:3000"
     hostname: "ordenes_de_servicio.local"
     container_name: ordenes_de_servicio
     image: ordenes_de_servicio
@@ -31,7 +31,7 @@ services:
   db:
     image: "mysql:9.5"
     ports:
-      - "127.0.0.1:${MYSQL_PORT_FORWARD}:3306"
+      - "127.0.0.1:3311:3306"
     hostname: "ordenes_de_servicio-mysql.local"
     container_name: "ordenes_de_servicio-mysql.local"
     environment:
@@ -42,6 +42,38 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
       - mysqldata:/var/lib/mysql
+
+  migrate:
+    build:
+      context: .
+      target: tools
+    command: pnpm db:migrate
+    environment:
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_PORT: ${MYSQL_PORT}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    depends_on:
+      - db
+    profiles:
+      - migrate
+
+  seed:
+    build:
+      context: .
+      target: tools
+    command: node ./src/lib/server/db/seed.js
+    environment:
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_PORT: ${MYSQL_PORT}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    depends_on:
+      - db
+    profiles:
+      - seed
 
 volumes:
   mysqldata:

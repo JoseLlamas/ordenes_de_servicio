@@ -25,7 +25,7 @@ export async function GET ({ params }) {
         'Cache-Control': 'public, max-age=31536000, immutable'
       }
     });
-  } catch (err) {
+  } catch {
     throw error(404, 'Archivo no encontrado');
   }
 }

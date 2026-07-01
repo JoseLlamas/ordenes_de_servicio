@@ -2,19 +2,14 @@ Instalación en modo development
 
 cat env.example > .env
 
-en esta parte, en MYSQL_HOST debe ir con "127.0.0.1" y en MYSQL_PORT en "3311" y se quita ORIGIN y APP_PORT_FORWARD, esto último es para producción
-
 Ejecutar
 
-docker compose -f compose.dev.yaml up -d db
+docker compose  up db -d
 
 Para bajar el servicio de mysql
 
 docker compose -f compose.dev.yaml down -v db
 
-Si quiere borrar el volumen donde esta la db
-
-docker volume rm nombre_volumen
 
 ###################
 Para producción
@@ -28,13 +23,25 @@ Después
 
 $ cat env.example > .env
 
-Algo importante, en el .env, en MYSQL_HOST se debe poner "db" y en MYSQL_PORT se debe poner "3306", esto es para la compilación, además de poner ORIGIN (como escucha el host con ip de proxy) y APP_PORT_FORWARD (como escucha internamente el docker)
+Algo importante, en el .env, en MYSQL_HOST se debe poner "db" y en MYSQL_PORT se debe poner "3306"
 
-$ docker compose -f compose.yaml up -d --build ordenes_servicio
+ejecutar los siguientes comandos
 
-Después de esto, en el .env, para poner correr la migración y el seed, hay que poner en MYSQL_HOST=127.0.0.1 (o la ip del servidor donde está el proyecto) y en MYSQL_PORT=3311, después de correr las migraciones, se regresa a como estaba...osea, con "db" t "3306" en los respectivas variables de ambiente. Esto es por que la migración y el seed se tiene que ejecutar desde afuera del contenedor node.
+# 1. Levantar la base de datos primero (sola, sin la app)
+docker compose up db -d
 
-#####
+# 2. Correr migraciones
+docker compose --profile migrate run --rm migrate <--necesario si queremos migrar de nuevo
+
+# 3. Correr seeds (solo la primera vez)
+docker compose --profile seed run --rm seed
+
+# 4. Levantar la app
+docker compose up app -d
+
+Sí queremos reconstruir la app debido a un nuevo cambio en el código de la aplicación, tendriamos que ejecutar
+
+docker compose up app -d --build
 
 restringir el acceso a root desde remoto
 
