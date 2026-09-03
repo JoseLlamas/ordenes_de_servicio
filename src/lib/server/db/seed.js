@@ -72,24 +72,6 @@ const rolesPermisos = [
 
 async function seed () {
 
-  await db.delete(schema.asignaciones);
-  await db.delete(schema.folios);
-  await db.delete(schema.activos);
-  await db.delete(schema.historialOrdenes);
-  await db.delete(schema.ordenesServicio);
-  await db.delete(schema.invitaciones);
-  await db.delete(schema.categoriasOrden);
-  await db.delete(schema.encargadosAreas);
-  await db.delete(schema.sesiones);
-  await db.delete(schema.usuarios);
-  await db.delete(schema.empleados);
-  await db.delete(schema.categoriasActivo);
-  await db.delete(schema.rolesPermisos);
-  await db.delete(schema.roles);
-  await db.delete(schema.permisos);
-  await db.delete(schema.areas);
-  await db.delete(schema.direccionesGenerales);
-
   await db.insert(schema.permisos).values(permisos);
   await db.insert(schema.roles).values(roles);
   await db.insert(schema.rolesPermisos).values(rolesPermisos.map((rolPermiso) => {

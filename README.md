@@ -4,12 +4,11 @@ cat env.example > .env
 
 Ejecutar
 
-docker compose  up db -d
+docker compose up db -d
 
 Para bajar el servicio de mysql
 
 docker compose -f compose.dev.yaml down -v db
-
 
 ###################
 Para producción
