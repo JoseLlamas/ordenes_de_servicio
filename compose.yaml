@@ -5,7 +5,7 @@ services:
       target: prod
       dockerfile: Dockerfile
     ports:
-      - "127.0.0.1:8081:3000"
+      - "127.0.0.1:10002:3000"
     hostname: "ordenes_de_servicio.local"
     container_name: ordenes_de_servicio
     image: ordenes_de_servicio
@@ -15,7 +15,8 @@ services:
       - ./data/firmas:/app/uploads/firmas
       - ./data/avatares:/app/uploads/avatares
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
       ORIGIN: ${ORIGIN}
       PROTOCOL_HEADER: X-Forwarded-Proto
@@ -29,6 +30,13 @@ services:
       MYSQL_PORT: ${MYSQL_PORT}
 
   db:
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 --silent"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 20s
+    restart: unless-stopped
     image: "mysql:9.5"
     ports:
       - "127.0.0.1:3311:3306"
@@ -40,10 +48,12 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_PORT: 3306
     volumes:
       - mysqldata:/var/lib/mysql
 
   migrate:
+    image: ordenes_de_servicio-tools
     build:
       context: .
       target: tools
@@ -55,11 +65,13 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     profiles:
       - migrate
 
   seed:
+    image: ordenes_de_servicio-tools
     build:
       context: .
       target: tools
@@ -71,7 +83,8 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     profiles:
       - seed
 
